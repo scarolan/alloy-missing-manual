@@ -10,5 +10,5 @@ This is the most significant architectural change since Alloy replaced Grafana A
 
 - [**What Changed**](what-changed.md) -- When the OTel Engine was introduced, how to invoke it, what components are available, and what you lose compared to the Default Engine
 - [**Migration from Alloy Config**](migration.md) -- Component-by-component mapping from Alloy syntax to OTel YAML, behavioral differences, what you gain and lose, and a practical migration workflow
-- [**When to Use OTEL Native vs Alloy Config**](when-to-use.md) -- A clear decision framework, the hybrid approach with `alloyengine`, and an honest assessment of where each engine fits
+- [**When to Use OTEL Native vs Alloy Config**](when-to-use.md) -- A clear decision framework, the hybrid approach with `alloyengine`, and a practical assessment of where each engine fits
 - [**Example Configurations**](examples.md) -- Six side-by-side examples: basic metrics, traces with tail sampling, log collection, host monitoring, hybrid deployment, and Kubernetes with Helm

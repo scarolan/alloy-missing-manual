@@ -540,7 +540,7 @@ If you get `Timeout: No Response from 10.0.1.1`, the device is not reachable via
 | Mistake | Impact | Fix |
 |---|---|---|
 | Hardcoding the community string in the config | Secret visible in config files, backups, FM UI | Use `sys.env("SNMP_COMMUNITY")` |
-| Using 32-bit counters (`ifInOctets`) instead of 64-bit (`ifHCInOctets`) | Counter wraps every few seconds on fast links, producing garbage rate() values | Always use `ifHC*` counters in the allow-list |
+| Using 32-bit counters (`ifInOctets`) instead of 64-bit (`ifHCInOctets`) | Counter wraps every few seconds on fast links, producing incorrect rate() values | Always use `ifHC*` counters in the allow-list |
 | Monitoring all ports including admin-down | 48-port switch has ~24 unused ports generating zero-value metrics | Drop `ifAdminStatus=2` in relabel rules |
 | MIB version mismatch with device firmware | Walk timeouts, missing metrics, wrong OID mappings | Regenerate `snmp.yml` from MIBs matching your firmware version |
 | Scrape timeout shorter than SNMP walk time | Scrape fails, no metrics collected | Set `scrape_timeout` to at least 2x the expected walk duration |

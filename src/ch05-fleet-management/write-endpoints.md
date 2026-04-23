@@ -6,7 +6,7 @@ Because of the [sealed-module architecture](sealed-module-gotcha.md), you cannot
 
 This means if you have 3 FM pipelines (host monitoring, blackbox probes, application scrapes), you have 3 copies of the `prometheus.remote_write` block and potentially 3 copies of the `loki.write` block.
 
-This feels wrong. It looks like duplication. But it is a direct consequence of the sealed-module design, and there is no workaround within the current Fleet Management architecture.
+At first glance this looks like unnecessary duplication. It is a direct consequence of the sealed-module design, and understanding why it works this way makes the pattern much easier to accept.
 
 ## Why the Duplication Is Necessary
 

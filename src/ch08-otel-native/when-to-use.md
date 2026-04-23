@@ -150,9 +150,9 @@ The hybrid approach is the right call when:
 | Kubernetes with OTel Operator/Helm charts | OTel Engine |
 | Need Web UI for pipeline debugging | Default Engine (or Hybrid) |
 
-## The Honest Take
+## The Bottom Line
 
-The OTel Engine is a strategic move by Grafana to make Alloy the "just use this" answer for any team adopting OpenTelemetry. It removes the biggest objection to Alloy: "I don't want to learn a proprietary config language."
+The OTel Engine makes Alloy a natural fit for any team adopting OpenTelemetry. Teams that prefer standard OTEL Collector YAML no longer need to choose between Alloy's packaging and a familiar config format.
 
 But as of April 2026, it is experimental. The Default Engine is mature, well-tested, and production-proven. For most existing Alloy users, there is no urgent reason to switch. The OTel Engine is most compelling for:
 

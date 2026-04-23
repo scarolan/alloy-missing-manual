@@ -2,7 +2,7 @@
 
 ## Overview
 
-An honest comparison of when to use Alloy vs the vanilla OpenTelemetry Collector.
+A practical comparison of when to use Alloy vs the vanilla OpenTelemetry Collector.
 
 ## What Alloy adds
 
@@ -13,9 +13,9 @@ An honest comparison of when to use Alloy vs the vanilla OpenTelemetry Collector
 - Fleet Management for remote configuration
 - Grafana-native integrations
 
-## What OTEL Collector does better
+## What OTEL Collector offers differently
 
-- No vendor dependency
+- Vendor-neutral distribution
 - Native YAML configuration
 - `memory_limiter` processor for back-pressure
 - Automatic resource detection

@@ -1,8 +1,8 @@
 # Introduction
 
-Grafana Alloy is a powerful observability pipeline — and one of the most frustrating tools to learn from scratch.
+Grafana Alloy is a powerful observability pipeline with a steep initial learning curve.
 
-The official documentation is thorough as a *reference*, but light as a *guide*. It tells you what every component does, but not how to wire them together without blowing your metrics budget. It documents every flag, but not the five gotchas that will eat your afternoon.
+The official documentation is thorough as a *reference*, but light as a *guide*. It tells you what every component does, but not how to wire them together without blowing your metrics budget. It documents every flag, but not the practical patterns that save you time in production.
 
 This book is the manual we wish existed when we started.
 

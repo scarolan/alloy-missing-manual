@@ -1,6 +1,6 @@
 # The Sealed-Module Gotcha
 
-## The Single Most Confusing Thing About Fleet Management
+## The Key Concept to Understand About Fleet Management
 
 You deploy a bootstrap config with `prometheus.remote_write "metrics_service"` defined. You create a Fleet Management pipeline that scrapes metrics and forwards them to `prometheus.remote_write.metrics_service.receiver`. It fails:
 
@@ -143,7 +143,7 @@ The sealed-module approach is a deliberate architectural choice, not a bug:
 2. **Safe updates.** FM can swap one pipeline without touching others. If pipelines shared components, updating one could break another.
 3. **Predictable behavior.** Each pipeline is self-contained. You can read a pipeline's config and understand exactly what it does without needing to see the bootstrap config or other pipelines.
 
-The tradeoff is duplication of write endpoint config. This is annoying but manageable with the `sys.env()` pattern -- the actual secrets are never duplicated, only the block structure.
+The tradeoff is duplication of write endpoint config. This is manageable with the `sys.env()` pattern -- the actual secrets are never duplicated, only the block structure.
 
 ## Quick Reference
 

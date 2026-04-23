@@ -1,6 +1,6 @@
 # Error Messages Decoded
 
-Alloy error messages range from "reasonably helpful" to "completely misleading." This page is a reference for the most common errors you will encounter, what they actually mean, and how to fix them. Bookmark it.
+Alloy error messages can be terse, especially when they surface from deep in the component graph. This page is a reference for the most common errors you will encounter, what they actually mean, and how to fix them. Bookmark it.
 
 ## Validation and Parse Errors
 
