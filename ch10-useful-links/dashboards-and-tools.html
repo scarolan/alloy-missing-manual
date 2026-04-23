@@ -1,0 +1,339 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Dashboards and Tools - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch10-useful-links/dashboards-and-tools.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="dashboards-and-tools"><a class="header" href="#dashboards-and-tools">Dashboards and Tools</a></h1>
+<h2 id="grafana-dashboards"><a class="header" href="#grafana-dashboards">Grafana Dashboards</a></h2>
+<h3 id="infrastructure-monitoring-dashboards"><a class="header" href="#infrastructure-monitoring-dashboards">Infrastructure Monitoring Dashboards</a></h3>
+<p>These are the dashboards you will import into Grafana to visualize the data Alloy collects. They are not Alloy-specific, but they are what most Alloy deployments are feeding data into.</p>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>What it monitors</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/grafana/dashboards/1860">Node Exporter Full (ID: 1860)</a></td><td>The most popular Linux monitoring dashboard. Visualizes nearly all default metrics exported by the Prometheus node exporter -- CPU, memory, disk, network, systemd, and more. Requires a <code>node</code> job targeting port 9100. Recommend running node-exporter with <code>--collector.systemd</code> and <code>--collector.processes</code> for full coverage.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/grafana/dashboards/24390">Windows Exporter Dashboard 2025 (ID: 24390)</a></td><td>Windows system performance dashboard compatible with prometheus-windows-exporter 0.31.3+. Uses bargauge, gauge, stat, table, and timeseries panels. Includes job filter for disk analysis.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/grafana/dashboards/">Grafana Dashboards library</a></td><td>Browse all community and official dashboards. Search for specific exporters or use cases.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h3 id="alloy-self-monitoring-dashboards"><a class="header" href="#alloy-self-monitoring-dashboards">Alloy Self-Monitoring Dashboards</a></h3>
+<p>Alloy exposes Prometheus metrics about itself. These dashboards visualize those internal metrics so you can monitor the monitor.</p>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>What it provides</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/integrations/grafana-alloy/monitor/">Alloy monitoring integration</a></td><td>Pre-built Grafana Cloud dashboards and alerts for monitoring Alloy instances. One-click setup if you are on Grafana Cloud.</td><td>Essential</td></tr>
+<tr><td><a href="https://github.com/grafana/alloy/tree/main/operations/alloy-mixin">Alloy mixin (GitHub)</a></td><td>Jsonnet mixin that renders into Grafana dashboard JSON and Prometheus alert rules. Includes dashboards for: cluster overview, cluster node, resources, controller, Prometheus pipelines, OpenTelemetry pipelines, OTel engine overview, and Loki pipelines. Pre-rendered JSON is committed under the <code>rendered/</code> folder for direct import.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/troubleshoot/controller_metrics/">Controller metrics docs</a></td><td>Documents the Prometheus metrics exposed by the Alloy controller, which you can scrape from <code>/metrics</code> on port 12345.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/troubleshoot/component_metrics/">Component metrics docs</a></td><td>Documents per-component metrics for diagnosing individual pipeline stages.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/troubleshoot/mixin-dashboards/">Import rendered mixin dashboards</a></td><td>Instructions for importing the pre-built mixin dashboards into your Grafana instance.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h2 id="the-alloy-web-ui"><a class="header" href="#the-alloy-web-ui">The Alloy Web UI</a></h2>
+<p>Alloy ships with a built-in web interface for inspecting running pipelines. It listens on port <strong>12345</strong> by default and is one of Alloy's most underappreciated features.</p>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>What it covers</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/http/">HTTP endpoints reference</a></td><td>Complete list of endpoints: <code>/</code> (UI), <code>/metrics</code> (Prometheus scrape), <code>/ready</code>, <code>/live</code>, and more.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/troubleshoot/debug/">Debug Alloy</a></td><td>How to use the UI to inspect component health, view the pipeline graph, and diagnose issues.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/run/">CLI <code>run</code> command</a></td><td>The <code>--server.http.listen-addr</code> flag controls the UI address (default <code>127.0.0.1:12345</code>). Set to <code>0.0.0.0:12345</code> in Docker to expose externally.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/config-blocks/livedebugging/">Live debugging config block</a></td><td>Enable the live debugging view to see real-time telemetry flowing through each component. Added in v1.3.</td><td>Essential</td></tr>
+</tbody></table>
+</div>
+<p><strong>Quick access:</strong> Once Alloy is running, open <code>http://localhost:12345</code> in your browser. You will see a visual graph of your pipeline, component health indicators, and links to per-component detail pages.</p>
+<h2 id="cli-tools"><a class="header" href="#cli-tools">CLI Tools</a></h2>
+<p>The <code>alloy</code> binary includes several built-in subcommands beyond <code>run</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Command</th><th>What it does</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/">CLI reference (overview)</a></td><td>All subcommands</td><td>Landing page for all CLI documentation.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/validate/">validate</a></td><td><code>alloy validate</code></td><td>Validates an Alloy config file or directory without starting the process. Returns zero exit code if valid, non-zero with diagnostics if not. Supports <code>--config.format</code> for validating converted configs (alloy, otelcol, prometheus, promtail, static).</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/convert/">convert</a></td><td><code>alloy convert</code></td><td>Converts configs from Prometheus, Promtail, Grafana Agent Static, or OTel Collector format into Alloy config. Use <code>--bypass-errors</code> for best-effort conversion of large files, <code>--report</code> for a diagnostic report.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/fmt/">fmt</a></td><td><code>alloy fmt</code></td><td>Formats Alloy config files according to standard conventions. Run this before committing configs.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/tools/">tools</a></td><td><code>alloy tools</code></td><td>Utilities for reading the Write-Ahead Log (WAL) and gathering statistical information.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/otel/">otel</a></td><td><code>alloy otel</code></td><td>Starts Alloy with the experimental OTel Engine using an OTel Collector YAML config directly.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/cli/completion/">completion</a></td><td><code>alloy completion</code></td><td>Generates shell completion scripts for bash, zsh, fish, and PowerShell.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h2 id="configuration-tools"><a class="header" href="#configuration-tools">Configuration Tools</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>What it does</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.github.io/alloy-configurator/">Alloy Configurator (web tool)</a></td><td>Experimental web-based GUI for building Alloy configs without writing code. Includes a configuration wizard, an examples catalog with pre-built templates, and a converter for transforming configs from other formats. Still early-stage but useful for exploration.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://github.com/grafana/alloy-configurator">Alloy Configurator (GitHub)</a></td><td>Source repo for the configurator. Track development progress and report issues here.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h2 id="editor-extensions"><a class="header" href="#editor-extensions">Editor Extensions</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>What it provides</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://marketplace.visualstudio.com/items?itemName=Grafana.grafana-alloy">Grafana Alloy VS Code extension (Marketplace)</a></td><td>Official VS Code extension from Grafana. Provides syntax highlighting for <code>.alloy</code> files. Install this before writing any configs.</td><td>Essential</td></tr>
+<tr><td><a href="https://github.com/grafana/vscode-alloy">grafana/vscode-alloy (GitHub)</a></td><td>Source repo for the VS Code extension. File issues and feature requests here.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://marketplace.visualstudio.com/items?itemName=Grafana.grafana-vscode">Grafana VS Code extension (Marketplace)</a></td><td>The broader Grafana extension for VS Code. Not Alloy-specific, but useful if you work with Grafana dashboards and data sources alongside Alloy configs.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h2 id="related-projects"><a class="header" href="#related-projects">Related Projects</a></h2>
+<p>These are the upstream projects and companion tools that Alloy builds on or sends data to. Understanding them makes you a better Alloy user.</p>
+<h3 id="opentelemetry"><a class="header" href="#opentelemetry">OpenTelemetry</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Why it matters</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://opentelemetry.io/docs/collector/">OpenTelemetry Collector docs</a></td><td>Alloy is a distribution of the OTel Collector. Understanding the upstream concepts (receivers, processors, exporters, connectors) maps directly to Alloy's <code>otelcol.*</code> components.</td><td>Essential</td></tr>
+<tr><td><a href="https://opentelemetry.io/docs/collector/configuration/">OTel Collector configuration</a></td><td>Reference for the YAML format that <code>alloy convert --source-format=otelcol</code> accepts, and that <code>alloy otel</code> runs natively.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://github.com/open-telemetry/opentelemetry-collector">OTel Collector GitHub</a></td><td>Upstream source. Check here for the latest receiver/processor/exporter capabilities.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://opentelemetry.io/docs/">OpenTelemetry docs home</a></td><td>The full OpenTelemetry documentation covering instrumentation, SDKs, and the collector.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/opentelemetry/collector/">Grafana OTel Collector docs</a></td><td>Grafana's own documentation for setting up the OTel Collector with Grafana Cloud.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h3 id="prometheus"><a class="header" href="#prometheus">Prometheus</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Why it matters</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://prometheus.io/docs/">Prometheus docs home</a></td><td>The Prometheus documentation. Alloy's <code>prometheus.*</code> components mirror Prometheus concepts (scrape configs, relabeling, remote write).</td><td>Essential</td></tr>
+<tr><td><a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">Prometheus configuration</a></td><td>The prometheus.yml format that <code>alloy convert --source-format=prometheus</code> accepts.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://prometheus.io/docs/prometheus/latest/getting_started/">Prometheus getting started</a></td><td>If you are new to Prometheus, start here before trying to understand Alloy's metrics pipeline.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h3 id="grafana-loki"><a class="header" href="#grafana-loki">Grafana Loki</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Why it matters</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/docs/loki/latest/">Loki docs home</a></td><td>Documentation for Grafana Loki, the log aggregation backend that Alloy's <code>loki.*</code> components write to.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/loki/latest/get-started/">Loki getting started</a></td><td>Loki's architecture and data model. Understanding labels and streams in Loki helps you design better Alloy log pipelines.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/loki/latest/setup/migrate/migrate-to-alloy/">Migrate to Alloy (Loki docs)</a></td><td>Loki's own documentation on migrating from Promtail to Alloy. Complements the Alloy migration guide with Loki-specific context.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/reference/components/loki/">Alloy Loki components reference</a></td><td>All <code>loki.*</code> components in Alloy: sources, processing stages, and write destinations.</td><td>Essential</td></tr>
+</tbody></table>
+</div>
+<h3 id="grafana-agent-deprecated----migration-reference"><a class="header" href="#grafana-agent-deprecated----migration-reference">Grafana Agent (Deprecated -- Migration Reference)</a></h3>
+<p>Grafana Agent reached End-of-Life on November 1, 2025. These docs remain available as a migration reference.</p>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Why it matters</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/docs/agent/latest/">Grafana Agent docs home</a></td><td>The now-deprecated Agent documentation. Still useful as a reference when translating old Agent configs to Alloy.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/agent/latest/about/">Agent introduction</a></td><td>Understanding what Agent was helps you understand why certain Alloy components exist.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/agent/latest/static/release-notes/">Agent release notes</a></td><td>Final release notes for Agent Static mode.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/agent/latest/flow/release-notes/">Agent Flow release notes</a></td><td>Final release notes for Agent Flow mode, which was the direct predecessor to Alloy's config language.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h3 id="grafana-tempo-and-pyroscope"><a class="header" href="#grafana-tempo-and-pyroscope">Grafana Tempo and Pyroscope</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Why it matters</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/docs/tempo/latest/">Tempo docs home</a></td><td>The tracing backend. Alloy's <code>otelcol.*</code> components can send traces here.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/tempo/latest/troubleshooting/send-traces/alloy/">Troubleshoot Alloy traces (Tempo docs)</a></td><td>Tempo-specific troubleshooting for when traces are not arriving.</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/pyroscope/latest/">Pyroscope docs home</a></td><td>The continuous profiling backend. Alloy's <code>pyroscope.*</code> components send profile data here.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+<h3 id="kubernetes-monitoring"><a class="header" href="#kubernetes-monitoring">Kubernetes Monitoring</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Link</th><th>Why it matters</th><th>Priority</th></tr></thead><tbody>
+<tr><td><a href="https://grafana.com/docs/grafana-cloud/monitor-infrastructure/kubernetes-monitoring/configuration/helm-chart-config/helm-chart/">Kubernetes Monitoring Helm chart overview</a></td><td>The full Kubernetes monitoring solution that deploys Alloy alongside kube-state-metrics, Node Exporter, and Windows Exporter. Creates three Alloy instances: alloy-metrics (StatefulSet), alloy-logs (DaemonSet), and alloy-singleton (Deployment).</td><td>Supplementary</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/set-up/install/kubernetes/">Deploy Alloy on Kubernetes</a></td><td>Standalone Alloy Helm chart deployment for when you want Alloy without the full monitoring chart.</td><td>Essential</td></tr>
+<tr><td><a href="https://grafana.com/docs/alloy/latest/configure/kubernetes/">Configure Alloy on Kubernetes</a></td><td>How to update ConfigMaps and apply new configs to a running Alloy Helm deployment.</td><td>Supplementary</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch10-useful-links/community.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../appendix/resources.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch10-useful-links/community.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../appendix/resources.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

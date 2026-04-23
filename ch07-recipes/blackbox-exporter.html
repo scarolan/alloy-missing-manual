@@ -1,0 +1,697 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Blackbox Exporter - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch07-recipes/blackbox-exporter.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="blackbox-exporter"><a class="header" href="#blackbox-exporter">Blackbox Exporter</a></h1>
+<h2 id="what-is-blackbox-monitoring"><a class="header" href="#what-is-blackbox-monitoring">What Is Blackbox Monitoring?</a></h2>
+<p>Blackbox monitoring probes endpoints from the outside -- the way a user or customer would experience them. Instead of collecting metrics from inside a service (CPU, memory, request counts), you ask a simple question from the outside: "Can I reach this thing, and how long does it take?"</p>
+<p>The name comes from treating the target as a "black box" -- you do not care about its internals, only its observable behavior. This is the complementary opposite of the host monitoring configs in <a href="starter-configs.html">Starter Configs</a>, which instrument the inside of a machine.</p>
+<p>Blackbox monitoring answers questions that internal metrics cannot:</p>
+<ul>
+<li>Is this HTTPS endpoint reachable from this network?</li>
+<li>How long does the TLS handshake take?</li>
+<li>When does the SSL certificate expire?</li>
+<li>Can I open a TCP connection to this port?</li>
+<li>Does this host respond to ICMP ping, and what is the round-trip latency?</li>
+<li>Does DNS resolve this name correctly?</li>
+</ul>
+<h2 id="why-use-alloys-built-in-blackbox-exporter"><a class="header" href="#why-use-alloys-built-in-blackbox-exporter">Why Use Alloy's Built-In Blackbox Exporter?</a></h2>
+<p>Alloy includes <code>prometheus.exporter.blackbox</code>, which embeds the same probe logic as the standalone <a href="https://github.com/prometheus/blackbox_exporter">blackbox_exporter</a> binary. You do not need to install, configure, or manage a separate blackbox_exporter process.</p>
+<p>The blackbox module configuration is passed inline as a backtick-delimited YAML string. No external <code>blackbox.yml</code> file is needed.</p>
+<h2 id="probe-types"><a class="header" href="#probe-types">Probe Types</a></h2>
+<p>The blackbox exporter supports four probe types. Each is defined as a "module" in the configuration.</p>
+<div class="table-wrapper"><table><thead><tr><th>Probe Type</th><th>Protocol</th><th>What It Tests</th><th>Common Use Cases</th></tr></thead><tbody>
+<tr><td><strong>HTTP</strong></td><td>HTTP/HTTPS</td><td>Full HTTP request cycle: DNS, TCP connect, TLS handshake, request, response</td><td>Website uptime, API health, SSL cert expiry</td></tr>
+<tr><td><strong>TCP</strong></td><td>TCP</td><td>TCP connection establishment</td><td>Database ports, custom service ports, Redis, SMTP</td></tr>
+<tr><td><strong>ICMP</strong></td><td>ICMP</td><td>Ping (echo request/reply)</td><td>Network reachability, latency baselines, packet loss</td></tr>
+<tr><td><strong>DNS</strong></td><td>DNS/UDP or DNS/TCP</td><td>DNS query and response validation</td><td>DNS server health, record correctness</td></tr>
+</tbody></table>
+</div>
+<h2 id="complete-working-config"><a class="header" href="#complete-working-config">Complete Working Config</a></h2>
+<p>This is a self-contained config that probes HTTP endpoints, TCP ports, ICMP hosts, and DNS servers. It ships all probe metrics to Grafana Cloud.</p>
+<pre><code class="language-alloy">// =================================================================
+// Blackbox Exporter -- HTTP, TCP, ICMP, and DNS Probes
+// =================================================================
+// Probes external and internal endpoints, ships metrics to
+// Grafana Cloud. Set env vars per Chapter 3.
+// =================================================================
+
+// --- Write Endpoint ---
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_METRICS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+// --- Blackbox Exporter ---
+prometheus.exporter.blackbox "probes" {
+  config = `
+modules:
+  http_2xx:
+    prober: http
+    timeout: 10s
+    http:
+      preferred_ip_protocol: ip4
+      valid_status_codes: [200, 201, 204]
+      follow_redirects: true
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+
+  http_2xx_tls:
+    prober: http
+    timeout: 10s
+    http:
+      preferred_ip_protocol: ip4
+      valid_status_codes: [200, 201, 204]
+      follow_redirects: true
+      fail_if_not_ssl: true
+      tls_config:
+        insecure_skip_verify: false
+
+  tcp_connect:
+    prober: tcp
+    timeout: 5s
+
+  icmp:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: ip4
+
+  dns_udp:
+    prober: dns
+    timeout: 5s
+    dns:
+      preferred_ip_protocol: ip4
+      query_name: "grafana.com"
+      query_type: "A"
+      transport_protocol: udp
+      valid_rcodes:
+        - NOERROR
+`
+
+  // --- HTTP targets ---
+  target {
+    name    = "grafana-com"
+    address = "https://grafana.com"
+    module  = "http_2xx_tls"
+    labels  = {
+      env  = "external"
+      team = "platform"
+      type = "website"
+    }
+  }
+
+  target {
+    name    = "grafana-cloud-status"
+    address = "https://status.grafana.com"
+    module  = "http_2xx_tls"
+    labels  = {
+      env  = "external"
+      team = "platform"
+      type = "status-page"
+    }
+  }
+
+  target {
+    name    = "internal-api"
+    address = "http://internal-api.example.com:8080/healthz"
+    module  = "http_2xx"
+    labels  = {
+      env  = "prod"
+      team = "backend"
+      type = "api"
+    }
+  }
+
+  // --- TCP targets ---
+  target {
+    name    = "postgres-primary"
+    address = "db-primary.example.com:5432"
+    module  = "tcp_connect"
+    labels  = {
+      env  = "prod"
+      team = "data"
+      type = "database"
+    }
+  }
+
+  target {
+    name    = "redis-cache"
+    address = "redis.example.com:6379"
+    module  = "tcp_connect"
+    labels  = {
+      env  = "prod"
+      team = "backend"
+      type = "cache"
+    }
+  }
+
+  // --- ICMP targets ---
+  target {
+    name    = "gateway"
+    address = "10.0.0.1"
+    module  = "icmp"
+    labels  = {
+      env  = "prod"
+      team = "network"
+      type = "gateway"
+    }
+  }
+
+  target {
+    name    = "dns-server"
+    address = "10.0.0.53"
+    module  = "icmp"
+    labels  = {
+      env  = "prod"
+      team = "network"
+      type = "dns"
+    }
+  }
+
+  // --- DNS targets ---
+  target {
+    name    = "dns-resolver-primary"
+    address = "10.0.0.53"
+    module  = "dns_udp"
+    labels  = {
+      env  = "prod"
+      team = "network"
+      type = "dns-resolver"
+    }
+  }
+}
+
+// --- Relabel for job/instance labels ---
+discovery.relabel "probes" {
+  targets = prometheus.exporter.blackbox.probes.targets
+  rule {
+    target_label = "job"
+    replacement  = "integrations/blackbox"
+  }
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+}
+
+// --- Scrape ---
+prometheus.scrape "probes" {
+  targets         = discovery.relabel.probes.output
+  forward_to      = [prometheus.remote_write.metrics_service.receiver]
+  scrape_interval = "60s"
+  scrape_timeout  = "15s"
+}
+</code></pre>
+<h2 id="module-configuration-explained"><a class="header" href="#module-configuration-explained">Module Configuration Explained</a></h2>
+<p>The <code>config</code> block uses a backtick-delimited YAML string. This is standard blackbox_exporter YAML, embedded directly in the Alloy config. No external file is needed.</p>
+<h3 id="http_2xx-module"><a class="header" href="#http_2xx-module">http_2xx Module</a></h3>
+<p>The basic HTTP probe. It makes a GET request and checks for a 2xx status code.</p>
+<div class="table-wrapper"><table><thead><tr><th>Parameter</th><th>Value</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>prober</code></td><td><code>http</code></td><td>Use the HTTP prober</td></tr>
+<tr><td><code>timeout</code></td><td><code>10s</code></td><td>Fail if no response within 10 seconds</td></tr>
+<tr><td><code>preferred_ip_protocol</code></td><td><code>ip4</code></td><td>Resolve to IPv4 (avoids dual-stack surprises)</td></tr>
+<tr><td><code>valid_status_codes</code></td><td><code>[200, 201, 204]</code></td><td>Which codes count as success</td></tr>
+<tr><td><code>follow_redirects</code></td><td><code>true</code></td><td>Follow HTTP 3xx redirects</td></tr>
+</tbody></table>
+</div>
+<h3 id="http_2xx_tls-module"><a class="header" href="#http_2xx_tls-module">http_2xx_tls Module</a></h3>
+<p>Same as <code>http_2xx</code> but enforces TLS. The <code>fail_if_not_ssl: true</code> setting causes the probe to fail if the target does not use HTTPS, so you catch accidental HTTP downgrades.</p>
+<h3 id="tcp_connect-module"><a class="header" href="#tcp_connect-module">tcp_connect Module</a></h3>
+<p>Opens a TCP connection and immediately closes it. Success means the port is open and accepting connections. This does not send any application-layer data.</p>
+<h3 id="icmp-module"><a class="header" href="#icmp-module">icmp Module</a></h3>
+<p>Sends an ICMP echo request (ping). Measures round-trip time and packet loss. Requires the <code>CAP_NET_RAW</code> capability (see the ICMP setup section below).</p>
+<h3 id="dns_udp-module"><a class="header" href="#dns_udp-module">dns_udp Module</a></h3>
+<p>Sends a DNS query over UDP and validates the response. The <code>query_name</code> and <code>query_type</code> define what to ask; <code>valid_rcodes</code> defines what counts as success.</p>
+<h2 id="target-configuration"><a class="header" href="#target-configuration">Target Configuration</a></h2>
+<p>Each <code>target</code> block defines one endpoint to probe:</p>
+<div class="table-wrapper"><table><thead><tr><th>Field</th><th>Required</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>name</code></td><td>Yes</td><td>Unique identifier for this target (becomes the <code>__param_target</code> label)</td></tr>
+<tr><td><code>address</code></td><td>Yes</td><td>The endpoint to probe (URL for HTTP, host:port for TCP, IP for ICMP, IP for DNS)</td></tr>
+<tr><td><code>module</code></td><td>Yes</td><td>Which probe module to use (must match a key in the <code>config</code> YAML)</td></tr>
+<tr><td><code>labels</code></td><td>No</td><td>Additional labels attached to all metrics from this target</td></tr>
+</tbody></table>
+</div>
+<p>The <code>labels</code> map is where you add organizational metadata. Common patterns:</p>
+<ul>
+<li><code>env</code> -- production, staging, development</li>
+<li><code>team</code> -- which team owns the endpoint</li>
+<li><code>type</code> -- website, api, database, cache, gateway</li>
+</ul>
+<p>These labels make it easy to filter and aggregate in Grafana dashboards and alert rules.</p>
+<h2 id="the-discoveryrelabel-pattern"><a class="header" href="#the-discoveryrelabel-pattern">The discovery.relabel Pattern</a></h2>
+<p>The <code>discovery.relabel</code> block sets the <code>job</code> and <code>instance</code> labels for all probe metrics:</p>
+<pre><code class="language-alloy">discovery.relabel "probes" {
+  targets = prometheus.exporter.blackbox.probes.targets
+  rule {
+    target_label = "job"
+    replacement  = "integrations/blackbox"
+  }
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+}
+</code></pre>
+<p>The <code>job</code> label groups all blackbox metrics under one job name. The <code>instance</code> label identifies which Alloy collector ran the probe -- important in multi-site setups where multiple Alloy instances probe the same targets from different locations.</p>
+<h2 id="icmp-setup-cap_net_raw"><a class="header" href="#icmp-setup-cap_net_raw">ICMP Setup: CAP_NET_RAW</a></h2>
+<p>ICMP probes require the <code>CAP_NET_RAW</code> Linux capability. Without it, the ICMP prober fails silently (the probe returns <code>probe_success=0</code> with no useful error).</p>
+<h3 id="option-1-add-the-capability-to-the-alloy-binary"><a class="header" href="#option-1-add-the-capability-to-the-alloy-binary">Option 1: Add the Capability to the Alloy Binary</a></h3>
+<pre><code class="language-bash">sudo setcap cap_net_raw+ep $(which alloy)
+sudo systemctl restart alloy
+</code></pre>
+<p>This survives reboots but is overwritten by package upgrades. Add the <code>setcap</code> command to your upgrade automation.</p>
+<h3 id="option-2-systemd-override-recommended"><a class="header" href="#option-2-systemd-override-recommended">Option 2: systemd Override (Recommended)</a></h3>
+<pre><code class="language-bash">sudo systemctl edit alloy
+</code></pre>
+<p>Add:</p>
+<pre><code class="language-ini">[Service]
+AmbientCapabilities=CAP_NET_RAW
+</code></pre>
+<p>Save and restart:</p>
+<pre><code class="language-bash">sudo systemctl restart alloy
+</code></pre>
+<p>This survives package upgrades because systemd drop-ins are not touched by the package manager.</p>
+<h3 id="verifying-icmp-works"><a class="header" href="#verifying-icmp-works">Verifying ICMP Works</a></h3>
+<p>After setup, check the probe metrics:</p>
+<pre><code class="language-promql">probe_success{job="integrations/blackbox", module="icmp"}
+</code></pre>
+<p>A value of <code>1</code> means the ICMP probe succeeded. If it returns <code>0</code> for all ICMP targets, the capability is likely missing.</p>
+<h3 id="windows"><a class="header" href="#windows">Windows</a></h3>
+<p>On Windows, Alloy runs as the SYSTEM account which has ICMP privileges by default. No additional configuration is needed.</p>
+<h2 id="key-metrics"><a class="header" href="#key-metrics">Key Metrics</a></h2>
+<p>The blackbox exporter produces detailed metrics for every probe. These are the most important ones for dashboards and alerting.</p>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Type</th><th>What It Tells You</th></tr></thead><tbody>
+<tr><td><code>probe_success</code></td><td>Gauge (0 or 1)</td><td>Did the probe succeed? The single most important metric.</td></tr>
+<tr><td><code>probe_duration_seconds</code></td><td>Gauge</td><td>Total time the probe took, end to end</td></tr>
+<tr><td><code>probe_dns_lookup_time_seconds</code></td><td>Gauge</td><td>Time spent on DNS resolution alone</td></tr>
+<tr><td><code>probe_tls_version_info</code></td><td>Gauge (info metric)</td><td>TLS version used (labels: <code>version="TLS 1.3"</code>)</td></tr>
+<tr><td><code>probe_ssl_earliest_cert_expiry</code></td><td>Gauge (Unix timestamp)</td><td>When the SSL certificate expires. Critical for cert expiry alerting.</td></tr>
+<tr><td><code>probe_ssl_last_chain_info</code></td><td>Gauge (info metric)</td><td>Certificate chain details</td></tr>
+<tr><td><code>probe_http_status_code</code></td><td>Gauge</td><td>HTTP response status code (200, 301, 404, etc.)</td></tr>
+<tr><td><code>probe_http_duration_seconds</code></td><td>Gauge</td><td>HTTP phase timings (labels: <code>phase="resolve"</code>, <code>"connect"</code>, <code>"tls"</code>, <code>"processing"</code>, <code>"transfer"</code>)</td></tr>
+<tr><td><code>probe_http_content_length</code></td><td>Gauge</td><td>Response body size in bytes</td></tr>
+<tr><td><code>probe_http_redirects</code></td><td>Gauge</td><td>Number of redirects followed</td></tr>
+<tr><td><code>probe_icmp_duration_seconds</code></td><td>Gauge</td><td>ICMP round-trip time (labels: <code>phase="setup"</code>, <code>"rtt"</code>)</td></tr>
+<tr><td><code>probe_dns_duration_seconds</code></td><td>Gauge</td><td>DNS query duration (labels: <code>phase="resolve"</code>, <code>"connect"</code>, <code>"request"</code>)</td></tr>
+</tbody></table>
+</div>
+<h3 id="series-count-estimation"><a class="header" href="#series-count-estimation">Series Count Estimation</a></h3>
+<p>Each target produces approximately 15-25 metric series depending on the probe type:</p>
+<div class="table-wrapper"><table><thead><tr><th>Probe Type</th><th>Approximate Series per Target</th></tr></thead><tbody>
+<tr><td>HTTP (with TLS)</td><td>~25 (includes phase breakdown, TLS info, cert expiry)</td></tr>
+<tr><td>HTTP (plain)</td><td>~20</td></tr>
+<tr><td>TCP</td><td>~10</td></tr>
+<tr><td>ICMP</td><td>~10</td></tr>
+<tr><td>DNS</td><td>~15</td></tr>
+</tbody></table>
+</div>
+<p>For the example config above (3 HTTP + 2 TCP + 2 ICMP + 1 DNS targets = 8 targets), expect approximately 140-160 series.</p>
+<h2 id="alerting-patterns"><a class="header" href="#alerting-patterns">Alerting Patterns</a></h2>
+<h3 id="endpoint-down-probe-failed"><a class="header" href="#endpoint-down-probe-failed">Endpoint Down (Probe Failed)</a></h3>
+<pre><code class="language-yaml">alert: BlackboxProbeDown
+expr: probe_success{job="integrations/blackbox"} == 0
+for: 5m
+labels:
+  severity: critical
+annotations:
+  summary: "Endpoint {{ $labels.name }} is down"
+  description: "Blackbox probe {{ $labels.name }} has been failing for 5 minutes."
+</code></pre>
+<p>The <code>for: 5m</code> clause prevents alerting on transient network blips. Adjust based on your SLA.</p>
+<h3 id="ssl-certificate-expiring-soon"><a class="header" href="#ssl-certificate-expiring-soon">SSL Certificate Expiring Soon</a></h3>
+<pre><code class="language-yaml">alert: SSLCertExpiringSoon
+expr: (probe_ssl_earliest_cert_expiry{job="integrations/blackbox"} - time()) / 86400 &lt; 30
+for: 1h
+labels:
+  severity: warning
+annotations:
+  summary: "SSL cert for {{ $labels.name }} expires in {{ $value | humanizeDuration }}"
+  description: "Certificate for {{ $labels.name }} expires in less than 30 days."
+</code></pre>
+<h3 id="high-probe-latency"><a class="header" href="#high-probe-latency">High Probe Latency</a></h3>
+<pre><code class="language-yaml">alert: BlackboxHighLatency
+expr: probe_duration_seconds{job="integrations/blackbox"} &gt; 5
+for: 10m
+labels:
+  severity: warning
+annotations:
+  summary: "Probe {{ $labels.name }} is slow ({{ $value }}s)"
+  description: "Blackbox probe {{ $labels.name }} has been taking over 5 seconds for 10 minutes."
+</code></pre>
+<h3 id="http-non-2xx-response"><a class="header" href="#http-non-2xx-response">HTTP Non-2xx Response</a></h3>
+<pre><code class="language-yaml">alert: BlackboxHTTPNon2xx
+expr: probe_http_status_code{job="integrations/blackbox"} &lt; 200 or probe_http_status_code{job="integrations/blackbox"} &gt;= 300
+for: 5m
+labels:
+  severity: warning
+annotations:
+  summary: "{{ $labels.name }} returning HTTP {{ $value }}"
+  description: "Endpoint {{ $labels.name }} has been returning non-2xx status for 5 minutes."
+</code></pre>
+<h2 id="advanced-module-configuration"><a class="header" href="#advanced-module-configuration">Advanced Module Configuration</a></h2>
+<h3 id="http-with-content-matching"><a class="header" href="#http-with-content-matching">HTTP with Content Matching</a></h3>
+<p>Verify that the response body contains expected content. This catches situations where a load balancer returns 200 but serves an error page:</p>
+<pre><code class="language-yaml">http_content_check:
+  prober: http
+  timeout: 10s
+  http:
+    preferred_ip_protocol: ip4
+    valid_status_codes: [200]
+    fail_if_body_not_matches_regexp:
+      - "healthy"
+      - "ok"
+    follow_redirects: true
+</code></pre>
+<h3 id="http-with-custom-headers"><a class="header" href="#http-with-custom-headers">HTTP with Custom Headers</a></h3>
+<p>Probe authenticated endpoints or APIs that require specific headers:</p>
+<pre><code class="language-yaml">http_api_auth:
+  prober: http
+  timeout: 10s
+  http:
+    preferred_ip_protocol: ip4
+    valid_status_codes: [200]
+    method: GET
+    headers:
+      Accept: application/json
+      Authorization: Bearer ${API_TOKEN}
+    follow_redirects: false
+</code></pre>
+<h3 id="http-post-with-body"><a class="header" href="#http-post-with-body">HTTP POST with Body</a></h3>
+<p>Probe endpoints that require a POST request (health check APIs, webhook targets):</p>
+<pre><code class="language-yaml">http_post:
+  prober: http
+  timeout: 10s
+  http:
+    preferred_ip_protocol: ip4
+    valid_status_codes: [200, 202]
+    method: POST
+    headers:
+      Content-Type: application/json
+    body: '{"check":"health"}'
+</code></pre>
+<h3 id="tcp-with-tls"><a class="header" href="#tcp-with-tls">TCP with TLS</a></h3>
+<p>Verify TLS connectivity to a port (useful for TLS-wrapped database connections, LDAPS, SMTPS):</p>
+<pre><code class="language-yaml">tcp_tls:
+  prober: tcp
+  timeout: 5s
+  tcp:
+    tls: true
+    tls_config:
+      insecure_skip_verify: false
+</code></pre>
+<h3 id="dns-with-record-validation"><a class="header" href="#dns-with-record-validation">DNS with Record Validation</a></h3>
+<p>Verify that DNS returns the expected answer (not just that it responds):</p>
+<pre><code class="language-yaml">dns_validate:
+  prober: dns
+  timeout: 5s
+  dns:
+    preferred_ip_protocol: ip4
+    query_name: "api.example.com"
+    query_type: "A"
+    transport_protocol: udp
+    valid_rcodes:
+      - NOERROR
+    validate_answer_rrs:
+      fail_if_not_matches_regexp:
+        - ".*10\\.0\\.1\\.100.*"
+</code></pre>
+<h2 id="grafana-dashboard-suggestions"><a class="header" href="#grafana-dashboard-suggestions">Grafana Dashboard Suggestions</a></h2>
+<h3 id="probe-overview-panel"><a class="header" href="#probe-overview-panel">Probe Overview Panel</a></h3>
+<p>A stat panel showing probe success across all targets:</p>
+<pre><code class="language-promql">probe_success{job="integrations/blackbox"}
+</code></pre>
+<p>Color map: 1 = green, 0 = red. Group by <code>name</code> label.</p>
+<h3 id="latency-heatmap"><a class="header" href="#latency-heatmap">Latency Heatmap</a></h3>
+<p>A heatmap showing probe duration over time:</p>
+<pre><code class="language-promql">probe_duration_seconds{job="integrations/blackbox"}
+</code></pre>
+<h3 id="ssl-certificate-expiry-table"><a class="header" href="#ssl-certificate-expiry-table">SSL Certificate Expiry Table</a></h3>
+<p>A table showing days until certificate expiry for all HTTPS targets:</p>
+<pre><code class="language-promql">(probe_ssl_earliest_cert_expiry{job="integrations/blackbox"} - time()) / 86400
+</code></pre>
+<p>Sort ascending to see the soonest-expiring certificates at the top.</p>
+<h3 id="http-phase-breakdown"><a class="header" href="#http-phase-breakdown">HTTP Phase Breakdown</a></h3>
+<p>A stacked bar chart showing where time is spent for each HTTP probe:</p>
+<pre><code class="language-promql">probe_http_duration_seconds{job="integrations/blackbox"}
+</code></pre>
+<p>Group by <code>phase</code> label to see resolve, connect, TLS, processing, and transfer times separately.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Mistake</th><th>Impact</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Missing <code>CAP_NET_RAW</code> for ICMP probes</td><td>ICMP probes always return <code>probe_success=0</code></td><td>Add the capability via systemd override or <code>setcap</code></td></tr>
+<tr><td>Setting <code>scrape_timeout</code> shorter than the longest probe <code>timeout</code></td><td>Scrape times out before probe completes, metrics lost</td><td>Set <code>scrape_timeout</code> at least 5s longer than your longest probe timeout</td></tr>
+<tr><td>Using the same <code>name</code> for multiple targets</td><td>Only one target is scraped (name collision)</td><td>Use unique <code>name</code> values for every target</td></tr>
+<tr><td>Forgetting <code>preferred_ip_protocol: ip4</code></td><td>Probe attempts IPv6 first, fails on IPv4-only networks</td><td>Always set <code>preferred_ip_protocol: ip4</code> unless you specifically need IPv6</td></tr>
+<tr><td>Module name in target does not match config</td><td>Probe fails with "unknown module"</td><td>Verify module names match exactly between <code>target.module</code> and <code>config</code> YAML keys</td></tr>
+<tr><td>Probing via HTTP when target redirects to HTTPS</td><td>Probe measures redirect chain, not the actual endpoint</td><td>Use <code>https://</code> in the address, or set <code>follow_redirects: false</code> and probe the HTTPS URL directly</td></tr>
+<tr><td>Not setting <code>fail_if_not_ssl: true</code> for HTTPS targets</td><td>An accidental HTTP downgrade goes undetected</td><td>Use the <code>http_2xx_tls</code> module for endpoints that must use TLS</td></tr>
+<tr><td>Inline YAML indentation errors</td><td>Alloy fails to parse the config block</td><td>Use a YAML linter on the content inside the backticks before deploying</td></tr>
+</tbody></table>
+</div>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li><code>prometheus.exporter.blackbox</code> embeds the blackbox_exporter inside Alloy -- no external binary needed</li>
+<li>Module configuration is passed inline as a backtick-delimited YAML string</li>
+<li>Four probe types: HTTP (website/API health), TCP (port checks), ICMP (ping/latency), DNS (resolution)</li>
+<li>Each target produces 10-25 metric series depending on probe type</li>
+<li>ICMP probes require <code>CAP_NET_RAW</code> on Linux (systemd override is the most robust approach)</li>
+<li>The three critical alerting patterns: probe failure (<code>probe_success == 0</code>), SSL cert expiry (<code>probe_ssl_earliest_cert_expiry</code>), and high latency (<code>probe_duration_seconds</code>)</li>
+<li>Use labels on targets (<code>env</code>, <code>team</code>, <code>type</code>) to organize probes for dashboard filtering</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch07-recipes/snmp-monitoring.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch07-recipes/network-testing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch07-recipes/snmp-monitoring.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch07-recipes/network-testing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

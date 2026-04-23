@@ -1,0 +1,559 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Error Messages Decoded - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch01-config-language/error-messages.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="error-messages-decoded"><a class="header" href="#error-messages-decoded">Error Messages Decoded</a></h1>
+<p>Alloy error messages can be terse, especially when they surface from deep in the component graph. This page is a reference for the most common errors you will encounter, what they actually mean, and how to fix them. Bookmark it.</p>
+<h2 id="validation-and-parse-errors"><a class="header" href="#validation-and-parse-errors">Validation and Parse Errors</a></h2>
+<p>These errors appear at startup or when running <code>alloy validate</code>. They mean your config file has a problem that prevents Alloy from even attempting to build the pipeline.</p>
+<h3 id="expected-block-label-got-"><a class="header" href="#expected-block-label-got-">"expected block label, got ..."</a></h3>
+<pre><code class="language-text">Error: building config: /etc/alloy/config.alloy:5:1: expected block label, got "#"
+</code></pre>
+<p><strong>Means:</strong> Alloy hit a character or token it did not expect while parsing a block definition.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Using <code>#</code> for comments instead of <code>//</code></li>
+<li>A stray character or typo at the start of a line</li>
+<li>Missing closing <code>}</code> on a previous block, causing the parser to get lost</li>
+</ul>
+<p><strong>Fix:</strong> Replace <code>#</code> comments with <code>//</code>. If the error points to a different character, check the lines above for unclosed braces.</p>
+<pre><code class="language-alloy">// WRONG
+# This is a comment
+
+// RIGHT
+// This is a comment
+</code></pre>
+<hr />
+<h3 id="expected--or--got-newline"><a class="header" href="#expected--or--got-newline">"expected "," or "]", got newline"</a></h3>
+<pre><code class="language-text">Error: building config: /etc/alloy/config.alloy:12:3: expected "," or "]", got newline
+</code></pre>
+<p><strong>Means:</strong> A list element is on its own line but is not followed by a comma.</p>
+<p><strong>Common cause:</strong> Missing trailing comma in a multi-line list.</p>
+<p><strong>Fix:</strong> Add a trailing comma after every element in a multi-line list or map.</p>
+<pre><code class="language-alloy">// WRONG
+forward_to = [
+  prometheus.remote_write.default.receiver
+]
+
+// RIGHT
+forward_to = [
+  prometheus.remote_write.default.receiver,
+]
+</code></pre>
+<hr />
+<h3 id="expected--got-s-or-similar-unit-suffix"><a class="header" href="#expected--got-s-or-similar-unit-suffix">"expected ";", got "s"" (or similar unit suffix)</a></h3>
+<pre><code class="language-text">Error: building config: /etc/alloy/config.alloy:8:22: expected ";", got "s"
+</code></pre>
+<p><strong>Means:</strong> You wrote a duration as a bare value without quotes.</p>
+<p><strong>Common cause:</strong> Writing <code>60s</code> instead of <code>"60s"</code>. People coming from Prometheus YAML do this constantly.</p>
+<p><strong>Fix:</strong> Quote all duration values.</p>
+<pre><code class="language-alloy">// WRONG
+scrape_interval = 60s
+
+// RIGHT
+scrape_interval = "60s"
+</code></pre>
+<hr />
+<h3 id="expected-block-got-attribute"><a class="header" href="#expected-block-got-attribute">"expected block, got attribute"</a></h3>
+<pre><code class="language-text">Error: building config: /etc/alloy/config.alloy:4:3: expected block, got attribute for "endpoint"
+</code></pre>
+<p><strong>Means:</strong> You used <code>=</code> to assign a value where Alloy expected a nested block definition.</p>
+<p><strong>Common cause:</strong> Writing <code>endpoint = { ... }</code> instead of <code>endpoint { ... }</code>.</p>
+<p><strong>Fix:</strong> Remove the <code>=</code> sign. Nested blocks do not use assignment syntax.</p>
+<pre><code class="language-alloy">// WRONG
+prometheus.remote_write "default" {
+  endpoint = {
+    url = "https://example.com/api/prom/push"
+  }
+}
+
+// RIGHT
+prometheus.remote_write "default" {
+  endpoint {
+    url = "https://example.com/api/prom/push"
+  }
+}
+</code></pre>
+<hr />
+<h3 id="expected--got-"><a class="header" href="#expected--got-">"expected "=", got "{""</a></h3>
+<pre><code class="language-text">Error: building config: /etc/alloy/config.alloy:6:7: expected "=", got "{"
+</code></pre>
+<p><strong>Means:</strong> You used block syntax where Alloy expected an attribute assignment.</p>
+<p><strong>Common cause:</strong> Omitting <code>=</code> when setting an attribute, or trying to define a sub-block where the schema expects an attribute.</p>
+<p><strong>Fix:</strong> Add <code>=</code> for attributes. Check the component documentation to confirm whether the field is an attribute or a block.</p>
+<hr />
+<h3 id="x-is-not-a-valid-component"><a class="header" href="#x-is-not-a-valid-component">"X is not a valid component"</a></h3>
+<pre><code class="language-text">Error: building config: "prometheus.exporter.snmp" is not a valid component
+</code></pre>
+<p><strong>Means:</strong> The component type you specified does not exist in this version of Alloy, or it is gated behind a stability level that is not enabled.</p>
+<p><strong>Common causes:</strong></p>
+<ol>
+<li><strong>Typo in the component name.</strong> Check spelling carefully. Component names are case-sensitive and use dots as separators.</li>
+<li><strong>The component requires a different stability level.</strong> Some components are marked as <code>experimental</code> or <code>public_preview</code> and must be enabled with a flag.</li>
+<li><strong>Wrong Alloy version.</strong> The component may have been added in a newer version, or removed/renamed in an upgrade.</li>
+</ol>
+<p><strong>Fix for stability levels:</strong> Enable the required stability level in your Alloy startup arguments:</p>
+<pre><code class="language-bash"># Allow experimental components
+alloy run --stability.level=experimental config.alloy
+
+# Or in the systemd unit
+Environment="CUSTOM_ARGS=--stability.level=experimental"
+</code></pre>
+<p>The stability levels from least to most restrictive: <code>experimental</code> &gt; <code>public_preview</code> &gt; <code>generally_available</code>. Setting a less restrictive level enables all levels above it (so <code>experimental</code> enables everything).</p>
+<p><strong>Fix for typos:</strong> Check the <a href="https://grafana.com/docs/alloy/latest/reference/components/">component reference</a> for the exact name.</p>
+<hr />
+<h3 id="label-x-is-already-in-use"><a class="header" href="#label-x-is-already-in-use">"label "X" is already in use"</a></h3>
+<pre><code class="language-text">Error: building config: label "default" is already in use for prometheus.remote_write
+</code></pre>
+<p><strong>Means:</strong> Two components of the same type have the same label.</p>
+<p><strong>Common cause:</strong> Copy-pasting a component block and forgetting to change the label.</p>
+<p><strong>Fix:</strong> Give each component of the same type a unique label.</p>
+<pre><code class="language-alloy">// WRONG
+prometheus.remote_write "default" { /* ... */ }
+prometheus.remote_write "default" { /* ... */ }
+
+// RIGHT
+prometheus.remote_write "grafana_cloud" { /* ... */ }
+prometheus.remote_write "local_mimir" { /* ... */ }
+</code></pre>
+<hr />
+<h3 id="cannot-convert-x-to-y"><a class="header" href="#cannot-convert-x-to-y">"cannot convert X to Y"</a></h3>
+<pre><code class="language-text">Error: building config: cannot convert string to list(capsule)
+</code></pre>
+<p><strong>Means:</strong> A type mismatch between what you provided and what the component expects.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li><code>forward_to</code> given a bare receiver instead of a list: <code>forward_to = prometheus.remote_write.default.receiver</code> instead of <code>forward_to = [prometheus.remote_write.default.receiver]</code></li>
+<li>Passing a string where a number is expected, or vice versa</li>
+<li>Passing a map where a list is expected</li>
+</ul>
+<p><strong>Fix:</strong> Check the expected type in the component documentation. The most common case is the missing brackets on <code>forward_to</code>:</p>
+<pre><code class="language-alloy">// WRONG -- bare receiver, not a list
+forward_to = prometheus.remote_write.default.receiver
+
+// RIGHT -- wrapped in a list
+forward_to = [prometheus.remote_write.default.receiver]
+</code></pre>
+<hr />
+<h3 id="dependency-cycle-detected"><a class="header" href="#dependency-cycle-detected">"dependency cycle detected"</a></h3>
+<pre><code class="language-text">Error: building config: dependency cycle detected: prometheus.relabel.a -&gt; prometheus.relabel.b -&gt; prometheus.relabel.a
+</code></pre>
+<p><strong>Means:</strong> Two or more components reference each other in a loop, which is not allowed in a DAG.</p>
+<p><strong>Common cause:</strong> A wiring mistake where component A forwards to B and B forwards back to A (directly or through intermediate components).</p>
+<p><strong>Fix:</strong> Trace the cycle shown in the error message. One of the <code>forward_to</code> references is wrong. Draw out your intended pipeline and fix the reference that creates the loop.</p>
+<pre><code class="language-alloy">// WRONG -- creates a cycle
+prometheus.relabel "a" {
+  forward_to = [prometheus.relabel.b.receiver]
+}
+prometheus.relabel "b" {
+  forward_to = [prometheus.relabel.a.receiver]  // cycle!
+}
+
+// RIGHT -- linear chain
+prometheus.relabel "a" {
+  forward_to = [prometheus.relabel.b.receiver]
+}
+prometheus.relabel "b" {
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+</code></pre>
+<hr />
+<h3 id="component-x-does-not-exist-or-is-out-of-scope"><a class="header" href="#component-x-does-not-exist-or-is-out-of-scope">"component X does not exist or is out of scope"</a></h3>
+<pre><code class="language-text">Error: building config: component "prometheus.remote_write.metrics" does not exist or is out of scope
+</code></pre>
+<p><strong>Means:</strong> You referenced a component that Alloy cannot find.</p>
+<p><strong>Common causes:</strong></p>
+<ol>
+<li><strong>Typo in the component reference.</strong> The label in the reference does not match the label in the block definition. Check for plurals (<code>default</code> vs <code>defaults</code>), underscores vs no underscores, and similar near-misses.</li>
+<li><strong>Wrong export name.</strong> You wrote <code>.output</code> when the component exports <code>.receiver</code>, or vice versa.</li>
+<li><strong>Module scope.</strong> The component you are referencing is defined inside a module, and components outside the module cannot see it. This is the "sealed module" problem -- see <a href="../ch05-fleet-management/sealed-module-gotcha.html">The Sealed-Module Gotcha</a>.</li>
+<li><strong>The component block does not exist.</strong> You deleted it, commented it out, or never defined it.</li>
+</ol>
+<p><strong>Fix:</strong> Compare the reference in the error to your actual component definitions. The reference format is <code>component.type.label.export</code>:</p>
+<pre><code class="language-text">prometheus.remote_write.metrics_service.receiver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+component.type         .label           .export
+</code></pre>
+<p>Check that each part matches exactly.</p>
+<hr />
+<h3 id="unrecognized-attribute-x"><a class="header" href="#unrecognized-attribute-x">"unrecognized attribute "X""</a></h3>
+<pre><code class="language-text">Error: building config: unrecognized attribute "forward_to" for otelcol.processor.batch
+</code></pre>
+<p><strong>Means:</strong> You used an attribute name that the component does not accept.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Using <code>forward_to</code> at the top level of an <code>otelcol.*</code> component (it goes inside the <code>output</code> block)</li>
+<li>Typo in an attribute name (<code>scrape_intervl</code> instead of <code>scrape_interval</code>)</li>
+<li>Using an attribute from a different component type or a different version of Alloy</li>
+</ul>
+<p><strong>Fix:</strong> Check the component's documentation for the correct attribute names. For <code>otelcol.*</code> components, remember that wiring goes in the <code>output</code> block:</p>
+<pre><code class="language-alloy">// WRONG
+otelcol.processor.batch "default" {
+  forward_to = [otelcol.exporter.otlp.default.input]
+}
+
+// RIGHT
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.otlp.default.input]
+    logs    = [otelcol.exporter.otlp.default.input]
+    traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+</code></pre>
+<h2 id="runtime-errors"><a class="header" href="#runtime-errors">Runtime Errors</a></h2>
+<p>These errors do not prevent Alloy from starting. Instead, they appear in the logs and in the web UI after the pipeline is running.</p>
+<h3 id="401-unauthorized--403-forbidden"><a class="header" href="#401-unauthorized--403-forbidden">401 Unauthorized / 403 Forbidden</a></h3>
+<pre><code class="language-text">level=error msg="failed to send batch" err="server returned HTTP status 401 Unauthorized"
+</code></pre>
+<p><strong>Means:</strong> Authentication failed when sending data to the remote endpoint.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li><code>sys.env("GCLOUD_RW_API_KEY")</code> returned an empty string because the environment variable is not set</li>
+<li>The API key has been rotated or revoked</li>
+<li>The username does not match the stack (wrong <code>GRAFANA_METRICS_USERNAME</code> value)</li>
+<li>The token does not have the required scope (e.g., missing <code>metrics:write</code> permission)</li>
+</ul>
+<p><strong>Fix:</strong></p>
+<ol>
+<li>Verify the env var is set: <code>echo $GCLOUD_RW_API_KEY</code> (should not be empty)</li>
+<li>Verify the env var is visible to the Alloy process. On Linux with systemd, the variable must be in the environment file (typically <code>/etc/default/alloy</code>)</li>
+<li>Verify the API key is valid in Grafana Cloud under Access Policies</li>
+<li>Restart Alloy after fixing (<code>systemctl restart alloy</code>)</li>
+</ol>
+<hr />
+<h3 id="connection-refused--dial-error"><a class="header" href="#connection-refused--dial-error">Connection Refused / Dial Error</a></h3>
+<pre><code class="language-text">level=error msg="failed to send batch" err="Post \"https://...\": dial tcp: lookup prometheus-prod-13... no such host"
+</code></pre>
+<p><strong>Means:</strong> Alloy cannot reach the remote endpoint.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li><code>sys.env("GRAFANA_METRICS_URL")</code> is empty or malformed</li>
+<li>DNS resolution failure (network/firewall issue)</li>
+<li>The endpoint is down or unreachable from this host</li>
+<li>Proxy settings not configured</li>
+</ul>
+<p><strong>Fix:</strong> Test connectivity from the host: <code>curl -v &lt;the_url&gt;</code>. Fix the URL, DNS, or firewall as needed.</p>
+<hr />
+<h3 id="component-health-unhealthy--degraded"><a class="header" href="#component-health-unhealthy--degraded">Component Health: Unhealthy / Degraded</a></h3>
+<p>In the web UI (<code>http://localhost:12345</code>), components show color-coded health:</p>
+<div class="table-wrapper"><table><thead><tr><th>Color</th><th>Status</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Green</td><td>Healthy</td><td>Working normally</td></tr>
+<tr><td>Yellow</td><td>Warning/Degraded</td><td>Partially working, may recover</td></tr>
+<tr><td>Red</td><td>Unhealthy</td><td>Failed, needs attention</td></tr>
+<tr><td>Gray</td><td>Unknown</td><td>Not yet evaluated or not applicable</td></tr>
+</tbody></table>
+</div>
+<p>Click on any unhealthy component to see the detailed health message. The message usually contains the actual error (connection refused, 401, invalid config value, etc.).</p>
+<hr />
+<h3 id="context-deadline-exceeded"><a class="header" href="#context-deadline-exceeded">"context deadline exceeded"</a></h3>
+<pre><code class="language-text">level=warn msg="scrape failed" err="context deadline exceeded"
+</code></pre>
+<p><strong>Means:</strong> A scrape or request timed out.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>The scrape target is too slow to respond within the timeout</li>
+<li><code>scrape_timeout</code> is shorter than the target needs</li>
+<li>Network latency between Alloy and the target</li>
+</ul>
+<p><strong>Fix:</strong> Increase the timeout or investigate why the target is slow:</p>
+<pre><code class="language-alloy">prometheus.scrape "slow_app" {
+  targets         = [{"__address__" = "slow-app:8080"}]
+  forward_to      = [prometheus.remote_write.default.receiver]
+  scrape_interval = "60s"
+  scrape_timeout  = "30s"   // default is 10s, increase if needed
+}
+</code></pre>
+<hr />
+<h3 id="too-many-open-files"><a class="header" href="#too-many-open-files">"too many open files"</a></h3>
+<pre><code class="language-text">level=error msg="accept: too many open files"
+</code></pre>
+<p><strong>Means:</strong> The Alloy process hit the OS file descriptor limit.</p>
+<p><strong>Common cause:</strong> Large deployments with many scrape targets, many log tails, or many concurrent connections can exhaust the default limit.</p>
+<p><strong>Fix:</strong> Increase the file descriptor limit in the systemd unit:</p>
+<pre><code class="language-ini"># /etc/systemd/system/alloy.service.d/override.conf
+[Service]
+LimitNOFILE=65536
+</code></pre>
+<p>Then reload and restart:</p>
+<pre><code class="language-bash">systemctl daemon-reload
+systemctl restart alloy
+</code></pre>
+<h2 id="using-alloy-validate"><a class="header" href="#using-alloy-validate">Using alloy validate</a></h2>
+<p>Before deploying a config change, validate it locally:</p>
+<pre><code class="language-bash"># Validate syntax and references
+alloy validate config.alloy
+
+# Validate with stability level (if using experimental components)
+alloy validate --stability.level=experimental config.alloy
+</code></pre>
+<p><code>alloy validate</code> catches all parse errors and reference errors (typos, missing components, type mismatches, cycles). It does not catch runtime errors (bad credentials, unreachable endpoints) because those require an actual running system.</p>
+<p><strong>Use it in CI/CD.</strong> Add <code>alloy validate</code> to your deployment pipeline. It catches the majority of config mistakes before they reach production.</p>
+<h2 id="using-alloy-fmt"><a class="header" href="#using-alloy-fmt">Using alloy fmt</a></h2>
+<p>Alloy includes a formatter that standardizes your config file style:</p>
+<pre><code class="language-bash"># Format a file in place
+alloy fmt config.alloy
+
+# Format and write to stdout (for checking)
+alloy fmt -w=false config.alloy
+</code></pre>
+<p><code>alloy fmt</code> does not catch errors -- it only reformats valid configs. But using it regularly helps keep configs readable and makes diffs easier to review.</p>
+<h2 id="quick-reference-table"><a class="header" href="#quick-reference-table">Quick Reference Table</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Error Message</th><th>Category</th><th>Usual Fix</th></tr></thead><tbody>
+<tr><td><code>expected block label, got "#"</code></td><td>Parse</td><td>Use <code>//</code> not <code>#</code> for comments</td></tr>
+<tr><td><code>expected "," or "]"</code></td><td>Parse</td><td>Add trailing comma in list</td></tr>
+<tr><td><code>expected ";", got "s"</code></td><td>Parse</td><td>Quote durations: <code>"60s"</code></td></tr>
+<tr><td><code>expected block, got attribute</code></td><td>Parse</td><td>Remove <code>=</code> from nested block</td></tr>
+<tr><td><code>X is not a valid component</code></td><td>Parse</td><td>Check spelling, version, or stability level</td></tr>
+<tr><td><code>label X is already in use</code></td><td>Parse</td><td>Use unique labels per component type</td></tr>
+<tr><td><code>cannot convert X to Y</code></td><td>Type</td><td>Check expected type, usually missing <code>[ ]</code> on <code>forward_to</code></td></tr>
+<tr><td><code>dependency cycle detected</code></td><td>Wiring</td><td>Trace the cycle, fix the wrong <code>forward_to</code></td></tr>
+<tr><td><code>does not exist or is out of scope</code></td><td>Wiring</td><td>Fix typo, check label, check module scope</td></tr>
+<tr><td><code>unrecognized attribute</code></td><td>Parse</td><td>Check docs for correct attribute name</td></tr>
+<tr><td><code>401 Unauthorized</code></td><td>Runtime</td><td>Verify env vars, API key, and permissions</td></tr>
+<tr><td><code>connection refused</code> / <code>no such host</code></td><td>Runtime</td><td>Check URL, DNS, and firewall</td></tr>
+<tr><td><code>context deadline exceeded</code></td><td>Runtime</td><td>Increase timeout or fix slow target</td></tr>
+<tr><td><code>too many open files</code></td><td>Runtime</td><td>Increase <code>LimitNOFILE</code> in systemd</td></tr>
+</tbody></table>
+</div>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>Use <code>alloy validate</code> to catch config errors before deployment</li>
+<li>Parse errors (bad syntax) prevent startup -- the error message points to the line</li>
+<li>Wiring errors (bad references) prevent startup -- check component names and labels carefully</li>
+<li>Runtime errors (auth, connectivity) do not prevent startup -- check the web UI and logs</li>
+<li>The web UI at port 12345 shows component health and is the fastest way to diagnose runtime issues</li>
+<li>When in doubt, the error reference table above covers the vast majority of errors you will encounter</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch01-config-language/component-wiring.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch02-cardinality-control/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch01-config-language/component-wiring.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch02-cardinality-control/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

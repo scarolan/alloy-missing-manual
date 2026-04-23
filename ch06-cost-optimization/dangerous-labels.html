@@ -1,0 +1,509 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Dangerous Label Patterns - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch06-cost-optimization/dangerous-labels.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="dangerous-label-patterns"><a class="header" href="#dangerous-label-patterns">Dangerous Label Patterns</a></h1>
+<p>Some labels are cost bombs. A single label with unbounded or high-cardinality values can multiply your series count by 10x, 100x, or more. This page catalogs the patterns that repeatedly cause series explosion in real deployments, explains the math behind each one, and shows how to detect and fix them.</p>
+<p>Every pattern here has been encountered in production environments. If you see any of these in your metrics, you are paying more than you need to.</p>
+<h2 id="the-fundamental-rule"><a class="header" href="#the-fundamental-rule">The Fundamental Rule</a></h2>
+<p>Series count is multiplicative across label dimensions. Adding one label with N unique values to a metric that has M existing series produces M x N total series.</p>
+<pre><code class="language-text">Before: 100 series
+Add a label with 10 values: 100 x 10 = 1,000 series
+Add another label with 50 values: 1,000 x 50 = 50,000 series
+</code></pre>
+<p>A label is "dangerous" when its value count is high, unbounded, or growing over time. The following catalog is organized from most commonly encountered to most subtle.</p>
+<h2 id="container-and-pod-ids"><a class="header" href="#container-and-pod-ids">Container and Pod IDs</a></h2>
+<p><strong>The pattern:</strong> Kubernetes metrics include labels like <code>container_id</code>, <code>pod_uid</code>, or Docker's <code>container_id</code> (the full SHA256 hash). These are unique per container instance and change on every pod restart or deployment.</p>
+<p><strong>Why it is dangerous:</strong></p>
+<pre><code class="language-text">50 pods x 20 metrics per pod = 1,000 series (with pod name only)
+50 pods x 20 metrics x container_id = still 1,000 series (1:1 with pod)
+  ...but every deployment creates 50 NEW container_ids
+  = 1,000 stale series + 1,000 new series until staleness expires
+</code></pre>
+<p>The label does not increase the instantaneous series count (it is 1:1 with the pod), but it causes high churn. Your active series count oscillates as old IDs go stale and new ones appear. Worse, if staleness windows overlap, you temporarily double your series for those metrics.</p>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count(group by (container_id) (container_cpu_usage_seconds_total))
+</code></pre>
+<p>If this returns hundreds or thousands, and you know you have far fewer running containers, you have stale series from old container IDs.</p>
+<p><strong>How to fix:</strong></p>
+<pre><code class="language-alloy">prometheus.relabel "drop_container_ids" {
+    forward_to = [prometheus.remote_write.default.receiver]
+
+    rule {
+        action = "labeldrop"
+        regex  = "container_id|pod_uid"
+    }
+}
+</code></pre>
+<p>Keep <code>pod</code> (the human-readable name) and <code>container</code> (the container name within the pod). Drop <code>container_id</code> and <code>pod_uid</code>. You lose nothing useful -- nobody writes PromQL queries against raw SHA256 container IDs.</p>
+<h2 id="request-paths-and-urls"><a class="header" href="#request-paths-and-urls">Request Paths and URLs</a></h2>
+<p><strong>The pattern:</strong> Application metrics with an <code>endpoint</code>, <code>path</code>, <code>url</code>, or <code>uri</code> label that captures the full request path, including path parameters.</p>
+<p><strong>Why it is dangerous:</strong></p>
+<pre><code class="language-text">http_request_duration_seconds with path="/api/users/12345"
+http_request_duration_seconds with path="/api/users/67890"
+http_request_duration_seconds with path="/api/users/99999"
+...
+</code></pre>
+<p>Each unique user ID in the path creates a new series. For a service handling 10,000 unique paths per day, this creates 10,000 series per metric -- multiplied by however many label dimensions the metric has (method, status code, etc.):</p>
+<pre><code class="language-text">10,000 paths x 5 methods x 10 status codes = 500,000 series
+</code></pre>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count(group by (path) (http_request_duration_seconds_bucket))
+</code></pre>
+<p>If the count is in the thousands and growing, you have path cardinality explosion.</p>
+<p><strong>How to fix:</strong> Normalize paths before they become labels. In Alloy, use <code>otelcol.processor.transform</code> for OpenTelemetry data, or relabel rules for Prometheus metrics:</p>
+<pre><code class="language-alloy">prometheus.relabel "normalize_paths" {
+    forward_to = [prometheus.remote_write.default.receiver]
+
+    // Replace numeric path segments with a placeholder
+    rule {
+        source_labels = ["path"]
+        regex         = "(/api/users/)[0-9]+"
+        target_label  = "path"
+        replacement   = "${1}:id"
+    }
+
+    // Replace UUIDs in paths
+    rule {
+        source_labels = ["path"]
+        regex         = "(/[^/]*/)([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(.*)"
+        target_label  = "path"
+        replacement   = "${1}:uuid${3}"
+    }
+}
+</code></pre>
+<p>The best fix is to normalize paths in the application's instrumentation library before they reach Alloy at all.</p>
+<h2 id="ip-addresses"><a class="header" href="#ip-addresses">IP Addresses</a></h2>
+<p><strong>The pattern:</strong> Labels like <code>remote_addr</code>, <code>client_ip</code>, <code>source_ip</code>, or <code>peer</code> that capture the IP address of a client or peer.</p>
+<p><strong>Why it is dangerous:</strong></p>
+<pre><code class="language-text">Unique IPs hitting an API gateway: 50,000/day
+http_requests_total{client_ip="1.2.3.4", method="GET", status="200"} -- series 1
+http_requests_total{client_ip="5.6.7.8", method="GET", status="200"} -- series 2
+... x 50,000
+</code></pre>
+<p>IP addresses are semi-bounded (there are only ~4 billion IPv4 addresses) but in practice, a busy service sees thousands to hundreds of thousands of unique IPs. Each one creates series across every metric that carries the label.</p>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count(group by (client_ip) ({__name__=~"http_.*"}))
+</code></pre>
+<p><strong>How to fix:</strong> Drop the label entirely. If you need per-IP analysis, use logs, not metrics. Metrics are for aggregates; logs are for individual events.</p>
+<pre><code class="language-alloy">prometheus.relabel "drop_ip_labels" {
+    forward_to = [prometheus.remote_write.default.receiver]
+
+    rule {
+        action = "labeldrop"
+        regex  = "remote_addr|client_ip|source_ip|peer_address"
+    }
+}
+</code></pre>
+<h2 id="timestamps-in-labels"><a class="header" href="#timestamps-in-labels">Timestamps in Labels</a></h2>
+<p><strong>The pattern:</strong> Labels that embed a timestamp, such as <code>start_time</code>, <code>created_at</code>, or <code>last_seen</code>.</p>
+<p><strong>Why it is dangerous:</strong> By definition, every timestamp value is unique. A label that captures a timestamp generates a new series for every event, every pod start, or every request. This is infinite growth.</p>
+<pre><code class="language-text">pod_start_time{pod="web", start_time="1681234567"} -- series 1 (Monday's deploy)
+pod_start_time{pod="web", start_time="1681320967"} -- series 2 (Tuesday's deploy)
+pod_start_time{pod="web", start_time="1681407367"} -- series 3 (Wednesday's deploy)
+</code></pre>
+<p><strong>How to detect:</strong> Look for labels whose value count grows linearly with time:</p>
+<pre><code class="language-promql">count(group by (start_time) (some_metric))
+</code></pre>
+<p>If this count keeps growing, the label is time-based.</p>
+<p><strong>How to fix:</strong></p>
+<pre><code class="language-alloy">prometheus.relabel "drop_timestamp_labels" {
+    forward_to = [prometheus.remote_write.default.receiver]
+
+    rule {
+        action = "labeldrop"
+        regex  = "start_time|created_at|last_seen|timestamp"
+    }
+}
+</code></pre>
+<p>Timestamps belong as sample values, not label values. If you need to know when something happened, use a gauge metric whose value is the timestamp, not a label.</p>
+<h2 id="unbounded-enums-error-messages"><a class="header" href="#unbounded-enums-error-messages">Unbounded Enums: Error Messages</a></h2>
+<p><strong>The pattern:</strong> Labels like <code>error</code>, <code>message</code>, <code>reason</code>, or <code>description</code> that capture free-text error messages.</p>
+<p><strong>Why it is dangerous:</strong> Error messages have subtle variations that create unique series:</p>
+<pre><code class="language-text">request_errors_total{error="connection refused: 10.0.1.5:8080"}
+request_errors_total{error="connection refused: 10.0.1.6:8080"}
+request_errors_total{error="connection refused: 10.0.1.7:9090"}
+request_errors_total{error="timeout after 30.001s"}
+request_errors_total{error="timeout after 30.002s"}
+</code></pre>
+<p>Each unique string is a separate series. IP addresses, port numbers, and timing values embedded in error messages create unbounded cardinality.</p>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count(group by (error) (request_errors_total)) &gt; 100
+</code></pre>
+<p>If you have more than a handful of unique error values, the label is probably capturing free-text messages.</p>
+<p><strong>How to fix:</strong> Normalize the error label to a fixed set of categories:</p>
+<pre><code class="language-alloy">prometheus.relabel "normalize_errors" {
+    forward_to = [prometheus.remote_write.default.receiver]
+
+    rule {
+        source_labels = ["error"]
+        regex         = "connection refused.*"
+        target_label  = "error"
+        replacement   = "connection_refused"
+    }
+    rule {
+        source_labels = ["error"]
+        regex         = "timeout.*"
+        target_label  = "error"
+        replacement   = "timeout"
+    }
+}
+</code></pre>
+<p>Better yet, fix the instrumentation to emit error categories (<code>connection_refused</code>, <code>timeout</code>, <code>auth_failure</code>) instead of raw error messages.</p>
+<h2 id="high-cpu-count-machines"><a class="header" href="#high-cpu-count-machines">High-CPU-Count Machines</a></h2>
+<p><strong>The pattern:</strong> Per-CPU metrics on hosts with 64, 96, or 128 cores. This is not a "bad label" -- it is a legitimate label (<code>cpu</code>) with a legitimately high value count.</p>
+<p><strong>Why it is dangerous:</strong></p>
+<pre><code class="language-text">node_cpu_seconds_total on a 128-core host:
+128 cores x 8 modes = 1,024 series from one metric
+
+windows_cpu_time_total on a 128-core host:
+128 cores x 5 modes = 640 series from one metric
+</code></pre>
+<p>Add other per-CPU metrics (<code>node_cpu_scaling_frequency_hertz</code>, <code>node_cpu_guest_seconds_total</code>, <code>node_schedstat_*</code>) and a single 128-core host can produce 2,000+ series just from CPU metrics.</p>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count by (instance) (node_cpu_seconds_total)
+</code></pre>
+<p>Any host returning more than 200 is worth investigating.</p>
+<p><strong>How to fix:</strong> For most environments, per-CPU data is valuable and worth the cost. But if you have a large fleet of high-core machines and do not need per-CPU breakdown, aggregate:</p>
+<pre><code class="language-alloy">prometheus.relabel "aggregate_cpu" {
+    forward_to = [prometheus.remote_write.default.receiver]
+
+    // Drop the cpu label, keeping only mode
+    // This aggregates all cores into one series per mode
+    rule {
+        action = "labeldrop"
+        regex  = "cpu"
+    }
+}
+</code></pre>
+<p>This reduces 1,024 series (128 cores x 8 modes) to 8 series (8 modes). The tradeoff: you lose the ability to identify hot individual CPUs.</p>
+<p>A middle ground: keep per-CPU data for a sample of hosts (one per hardware profile) and aggregate the rest.</p>
+<h2 id="windows-service-explosion"><a class="header" href="#windows-service-explosion">Windows Service Explosion</a></h2>
+<p><strong>The pattern:</strong> The Windows service collector emits metrics for every installed service. A typical Windows server has 150-250 services.</p>
+<p><strong>Why it is dangerous:</strong></p>
+<pre><code class="language-text">200 services x windows_service_state (8 state values each) = 1,600 series
+200 services x windows_service_start_mode = 200 series
+200 services x windows_service_info = 200 series
+200 services x windows_service_status = 200 series
+Total: ~2,600 series from services alone
+</code></pre>
+<p>On the benchmark Windows server, the service collector produced 2,672 of 2,909 total series -- 92% of all metrics from a single collector.</p>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count by (__name__) ({__name__=~"windows_service_.*"})
+</code></pre>
+<p><strong>How to fix:</strong> Use the service filter from <a href="../ch02-cardinality-control/layer5-service-filter-windows.html">Chapter 2, Layer 5</a>. Monitor only the services you actually care about:</p>
+<pre><code class="language-alloy">prometheus.exporter.windows "default" {
+    service {
+        where_clause = "Name IN ('W32Time','WinRM','EventLog','Spooler','LanmanServer','LanmanWorkstation','TermService','MSSQLSERVER','WinDefend','Dhcp','Dnscache','W3SVC')"
+    }
+}
+</code></pre>
+<p>This reduces 2,600+ series to roughly 50-70 (12 services x 4-5 series each).</p>
+<h2 id="alloy-self-monitoring-metrics"><a class="header" href="#alloy-self-monitoring-metrics">Alloy Self-Monitoring Metrics</a></h2>
+<p><strong>The pattern:</strong> Alloy exposes detailed internal metrics at its HTTP endpoint (<code>:12345/metrics</code>). If you scrape this endpoint and ship everything, you pay for hundreds of series about Alloy's own internals.</p>
+<p><strong>Why it is dangerous:</strong> Alloy generates metrics per component, per pipeline stage, and per target. A moderately complex pipeline with 20+ components can produce 500-800 self-monitoring series. Most of these are never looked at.</p>
+<p><strong>How to detect:</strong></p>
+<pre><code class="language-promql">count({job="alloy"})
+</code></pre>
+<p>Or check the series count at the endpoint directly:</p>
+<pre><code class="language-bash">curl -s http://localhost:12345/metrics | grep -v '^#' | wc -l
+</code></pre>
+<p><strong>How to fix:</strong> Either do not scrape Alloy's self-monitoring endpoint at all (the recommended default for most deployments), or apply a strict allow-list as shown in <a href="top-n-series.html">The Top-N Series Approach</a>.</p>
+<h2 id="log-derived-metrics-high-cardinality-labels-from-log-lines"><a class="header" href="#log-derived-metrics-high-cardinality-labels-from-log-lines">Log-Derived Metrics (High-Cardinality Labels from Log Lines)</a></h2>
+<p><strong>The pattern:</strong> Using Alloy's <code>loki.process</code> with <code>stage.metrics</code> to derive Prometheus metrics from log lines. The extracted labels inherit whatever cardinality the log fields have.</p>
+<p><strong>Why it is dangerous:</strong> Log fields are often high-cardinality by nature. Extracting a <code>user_id</code>, <code>request_id</code>, <code>trace_id</code>, or <code>url</code> from a log line and promoting it to a metric label creates exactly the same explosion as having those labels in application metrics.</p>
+<pre><code class="language-text">log_line_errors_total{user_id="user_12345"} -- series per user
+log_line_errors_total{user_id="user_67890"} -- another series per user
+... x 100,000 users = 100,000 series
+</code></pre>
+<p><strong>How to detect:</strong> Check the series count for any metric generated by <code>stage.metrics</code>:</p>
+<pre><code class="language-promql">count(group by (__name__) ({__name__=~"log_line_.*"}))
+</code></pre>
+<p><strong>How to fix:</strong> When deriving metrics from logs, be extremely selective about which labels to include. Extract only bounded, categorical fields:</p>
+<pre><code class="language-alloy">loki.process "derive_metrics" {
+    forward_to = [loki.write.default.receiver]
+
+    // Extract the status code (bounded: ~5 values)
+    stage.regex {
+        expression = "status=(?P&lt;status&gt;\\d{3})"
+    }
+
+    // Create a counter metric with only the status label
+    stage.metrics {
+        metric.counter {
+            name         = "log_http_requests_total"
+            source       = "status"
+            description  = "Total HTTP requests by status code"
+            match_all    = true
+            action       = "inc"
+        }
+    }
+}
+</code></pre>
+<p>Do not extract <code>user_id</code>, <code>request_id</code>, <code>ip</code>, <code>path</code>, or any other high-cardinality field into metric labels. If you need per-user or per-request analysis, query the logs directly.</p>
+<h2 id="quick-reference-the-dangerous-labels-catalog"><a class="header" href="#quick-reference-the-dangerous-labels-catalog">Quick Reference: The Dangerous Labels Catalog</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Label Pattern</th><th>Typical Cardinality</th><th>Series Impact</th><th>Fix</th></tr></thead><tbody>
+<tr><td><code>container_id</code>, <code>pod_uid</code></td><td>Hundreds, churning</td><td>Churn + stale overlap</td><td><code>labeldrop</code></td></tr>
+<tr><td><code>path</code>, <code>url</code>, <code>endpoint</code> (with params)</td><td>Thousands-millions</td><td>Unbounded growth</td><td>Normalize or drop</td></tr>
+<tr><td><code>client_ip</code>, <code>remote_addr</code></td><td>Thousands-millions</td><td>Unbounded growth</td><td>Drop; use logs for per-IP</td></tr>
+<tr><td><code>start_time</code>, <code>created_at</code></td><td>Infinite (time-based)</td><td>Linear growth</td><td>Drop; use gauge values</td></tr>
+<tr><td><code>error</code>, <code>message</code> (free text)</td><td>Hundreds-thousands</td><td>Unbounded growth</td><td>Normalize to categories</td></tr>
+<tr><td><code>cpu</code> on 128-core hosts</td><td>128</td><td>x128 per CPU metric</td><td>Aggregate if per-CPU not needed</td></tr>
+<tr><td>Windows <code>service</code> (unfiltered)</td><td>150-250</td><td>x150-250 per service metric</td><td>Filter to 10-15 services</td></tr>
+<tr><td>Alloy internal metrics</td><td>200-800</td><td>Per-component growth</td><td>Do not scrape, or strict allow-list</td></tr>
+<tr><td>Log-derived labels (<code>user_id</code>, etc.)</td><td>Unbounded</td><td>Mirrors log cardinality</td><td>Extract only bounded fields</td></tr>
+</tbody></table>
+</div>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<p><strong>Assuming <code>labeldrop</code> is always safe.</strong> Dropping a label can cause previously distinct series to collide. If two series differ only by the label you drop, Prometheus/Mimir will reject the duplicate. Always check that the remaining labels still produce unique combinations:</p>
+<pre><code class="language-promql">// Before dropping label "foo", check for collisions:
+count by (__name__, remaining_label_1, remaining_label_2) (your_metric) &gt; 1
+</code></pre>
+<p>If any result returns a count greater than 1, dropping the label will cause collisions.</p>
+<p><strong>Fixing label cardinality at the backend instead of the source.</strong> Recording rules and aggregation at the backend still require storing the high-cardinality series first. You pay for ingestion and storage before the aggregation happens. Fix it at the source in Alloy's relabel pipeline, before the data leaves the host.</p>
+<p><strong>Adding a "just in case" label to custom metrics.</strong> Every label you add multiplies series count. Before adding a label to your application's instrumentation, ask: "Will a dashboard or alert actually filter or group by this label?" If the answer is no, do not add it.</p>
+<p><strong>Not monitoring label cardinality over time.</strong> A label that has 5 values today might have 500 tomorrow if a new code path starts emitting new values. Set up a recurring check:</p>
+<pre><code class="language-promql">count(group by (your_suspicious_label) (your_metric)) &gt; 100
+</code></pre>
+<p>Alert on this so you catch label explosion early.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>Labels with high, unbounded, or growing value counts are the primary cause of series explosion</li>
+<li>Container IDs, request paths, IP addresses, timestamps, and free-text error messages are the most common offenders</li>
+<li>Detection is straightforward: <code>count(group by (label) (metric))</code> tells you the cardinality of any label</li>
+<li>Fixes: <code>labeldrop</code> for unnecessary labels, regex normalization for path/error labels, service filters for Windows, aggregation for high-core-count CPU metrics</li>
+<li>Fix at the source (in Alloy) rather than at the backend to avoid paying for ingestion of data you will discard</li>
+<li>Always verify that dropping a label does not create series collisions before applying the change</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch06-cost-optimization/adaptive-metrics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch06-cost-optimization/log-filtering.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch06-cost-optimization/adaptive-metrics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch06-cost-optimization/log-filtering.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

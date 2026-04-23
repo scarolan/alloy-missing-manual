@@ -1,0 +1,493 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gotchas and Traps - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch01-config-language/gotchas-and-traps.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gotchas-and-traps"><a class="header" href="#gotchas-and-traps">Gotchas and Traps</a></h1>
+<p>Every Alloy gotcha listed here has bitten real users in real deployments. This is not a theoretical list -- it is a field guide to the mistakes you will make and the error messages you will see when you make them.</p>
+<h2 id="it-looks-like-hcl-but-it-is-not-hcl"><a class="header" href="#it-looks-like-hcl-but-it-is-not-hcl">It Looks Like HCL but It Is Not HCL</a></h2>
+<p>Alloy's config syntax was inspired by HCL2 (Terraform's language). The curly braces, the <code>key = value</code> syntax, and the block structure look familiar. But Alloy's language is its own thing, and the differences will bite you if you assume HCL behavior.</p>
+<div class="table-wrapper"><table><thead><tr><th>Feature</th><th>HCL2 (Terraform)</th><th>Alloy</th></tr></thead><tbody>
+<tr><td>Locals block</td><td><code>locals { }</code></td><td>Does not exist</td></tr>
+<tr><td>Variable interpolation</td><td><code>"${var.name}"</code></td><td>Not supported. Use string concatenation: <code>"prefix" + variable</code></td></tr>
+<tr><td>Conditional blocks</td><td><code>count</code>, <code>for_each</code></td><td>Does not exist</td></tr>
+<tr><td>Loops</td><td><code>for</code> expressions</td><td>Does not exist</td></tr>
+<tr><td>Dynamic blocks</td><td><code>dynamic</code> block</td><td>Does not exist</td></tr>
+<tr><td>Module variables</td><td><code>variable</code> blocks</td><td>Module arguments use <code>argument</code> blocks</td></tr>
+<tr><td>Comments</td><td><code>#</code> and <code>//</code></td><td><code>//</code> and <code>/* */</code> only</td></tr>
+</tbody></table>
+</div>
+<p>If you find yourself reaching for HCL features, stop. Alloy configs are intentionally simpler. There are no loops, no conditionals at the block level, and no variable system. Values are either hardcoded, read from <code>sys.env()</code>, or passed through module arguments.</p>
+<h2 id="gotcha-the--comment-trap"><a class="header" href="#gotcha-the--comment-trap">Gotcha: The <code>#</code> Comment Trap</a></h2>
+<p><strong>Mistake:</strong> Using <code>#</code> for comments, especially if you are coming from YAML or Prometheus config.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: /etc/alloy/config.alloy:3:1: expected block label, got "#"
+</code></pre>
+<p><strong>Fix:</strong> Replace <code>#</code> with <code>//</code> for single-line comments, or <code>/* */</code> for multi-line.</p>
+<pre><code class="language-alloy"># This is NOT a comment -- it will cause a parse error
+
+// This is a comment
+/* This is also a comment */
+</code></pre>
+<h2 id="gotcha-trailing-commas-in-lists-and-maps"><a class="header" href="#gotcha-trailing-commas-in-lists-and-maps">Gotcha: Trailing Commas in Lists and Maps</a></h2>
+<p><strong>Mistake:</strong> Omitting the trailing comma, or getting confused about when commas are required.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: expected "," or "]", got newline
+</code></pre>
+<p><strong>Fix:</strong> In lists and maps, every element must be followed by a comma OR be on the same line as the closing bracket. The safe habit is to always include a trailing comma:</p>
+<pre><code class="language-alloy">// CORRECT -- trailing comma on last element
+forward_to = [
+  prometheus.relabel.filter.receiver,
+  prometheus.remote_write.default.receiver,
+]
+
+// CORRECT -- single line, no trailing comma needed
+forward_to = [prometheus.remote_write.default.receiver]
+
+// WRONG -- missing comma after last element on its own line
+forward_to = [
+  prometheus.remote_write.default.receiver
+]
+</code></pre>
+<p>The trailing comma rule applies to maps too:</p>
+<pre><code class="language-alloy">// CORRECT
+labels = {
+  "env"  = "production",
+  "team" = "platform",
+}
+
+// WRONG -- will fail if elements are on separate lines without trailing comma
+labels = {
+  "env"  = "production",
+  "team" = "platform"
+}
+</code></pre>
+<h2 id="gotcha-duration-strings-must-be-quoted"><a class="header" href="#gotcha-duration-strings-must-be-quoted">Gotcha: Duration Strings Must Be Quoted</a></h2>
+<p><strong>Mistake:</strong> Writing durations as bare values without quotes.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: expected ";", got "s"
+</code></pre>
+<p><strong>Fix:</strong> Durations are strings. They must always be in double quotes:</p>
+<pre><code class="language-alloy">// CORRECT
+scrape_interval = "60s"
+scrape_timeout  = "10s"
+poll_frequency  = "5m"
+
+// WRONG -- these are parse errors
+scrape_interval = 60s
+scrape_timeout  = 10s
+</code></pre>
+<p>This trips up people coming from Prometheus YAML where <code>60s</code> is valid bare syntax.</p>
+<h2 id="gotcha-env-vs-sysenv"><a class="header" href="#gotcha-env-vs-sysenv">Gotcha: env() vs sys.env()</a></h2>
+<p>This one matters a lot, especially if you use Fleet Management.</p>
+<p><strong><code>sys.env()</code></strong> is a runtime function. It reads the environment variable from the host's actual environment when the config is evaluated. It is the function you want in almost every case.</p>
+<p><strong><code>env()</code></strong> was an older function that read environment variables at parse time. It has been deprecated and removed from newer versions. In some older versions, using <code>env()</code> instead of <code>sys.env()</code> could cause different behavior during config reloads.</p>
+<p><strong>The Fleet Management implication:</strong> When Fleet Management pushes a pipeline config to a collector, <code>sys.env()</code> reads from the host's local environment. This is exactly what you want -- the API key lives on the host, not in the pipeline YAML stored in Fleet Management. If you mistakenly hardcode credentials in the pipeline config, they are visible to anyone with Fleet Management access.</p>
+<p><strong>Fix:</strong> Always use <code>sys.env()</code>. If you see <code>env()</code> in old configs or blog posts, replace it.</p>
+<pre><code class="language-alloy">// CORRECT -- use sys.env()
+password = sys.env("GCLOUD_RW_API_KEY")
+
+// WRONG -- deprecated, do not use
+password = env("GCLOUD_RW_API_KEY")
+</code></pre>
+<h2 id="gotcha-forward_to-needs-brackets-even-for-one-target"><a class="header" href="#gotcha-forward_to-needs-brackets-even-for-one-target">Gotcha: forward_to Needs Brackets Even for One Target</a></h2>
+<p><strong>Mistake:</strong> Passing a single receiver without wrapping it in a list.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: expected type list(capsule), got capsule
+</code></pre>
+<p><strong>Fix:</strong> <code>forward_to</code> always takes a list. Even when you have only one destination, you need the square brackets:</p>
+<pre><code class="language-alloy">// CORRECT
+forward_to = [prometheus.remote_write.default.receiver]
+
+// WRONG -- missing brackets
+forward_to = prometheus.remote_write.default.receiver
+</code></pre>
+<p>This is the most common type error for new users. The brackets are always required.</p>
+<h2 id="gotcha-label-naming-restrictions"><a class="header" href="#gotcha-label-naming-restrictions">Gotcha: Label Naming Restrictions</a></h2>
+<p><strong>Mistake:</strong> Using hyphens, leading numbers, or special characters in component labels.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: expected block label, got "-"
+</code></pre>
+<p><strong>Fix:</strong> Component labels must be valid identifiers: start with a letter or underscore, followed by letters, digits, or underscores. No hyphens.</p>
+<pre><code class="language-alloy">// CORRECT
+prometheus.scrape "my_web_app" { }
+prometheus.scrape "app_v2" { }
+
+// WRONG -- hyphens not allowed
+prometheus.scrape "my-web-app" { }
+
+// WRONG -- cannot start with a number
+prometheus.scrape "2nd_app" { }
+</code></pre>
+<p>If your team uses hyphens in service names (common in Kubernetes), convert them to underscores in your Alloy labels.</p>
+<h2 id="gotcha-duplicate-labels"><a class="header" href="#gotcha-duplicate-labels">Gotcha: Duplicate Labels</a></h2>
+<p><strong>Mistake:</strong> Using the same label for two components of the same type.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: label "default" is already in use for prometheus.remote_write
+</code></pre>
+<p><strong>Fix:</strong> Every component of the same type must have a unique label. You cannot have two <code>prometheus.remote_write "default"</code> blocks. Choose descriptive labels:</p>
+<pre><code class="language-alloy">// CORRECT -- different labels
+prometheus.remote_write "grafana_cloud" {
+  // ...
+}
+prometheus.remote_write "local_mimir" {
+  // ...
+}
+
+// WRONG -- duplicate label for same component type
+prometheus.remote_write "default" {
+  // ...
+}
+prometheus.remote_write "default" {
+  // ...
+}
+</code></pre>
+<p>Two different component types can share a label without conflict. A <code>prometheus.scrape "default"</code> and a <code>prometheus.remote_write "default"</code> are fine together.</p>
+<h2 id="gotcha-block-ordering-does-not-matter"><a class="header" href="#gotcha-block-ordering-does-not-matter">Gotcha: Block Ordering Does Not Matter</a></h2>
+<p><strong>Mistake:</strong> Assuming components must be defined in pipeline order (source first, then processor, then destination).</p>
+<p><strong>Reality:</strong> Alloy builds a directed acyclic graph (DAG) from the component references. It does not care about the order of blocks in the config file. The runtime resolves dependencies regardless of where they appear.</p>
+<pre><code class="language-alloy">// This works fine -- remote_write is defined before scrape
+prometheus.remote_write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+
+prometheus.scrape "node" {
+  targets    = prometheus.exporter.unix.default.targets
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.exporter.unix "default" { }
+</code></pre>
+<p>That said, for readability, most people define components in pipeline order (sources at top, destinations at bottom). It is a convention, not a requirement.</p>
+<h2 id="gotcha-attribute-vs-block-confusion"><a class="header" href="#gotcha-attribute-vs-block-confusion">Gotcha: Attribute vs Block Confusion</a></h2>
+<p><strong>Mistake:</strong> Using <code>=</code> when defining a nested block, or omitting <code>=</code> when setting an attribute.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: expected block, got attribute
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">Error: building config: expected "=", got "{"
+</code></pre>
+<p><strong>Fix:</strong> Remember the rule: attributes use <code>=</code>, blocks do not.</p>
+<pre><code class="language-alloy">// CORRECT -- endpoint is a nested block
+endpoint {
+  url = "https://example.com"
+}
+
+// WRONG -- using = with a block
+endpoint = {
+  url = "https://example.com"
+}
+
+// CORRECT -- url is an attribute
+url = "https://example.com"
+
+// WRONG -- omitting = for an attribute
+url "https://example.com"
+</code></pre>
+<p>When in doubt, check the <a href="https://grafana.com/docs/alloy/latest/reference/components/">component documentation</a>. Arguments listed as "Attributes" use <code>=</code>. Arguments listed as "Blocks" use nested <code>{ }</code>.</p>
+<h2 id="gotcha-the-output-block-trap-in-otelcol-components"><a class="header" href="#gotcha-the-output-block-trap-in-otelcol-components">Gotcha: The output Block Trap in otelcol Components</a></h2>
+<p><strong>Mistake:</strong> Forgetting the <code>output</code> block in OpenTelemetry Collector (<code>otelcol.*</code>) components, or putting <code>forward_to</code> at the wrong level.</p>
+<p><strong>Error you will see:</strong></p>
+<pre><code class="language-text">Error: building config: unrecognized attribute "forward_to"
+</code></pre>
+<p><strong>Fix:</strong> Most <code>otelcol.*</code> processor and receiver components use a nested <code>output</code> block for their <code>forward_to</code> instead of a top-level attribute:</p>
+<pre><code class="language-alloy">// CORRECT -- forward_to inside output block
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.otlp.default.input]
+    logs    = [otelcol.exporter.otlp.default.input]
+    traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+
+// WRONG -- forward_to at the top level
+otelcol.processor.batch "default" {
+  forward_to = [otelcol.exporter.otlp.default.input]
+}
+</code></pre>
+<p>The <code>otelcol.*</code> components also separate their outputs by signal type (<code>metrics</code>, <code>logs</code>, <code>traces</code>), unlike Prometheus or Loki components that have a single <code>forward_to</code>. This is a common surprise when mixing component families.</p>
+<h2 id="gotcha-empty-blocks-are-valid-and-sometimes-required"><a class="header" href="#gotcha-empty-blocks-are-valid-and-sometimes-required">Gotcha: Empty Blocks Are Valid (and Sometimes Required)</a></h2>
+<p><strong>Mistake:</strong> Thinking you can omit a block if it has no configuration.</p>
+<p><strong>Reality:</strong> Some components work with zero configuration but you still must declare the block:</p>
+<pre><code class="language-alloy">// This is valid -- empty block, uses all defaults
+prometheus.exporter.unix "default" { }
+
+// You cannot omit the braces
+// prometheus.exporter.unix "default"   // WRONG -- parse error
+</code></pre>
+<p>An empty block with <code>{ }</code> is the equivalent of "use all defaults." This is common for exporters and some processors.</p>
+<h2 id="gotcha-reload-vs-restart"><a class="header" href="#gotcha-reload-vs-restart">Gotcha: Reload vs Restart</a></h2>
+<p><strong>Mistake:</strong> Changing an environment variable and expecting <code>sys.env()</code> to pick it up on config reload.</p>
+<p><strong>Reality:</strong> A config <strong>reload</strong> (sending SIGHUP or clicking "Reload" in the UI) re-evaluates the config file but does <strong>not</strong> re-read the process environment. If you change an environment variable (like rotating an API key), you must <strong>restart</strong> the Alloy process for <code>sys.env()</code> to see the new value.</p>
+<div class="table-wrapper"><table><thead><tr><th>Action</th><th>What Changes</th><th>What to Do</th></tr></thead><tbody>
+<tr><td>Edit config file</td><td>Config attributes, component wiring</td><td>Reload (SIGHUP or UI)</td></tr>
+<tr><td>Change environment variable</td><td><code>sys.env()</code> values</td><td>Full restart (<code>systemctl restart alloy</code>)</td></tr>
+<tr><td>Change both</td><td>Everything</td><td>Full restart</td></tr>
+</tbody></table>
+</div>
+<p>On Linux with systemd, the distinction matters:</p>
+<pre><code class="language-bash"># Reload config only (env vars NOT re-read)
+systemctl reload alloy
+
+# Restart process (env vars AND config re-read)
+systemctl restart alloy
+</code></pre>
+<h2 id="gotcha-no-string-interpolation"><a class="header" href="#gotcha-no-string-interpolation">Gotcha: No String Interpolation</a></h2>
+<p><strong>Mistake:</strong> Trying to use <code>${}</code> or <code>%s</code> style string interpolation inside strings.</p>
+<p><strong>Error you will see:</strong> No error -- the literal string <code>${var}</code> is sent as-is, which is worse than an error because it fails silently.</p>
+<p><strong>Fix:</strong> Use string concatenation with <code>+</code>:</p>
+<pre><code class="language-alloy">// WRONG -- this sends the literal string "${HOST}"
+url = "https://${HOST}/api/push"
+
+// CORRECT -- use concatenation
+url = "https://" + sys.env("HOST") + "/api/push"
+</code></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Gotcha</th><th>Key Takeaway</th></tr></thead><tbody>
+<tr><td><code>#</code> comments</td><td>Use <code>//</code> or <code>/* */</code> only</td></tr>
+<tr><td>Trailing commas</td><td>Always add trailing commas in multi-line lists and maps</td></tr>
+<tr><td>Duration strings</td><td>Must be quoted: <code>"60s"</code> not <code>60s</code></td></tr>
+<tr><td><code>env()</code> vs <code>sys.env()</code></td><td>Always use <code>sys.env()</code></td></tr>
+<tr><td><code>forward_to</code> brackets</td><td>Always a list: <code>[receiver]</code> not <code>receiver</code></td></tr>
+<tr><td>Label names</td><td>No hyphens, no leading digits. Use underscores.</td></tr>
+<tr><td>Duplicate labels</td><td>Each component type must have unique labels</td></tr>
+<tr><td>Block ordering</td><td>Does not matter -- DAG resolves dependencies</td></tr>
+<tr><td>Attribute vs block</td><td>Attributes use <code>=</code>, blocks do not</td></tr>
+<tr><td><code>otelcol</code> output block</td><td>Use <code>output { metrics = [...] }</code> not top-level <code>forward_to</code></td></tr>
+<tr><td>Empty blocks</td><td><code>{ }</code> is valid and sometimes required</td></tr>
+<tr><td>Reload vs restart</td><td>Env var changes require a full restart</td></tr>
+<tr><td>String interpolation</td><td>Does not exist. Use <code>+</code> concatenation.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch01-config-language/syntax-basics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch01-config-language/component-wiring.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch01-config-language/syntax-basics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch01-config-language/component-wiring.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

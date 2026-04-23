@@ -1,0 +1,357 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Why Cardinality Matters - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch02-cardinality-control/why-cardinality-matters.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="why-cardinality-matters"><a class="header" href="#why-cardinality-matters">Why Cardinality Matters</a></h1>
+<p>Cardinality is the single most important concept to understand before deploying Alloy. It determines how many time series your hosts generate, which directly determines what you pay. Get this wrong and a fleet of 500 servers can cost 10x more than it should. Get it right and you have predictable, controlled costs with zero dashboard regressions.</p>
+<h2 id="what-is-a-time-series"><a class="header" href="#what-is-a-time-series">What Is a Time Series?</a></h2>
+<p>A time series is one unique combination of metric name plus label key-value pairs. Every distinct combination is a separate series that your backend must store, index, and query.</p>
+<pre><code class="language-text">node_cpu_seconds_total{cpu="0", mode="idle", instance="web-1", job="integrations/node_exporter"}
+node_cpu_seconds_total{cpu="0", mode="user", instance="web-1", job="integrations/node_exporter"}
+node_cpu_seconds_total{cpu="1", mode="idle", instance="web-1", job="integrations/node_exporter"}
+</code></pre>
+<p>Those are three separate time series, even though they share the same metric name. The label values differ, so each is tracked and billed independently.</p>
+<h2 id="the-math-how-series-count-is-calculated"><a class="header" href="#the-math-how-series-count-is-calculated">The Math: How Series Count Is Calculated</a></h2>
+<p>Series count is multiplicative across label dimensions:</p>
+<pre><code class="language-text">total_series = metric_name_count x label_value_combinations
+</code></pre>
+<p>For a single metric like <code>node_cpu_seconds_total</code> on a 4-core host:</p>
+<pre><code class="language-text">4 CPU cores x 8 modes (idle, user, system, nice, iowait, irq, softirq, steal)
+= 32 series from one metric
+</code></pre>
+<p>For <code>windows_cpu_time_total</code> on a 16-core Windows server:</p>
+<pre><code class="language-text">16 cores x 5 modes (idle, user, privileged, interrupt, dpc)
+= 80 series from one metric
+</code></pre>
+<p>Now multiply across all metric families. A single host running the node exporter exposes 500+ metric names by default. Many of those have per-device labels (one per CPU, per disk, per NIC, per filesystem, per network interface). The math compounds quickly:</p>
+<pre><code class="language-text">Unfiltered Linux host (1 CPU, 1 disk, 1 NIC): ~337 series
+Unfiltered Windows server (2 CPU, 1 disk, 1 NIC, 200 services): ~2,909 series
+</code></pre>
+<p>And those are small VMs. Bigger hardware means more label values per metric.</p>
+<h2 id="the-cost-model-active-series-x-dpm"><a class="header" href="#the-cost-model-active-series-x-dpm">The Cost Model: Active Series x DPM</a></h2>
+<p>Grafana Cloud (and similar Prometheus-compatible backends) bills on two dimensions:</p>
+<ol>
+<li><strong>Active series</strong> -- the number of unique time series that received a sample in the last 5 minutes</li>
+<li><strong>Data Points per Minute (DPM)</strong> -- how frequently each series receives new samples</li>
+</ol>
+<p>The billing formula:</p>
+<pre><code class="language-text">monthly_cost = (active_series / 1000) x (DPM / included_DPM) x price_per_1000_series
+</code></pre>
+<p>At a 60-second scrape interval, DPM = 1 (optimal for Grafana Cloud's included tier). At 15-second intervals, DPM = 4 and you pay 4x for the same data.</p>
+<p><strong>Concrete example at $8 per 1,000 active series:</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Scenario</th><th>Active Series</th><th>DPM</th><th>Monthly Cost</th></tr></thead><tbody>
+<tr><td>100 hosts, unfiltered Windows (2,909/host)</td><td>290,900</td><td>1</td><td>$2,327</td></tr>
+<tr><td>100 hosts, hardened Windows (135/host)</td><td>13,500</td><td>1</td><td>$108</td></tr>
+<tr><td>1,000 hosts, unfiltered Linux (~2,000/host)</td><td>2,000,000</td><td>1</td><td>$16,000</td></tr>
+<tr><td>1,000 hosts, hardened Linux (~500/host)</td><td>500,000</td><td>1</td><td>$4,000</td></tr>
+</tbody></table>
+</div>
+<p>The hardened configs save $2,219/month on 100 Windows hosts and $12,000/month on 1,000 Linux hosts. Over a year, that is $26,628 and $144,000 respectively.</p>
+<h2 id="what-an-unfiltered-host-actually-generates"><a class="header" href="#what-an-unfiltered-host-actually-generates">What an Unfiltered Host Actually Generates</a></h2>
+<p>These numbers come from real benchmarks on actual cloud VMs:</p>
+<h3 id="linux-t3micro-1-vcpu"><a class="header" href="#linux-t3micro-1-vcpu">Linux (t3.micro, 1 vCPU)</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Configuration</th><th>Active Series</th></tr></thead><tbody>
+<tr><td>Bare minimum (CPU/Disk/Mem/Net)</td><td>11</td></tr>
+<tr><td>Dashboard-optimized (hardened, all layers)</td><td>~50</td></tr>
+<tr><td>Unfiltered (all default collectors)</td><td>337</td></tr>
+</tbody></table>
+</div>
+<p>The default node exporter enables collectors like <code>bcache</code>, <code>btrfs</code>, <code>xfs</code>, <code>nfs</code>, <code>infiniband</code>, <code>ipvs</code>, <code>rapl</code>, <code>tapestats</code>, and <code>zfs</code> -- none of which appear on Dashboard 1860 (Node Exporter Full). Every one generates series you pay for but never look at.</p>
+<h3 id="windows-n2-standard-2-2-vcpu-200-services"><a class="header" href="#windows-n2-standard-2-2-vcpu-200-services">Windows (n2-standard-2, 2 vCPU, 200 services)</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Configuration</th><th>Active Series</th></tr></thead><tbody>
+<tr><td>Bare minimum (4 collectors)</td><td>16</td></tr>
+<tr><td>Dashboard-optimized (hardened, 5 layers)</td><td>135</td></tr>
+<tr><td>Unfiltered (same 10 collectors, no filtering)</td><td>2,909</td></tr>
+</tbody></table>
+</div>
+<p>The service collector alone accounts for <strong>2,672 of those 2,909 unfiltered series</strong> -- 92% of the total. That is 200 services x multiple states and modes, all shipped to your backend to sit in storage untouched.</p>
+<h3 id="where-the-waste-comes-from"><a class="header" href="#where-the-waste-comes-from">Where the Waste Comes From</a></h3>
+<p>The biggest waste categories:</p>
+<div class="table-wrapper"><table><thead><tr><th>Source</th><th>Typical Waste</th><th>Example</th></tr></thead><tbody>
+<tr><td>Unused collectors</td><td>100-500+ series</td><td><code>node_xfs_*</code>, <code>node_btrfs_*</code>, <code>node_nfs_*</code> never queried</td></tr>
+<tr><td>Service explosion (Windows)</td><td>2,600+ series</td><td>200 services x 8 states + start_modes + info</td></tr>
+<tr><td>Virtual network interfaces</td><td>50-200 series</td><td><code>veth*</code>, <code>cali*</code>, <code>flannel.*</code> on container hosts</td></tr>
+<tr><td>Container filesystem mounts</td><td>50-500 series</td><td><code>/var/lib/docker/*</code>, <code>/var/lib/containerd/*</code></td></tr>
+<tr><td>UUID-labeled devices</td><td>20-100 series</td><td>Device-mapper names with full UUIDs</td></tr>
+<tr><td>Hidden volumes (Windows)</td><td>20-50 series</td><td><code>HarddiskVolume*</code>, GUID volumes</td></tr>
+</tbody></table>
+</div>
+<h2 id="the-dashboard-test"><a class="header" href="#the-dashboard-test">The Dashboard Test</a></h2>
+<p>Here is the fundamental question to ask about every metric:</p>
+<blockquote>
+<p><strong>Does this metric power a panel in a dashboard, an alert rule, or a recording rule?</strong></p>
+</blockquote>
+<p>If the answer is no, you are paying to collect, transmit, store, and index data that nobody looks at.</p>
+<p>The hardened configs in this book are built by starting from specific dashboards and working backwards:</p>
+<ul>
+<li><strong>Linux</strong>: <a href="https://grafana.com/grafana/dashboards/1860-node-exporter-full/">Node Exporter Full (Dashboard 1860)</a> -- every panel was audited to determine the ~208 metric names it queries</li>
+<li><strong>Windows</strong>: <a href="https://grafana.com/grafana/dashboards/24390-windows-exporter-dashboard-2025/">Windows Exporter Dashboard 2025 (Dashboard 24390)</a> -- every panel was audited to determine the ~95 metric names it queries</li>
+</ul>
+<p>If a metric name is not on the allow-list, it means no panel in the dashboard uses it. Dropping it costs you nothing in observability.</p>
+<p>This is the dashboard test in practice. It transforms cardinality control from guesswork ("what can I safely drop?") into a mechanical process ("what does the dashboard actually query?").</p>
+<h2 id="the-multiplicative-trap"><a class="header" href="#the-multiplicative-trap">The Multiplicative Trap</a></h2>
+<p>The danger with cardinality is not any single metric. It is the multiplication across dimensions.</p>
+<p>Consider adding one new label with 10 values to a metric that currently has 100 series:</p>
+<pre><code class="language-text">Before: 100 series
+After:  100 x 10 = 1,000 series
+</code></pre>
+<p>A single label addition caused a 10x increase. Now imagine that label is unbounded -- like a user ID, request ID, or IP address:</p>
+<pre><code class="language-text">100 base series x 50,000 unique user IDs = 5,000,000 series
+</code></pre>
+<p>This is why the Grafana PS best-practice guides specifically call out these "dangerous label patterns":</p>
+<ul>
+<li><strong>User/Customer IDs</strong>: creates a series per user</li>
+<li><strong>Request IDs / UUIDs</strong>: creates a series per request</li>
+<li><strong>IP addresses</strong>: thousands of series</li>
+<li><strong>Full URLs</strong>: unbounded cardinality</li>
+<li><strong>Error messages</strong>: unique variations create unique series</li>
+<li><strong>Timestamps in labels</strong>: series grow with time</li>
+</ul>
+<p>The hardened configs in this book address these patterns through Layer 2 (Pattern Block), which uses regex to catch and drop UUIDs, container paths, and other high-churn patterns before they reach your backend.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<p><strong>Scraping at 15-second intervals "just in case."</strong> This quadruples your DPM (and cost) compared to 60-second intervals. Most infrastructure metrics do not change meaningfully in 15 seconds. The hardened configs use <code>scrape_interval = "60s"</code>.</p>
+<p><strong>Enabling all collectors.</strong> The node exporter and Windows exporter have many collectors enabled by default that produce metrics no standard dashboard uses. The hardened Linux config explicitly disables 14 unused collectors (<code>bcache</code>, <code>bonding</code>, <code>btrfs</code>, <code>fibrechannel</code>, <code>infiniband</code>, <code>ipvs</code>, <code>mdadm</code>, <code>nfs</code>, <code>nfsd</code>, <code>rapl</code>, <code>tapestats</code>, <code>udp_queues</code>, <code>xfs</code>, <code>zfs</code>).</p>
+<p><strong>Using deny-lists instead of allow-lists.</strong> A deny-list ("drop these metrics") means every new metric from an exporter upgrade passes through silently. An allow-list ("only keep these metrics") means upgrades never surprise you with unexpected series.</p>
+<p><strong>Ignoring the service collector on Windows.</strong> Without filtering, the Windows service collector generates 2,672 series from services alone. This is the single largest cardinality trap in Windows monitoring.</p>
+<p><strong>Not filtering virtual/ephemeral devices.</strong> Container hosts generate new <code>veth*</code> interfaces and <code>/var/lib/docker/*</code> mounts constantly. Each creates new series that churn and never stabilize.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>A time series is one unique metric name + label combination</li>
+<li>Series count is multiplicative: more label values = exponentially more series</li>
+<li>Unfiltered hosts generate 3x-20x more series than hardened configs</li>
+<li>Cost scales linearly with active series count</li>
+<li>The dashboard test -- "does this metric power a panel?" -- is the foundation of cardinality control</li>
+<li>The 5-layer pattern in this chapter systematically eliminates waste while preserving every panel your dashboards need</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch02-cardinality-control/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch02-cardinality-control/layer1-allow-list.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch02-cardinality-control/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch02-cardinality-control/layer1-allow-list.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

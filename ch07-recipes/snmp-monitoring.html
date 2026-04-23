@@ -1,0 +1,710 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SNMP Monitoring - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch07-recipes/snmp-monitoring.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="snmp-monitoring"><a class="header" href="#snmp-monitoring">SNMP Monitoring</a></h1>
+<h2 id="when-you-need-snmp"><a class="header" href="#when-you-need-snmp">When You Need SNMP</a></h2>
+<p>Network switches, routers, firewalls, load balancers, UPS units, NAS appliances, and printers have one thing in common: you cannot install an agent on them. There is no node_exporter for a Cisco switch and no windows_exporter for a NetApp filer. These devices expose their telemetry through SNMP (Simple Network Management Protocol), and Alloy's built-in <code>prometheus.exporter.snmp</code> component can query them.</p>
+<p>If the device runs a standard operating system where you can install Alloy (Linux, Windows), use the host monitoring configs from <a href="starter-configs.html">Starter Configs</a> instead. SNMP monitoring is for the infrastructure that has no other option.</p>
+<p>Common SNMP monitoring targets:</p>
+<div class="table-wrapper"><table><thead><tr><th>Device Type</th><th>What You Monitor</th><th>Example Metrics</th></tr></thead><tbody>
+<tr><td>Network switches</td><td>Port traffic, errors, status, PoE</td><td>Bytes in/out, CRC errors, port admin/oper status</td></tr>
+<tr><td>Routers</td><td>Interface traffic, routing table, BGP</td><td>Interface utilization, route count, BGP peer state</td></tr>
+<tr><td>Firewalls</td><td>Connections, throughput, policy hits</td><td>Active sessions, CPU, memory, policy deny counts</td></tr>
+<tr><td>UPS / PDU</td><td>Battery, load, voltage, temperature</td><td>Battery charge %, output watts, input voltage</td></tr>
+<tr><td>NAS appliances</td><td>Disk health, volume usage, IOPS</td><td>RAID status, pool usage %, read/write latency</td></tr>
+<tr><td>Wireless APs</td><td>Client count, channel utilization, signal</td><td>Associated clients, noise floor, retransmissions</td></tr>
+</tbody></table>
+</div>
+<h2 id="snmp-versions-v2c-vs-v3"><a class="header" href="#snmp-versions-v2c-vs-v3">SNMP Versions: v2c vs v3</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Feature</th><th>SNMP v2c</th><th>SNMP v3</th></tr></thead><tbody>
+<tr><td><strong>Authentication</strong></td><td>Community string (plaintext password)</td><td>Username + auth protocol (MD5, SHA)</td></tr>
+<tr><td><strong>Encryption</strong></td><td>None</td><td>Optional (DES, AES)</td></tr>
+<tr><td><strong>Deployment effort</strong></td><td>Minimal</td><td>Moderate</td></tr>
+<tr><td><strong>When to use</strong></td><td>Lab, isolated management VLANs, devices that do not support v3</td><td>Production networks, compliance requirements</td></tr>
+</tbody></table>
+</div>
+<p>Most network equipment supports v2c. If your security policy requires encrypted SNMP traffic or your management VLAN is not isolated, use v3. The Alloy config supports both.</p>
+<p>For the configs in this chapter, we use v2c with the community string stored in an environment variable via <code>sys.env()</code>. The community string never appears in the config file.</p>
+<h2 id="the-snmpyml-module-file"><a class="header" href="#the-snmpyml-module-file">The snmp.yml Module File</a></h2>
+<p>The SNMP exporter does not query arbitrary OIDs on the fly. It uses a <strong>module file</strong> (<code>snmp.yml</code>) that defines which OIDs to query, how to parse the results, and what metric names to produce. This file is the bridge between raw SNMP MIB trees and Prometheus-style metrics.</p>
+<p>The upstream <a href="https://github.com/prometheus/snmp_exporter">snmp_exporter</a> project maintains a default <code>snmp.yml</code> that covers common MIBs. The most important module for network monitoring is <code>if_mib</code>, which covers the standard interface MIB (RFC 2863) -- the universal set of port/interface metrics that virtually every network device supports.</p>
+<h3 id="where-to-get-snmpyml"><a class="header" href="#where-to-get-snmpyml">Where to Get snmp.yml</a></h3>
+<ol>
+<li>
+<p><strong>Use the default</strong> -- download the latest <code>snmp.yml</code> from the <a href="https://github.com/prometheus/snmp_exporter/releases">snmp_exporter releases page</a>. The default file includes modules for <code>if_mib</code>, <code>apcups</code>, <code>synology</code>, and many others.</p>
+</li>
+<li>
+<p><strong>Generate a custom one</strong> -- if you need vendor-specific MIBs (Cisco, Juniper, Arista, etc.), use the <code>snmp_exporter/generator</code> tool to build a custom <code>snmp.yml</code> from the MIB files. See the <a href="https://github.com/prometheus/snmp_exporter/tree/main/generator">generator documentation</a>.</p>
+</li>
+</ol>
+<h3 id="file-placement"><a class="header" href="#file-placement">File Placement</a></h3>
+<p>Place <code>snmp.yml</code> in a location Alloy can read. Common paths:</p>
+<div class="table-wrapper"><table><thead><tr><th>OS</th><th>Path</th></tr></thead><tbody>
+<tr><td>Linux</td><td><code>/etc/alloy/snmp.yml</code></td></tr>
+<tr><td>Windows</td><td><code>C:\Program Files\GrafanaLabs\Alloy\snmp.yml</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="complete-working-config-monitoring-network-switches"><a class="header" href="#complete-working-config-monitoring-network-switches">Complete Working Config: Monitoring Network Switches</a></h2>
+<p>This config monitors a set of network switches using the standard <code>if_mib</code> module. It reads the SNMP module file from disk, defines targets inline, and ships metrics to Grafana Cloud.</p>
+<p><strong>Environment variables required:</strong> <code>GCLOUD_RW_API_KEY</code>, <code>GRAFANA_METRICS_URL</code>, <code>GRAFANA_METRICS_USERNAME</code>, <code>SNMP_COMMUNITY</code></p>
+<p><strong>Additional environment variable:</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Variable</th><th>Example Value</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>SNMP_COMMUNITY</code></td><td><code>monitoring-ro</code></td><td>SNMP v2c community string (read-only)</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-alloy">// =================================================================
+// SNMP Monitoring -- Network Switches (if_mib)
+// =================================================================
+// Monitors network switches via SNMP v2c. Uses the standard if_mib
+// module for interface metrics. Community string via sys.env().
+// =================================================================
+
+// --- Write Endpoint ---
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_METRICS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+// --- Load SNMP module file ---
+local.file "snmp_modules" {
+  filename = "/etc/alloy/snmp.yml"
+}
+
+// --- SNMP Exporter ---
+prometheus.exporter.snmp "network_switches" {
+  config = local.file.snmp_modules.content
+
+  target "core-switch-01" {
+    address     = "10.0.1.1"
+    module      = "if_mib"
+    auth        = "public_v2"
+    walk_params = "standard"
+  }
+
+  target "core-switch-02" {
+    address     = "10.0.1.2"
+    module      = "if_mib"
+    auth        = "public_v2"
+    walk_params = "standard"
+  }
+
+  target "access-switch-01" {
+    address     = "10.0.2.1"
+    module      = "if_mib"
+    auth        = "public_v2"
+    walk_params = "standard"
+  }
+
+  target "access-switch-02" {
+    address     = "10.0.2.2"
+    module      = "if_mib"
+    auth        = "public_v2"
+    walk_params = "standard"
+  }
+
+  target "access-switch-03" {
+    address     = "10.0.2.3"
+    module      = "if_mib"
+    auth        = "public_v2"
+    walk_params = "standard"
+  }
+
+  walk_params "standard" {
+    retries = 3
+    timeout = "10s"
+    max_repetitions = 25
+  }
+
+  auth "public_v2" {
+    community = sys.env("SNMP_COMMUNITY")
+  }
+}
+
+// --- Discovery + Relabel ---
+discovery.relabel "network_switches" {
+  targets = prometheus.exporter.snmp.network_switches.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/snmp"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+}
+
+// --- Scrape ---
+prometheus.scrape "network_switches" {
+  targets         = discovery.relabel.network_switches.output
+  forward_to      = [prometheus.relabel.network_switches.receiver]
+  scrape_interval = "60s"
+  scrape_timeout  = "30s"
+}
+
+// --- Cardinality Control ---
+prometheus.relabel "network_switches" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  // Allow-list: keep only the interface metrics we need
+  rule {
+    source_labels = ["__name__"]
+    regex = join([
+      "up",
+      "snmp_scrape_duration_seconds",
+      "snmp_scrape_pdus_returned",
+      "snmp_scrape_walk_duration_seconds",
+
+      // -- Interface status --
+      "ifAdminStatus",
+      "ifOperStatus",
+      "ifType",
+      "ifAlias",
+      "ifDescr",
+      "ifName",
+      "ifIndex",
+      "ifHighSpeed",
+      "ifSpeed",
+      "ifMtu",
+      "ifLastChange",
+
+      // -- Interface traffic (64-bit counters) --
+      "ifHCInOctets",
+      "ifHCOutOctets",
+      "ifHCInUcastPkts",
+      "ifHCOutUcastPkts",
+      "ifHCInMulticastPkts",
+      "ifHCOutMulticastPkts",
+      "ifHCInBroadcastPkts",
+      "ifHCOutBroadcastPkts",
+
+      // -- Interface errors --
+      "ifInErrors",
+      "ifOutErrors",
+      "ifInDiscards",
+      "ifOutDiscards",
+
+      // -- System info --
+      "sysUpTime",
+      "sysDescr",
+      "sysName",
+      "sysContact",
+      "sysLocation",
+    ], "|")
+    action = "keep"
+  }
+
+  // Drop interfaces that are administratively down
+  // (removes metrics for unused ports)
+  rule {
+    source_labels = ["ifAdminStatus"]
+    regex         = "2"
+    action        = "drop"
+  }
+}
+</code></pre>
+<h2 id="config-components-explained"><a class="header" href="#config-components-explained">Config Components Explained</a></h2>
+<h3 id="localfile"><a class="header" href="#localfile">local.file</a></h3>
+<pre><code class="language-alloy">local.file "snmp_modules" {
+  filename = "/etc/alloy/snmp.yml"
+}
+</code></pre>
+<p>Reads the SNMP module file from disk. The content is passed to <code>prometheus.exporter.snmp</code> as the <code>config</code> parameter. If you update the file on disk, Alloy detects the change and reloads it automatically.</p>
+<h3 id="target-blocks"><a class="header" href="#target-blocks">target Blocks</a></h3>
+<p>Each <code>target</code> block defines one SNMP device to poll:</p>
+<div class="table-wrapper"><table><thead><tr><th>Field</th><th>Required</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>(label)</td><td>Yes</td><td>Unique name for this target (the string after <code>target</code>, e.g., <code>"core-switch-01"</code>)</td></tr>
+<tr><td><code>address</code></td><td>Yes</td><td>IP address or hostname of the SNMP device</td></tr>
+<tr><td><code>module</code></td><td>Yes</td><td>Which module from <code>snmp.yml</code> to use (e.g., <code>"if_mib"</code>)</td></tr>
+<tr><td><code>auth</code></td><td>Yes</td><td>Which auth block to use for credentials</td></tr>
+<tr><td><code>walk_params</code></td><td>No</td><td>Which walk_params block to use for SNMP transport settings</td></tr>
+</tbody></table>
+</div>
+<h3 id="walk_params"><a class="header" href="#walk_params">walk_params</a></h3>
+<p>Controls the SNMP transport behavior:</p>
+<div class="table-wrapper"><table><thead><tr><th>Parameter</th><th>Value</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>retries</code></td><td><code>3</code></td><td>Number of retries on timeout before giving up</td></tr>
+<tr><td><code>timeout</code></td><td><code>"10s"</code></td><td>Timeout for each SNMP request</td></tr>
+<tr><td><code>max_repetitions</code></td><td><code>25</code></td><td>How many OIDs to request per SNMP GETBULK (higher = faster walks, more memory)</td></tr>
+</tbody></table>
+</div>
+<h3 id="auth-v2c"><a class="header" href="#auth-v2c">auth (v2c)</a></h3>
+<pre><code class="language-alloy">auth "public_v2" {
+  community = sys.env("SNMP_COMMUNITY")
+}
+</code></pre>
+<p>The community string is read from an environment variable. Never hardcode community strings in the config.</p>
+<h3 id="auth-v3"><a class="header" href="#auth-v3">auth (v3)</a></h3>
+<p>For SNMP v3 with authentication and encryption:</p>
+<pre><code class="language-alloy">auth "secure_v3" {
+  security_level = "authPriv"
+  username       = sys.env("SNMP_V3_USERNAME")
+  auth_protocol  = "SHA"
+  auth_password  = sys.env("SNMP_V3_AUTH_PASSWORD")
+  priv_protocol  = "AES"
+  priv_password  = sys.env("SNMP_V3_PRIV_PASSWORD")
+}
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>Security Level</th><th>Authentication</th><th>Encryption</th></tr></thead><tbody>
+<tr><td><code>noAuthNoPriv</code></td><td>No</td><td>No</td></tr>
+<tr><td><code>authNoPriv</code></td><td>Yes (MD5 or SHA)</td><td>No</td></tr>
+<tr><td><code>authPriv</code></td><td>Yes (MD5 or SHA)</td><td>Yes (DES or AES)</td></tr>
+</tbody></table>
+</div>
+<h2 id="multiple-device-types"><a class="header" href="#multiple-device-types">Multiple Device Types</a></h2>
+<p>Real networks have more than just switches. Here is how to monitor different device types by using different SNMP modules:</p>
+<pre><code class="language-alloy">// Switches use if_mib
+target "core-switch-01" {
+  address     = "10.0.1.1"
+  module      = "if_mib"
+  auth        = "public_v2"
+  walk_params = "standard"
+}
+
+// UPS uses apcups module
+target "ups-01" {
+  address     = "10.0.10.1"
+  module      = "apcups"
+  auth        = "public_v2"
+  walk_params = "standard"
+}
+
+// Synology NAS uses synology module
+target "nas-01" {
+  address     = "10.0.20.1"
+  module      = "synology"
+  auth        = "public_v2"
+  walk_params = "standard"
+}
+</code></pre>
+<p>Each device type uses a different module from <code>snmp.yml</code>. The upstream <code>snmp.yml</code> includes modules for many common device types. If your device is not covered, you need to generate a custom module (see the Custom MIBs section below).</p>
+<h2 id="walk-vs-get-performance-considerations"><a class="header" href="#walk-vs-get-performance-considerations">Walk vs Get: Performance Considerations</a></h2>
+<p>SNMP uses two main operations:</p>
+<ul>
+<li><strong>GET</strong> -- request a specific OID. One request, one response. Fast and predictable.</li>
+<li><strong>WALK (GETNEXT / GETBULK)</strong> -- traverse a subtree of OIDs. Multiple round-trips. Slower but discovers all entries.</li>
+</ul>
+<p>The if_mib module uses WALK to discover all interfaces on a device. This is necessary because the number of interfaces varies per device. The walk operation is the most expensive part of SNMP polling.</p>
+<h3 id="performance-factors"><a class="header" href="#performance-factors">Performance Factors</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Factor</th><th>Impact</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>Number of interfaces per device</td><td>Each interface adds ~30 OID values to the walk</td><td>Filter unused interfaces in relabel rules</td></tr>
+<tr><td>SNMP timeout</td><td>Slow devices cause scrape timeouts</td><td>Increase <code>walk_params.timeout</code> and <code>scrape_timeout</code></td></tr>
+<tr><td><code>max_repetitions</code></td><td>Higher = fewer round-trips but larger responses</td><td>Start at 25, increase for devices with many interfaces</td></tr>
+<tr><td>Number of devices per exporter</td><td>Each device is polled sequentially within a scrape</td><td>Keep to 20-30 devices per exporter instance</td></tr>
+</tbody></table>
+</div>
+<h3 id="timing-budget"><a class="header" href="#timing-budget">Timing Budget</a></h3>
+<p>For a 60-second scrape interval, you need all SNMP walks to complete within the <code>scrape_timeout</code>. A rough guide:</p>
+<div class="table-wrapper"><table><thead><tr><th>Device Count</th><th>Ports per Device</th><th>Estimated Walk Time</th><th>Recommended scrape_timeout</th></tr></thead><tbody>
+<tr><td>5</td><td>24</td><td>5-10s</td><td>15s</td></tr>
+<tr><td>10</td><td>48</td><td>15-30s</td><td>45s</td></tr>
+<tr><td>20</td><td>48</td><td>30-60s</td><td>60s (push scrape_interval to 120s)</td></tr>
+<tr><td>50+</td><td>Mixed</td><td>60s+</td><td>Split across multiple exporter instances</td></tr>
+</tbody></table>
+</div>
+<p>If walks consistently take more than half your scrape interval, either increase the interval or split the targets across multiple <code>prometheus.exporter.snmp</code> instances.</p>
+<h2 id="cardinality-considerations"><a class="header" href="#cardinality-considerations">Cardinality Considerations</a></h2>
+<p>SNMP monitoring can produce surprising cardinality. The math is straightforward:</p>
+<pre><code>series = devices x ports_per_device x metrics_per_port
+</code></pre>
+<h3 id="real-world-example-48-port-switches"><a class="header" href="#real-world-example-48-port-switches">Real-World Example: 48-Port Switches</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Scenario</th><th>Devices</th><th>Ports</th><th>Metrics/Port</th><th>Total Series</th></tr></thead><tbody>
+<tr><td>5 access switches, all ports</td><td>5</td><td>48</td><td>15</td><td>3,600</td></tr>
+<tr><td>10 access switches, all ports</td><td>10</td><td>48</td><td>15</td><td>7,200</td></tr>
+<tr><td>100 switches (campus network)</td><td>100</td><td>48</td><td>15</td><td>72,000</td></tr>
+<tr><td>100 switches, filtered to active ports only</td><td>100</td><td>~20 avg</td><td>15</td><td>30,000</td></tr>
+</tbody></table>
+</div>
+<p>At $8 per 1,000 active series per month:</p>
+<div class="table-wrapper"><table><thead><tr><th>Scenario</th><th>Monthly Cost</th></tr></thead><tbody>
+<tr><td>100 switches, all ports, 15 metrics</td><td>$576</td></tr>
+<tr><td>100 switches, active ports only, 15 metrics</td><td>$240</td></tr>
+<tr><td>100 switches, active ports only, 8 core metrics</td><td>$128</td></tr>
+</tbody></table>
+</div>
+<p>The three levers for controlling SNMP cardinality:</p>
+<ol>
+<li><strong>Filter unused ports</strong> -- drop interfaces where <code>ifAdminStatus = 2</code> (administratively down). This is included in the config above.</li>
+<li><strong>Reduce metrics per port</strong> -- the allow-list in the relabel rules controls which OIDs are kept. Start with traffic counters and error counters; add more only if your dashboards need them.</li>
+<li><strong>Increase scrape interval</strong> -- SNMP data on network switches does not change meaningfully in 15 seconds. A 60-second or 120-second interval is standard for network monitoring.</li>
+</ol>
+<h2 id="key-network-metrics"><a class="header" href="#key-network-metrics">Key Network Metrics</a></h2>
+<p>These are the most useful metrics from the <code>if_mib</code> module for network monitoring dashboards.</p>
+<h3 id="interface-traffic"><a class="header" href="#interface-traffic">Interface Traffic</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Type</th><th>What It Measures</th></tr></thead><tbody>
+<tr><td><code>ifHCInOctets</code></td><td>Counter</td><td>Bytes received on the interface (64-bit)</td></tr>
+<tr><td><code>ifHCOutOctets</code></td><td>Counter</td><td>Bytes transmitted on the interface (64-bit)</td></tr>
+<tr><td><code>ifHCInUcastPkts</code></td><td>Counter</td><td>Unicast packets received</td></tr>
+<tr><td><code>ifHCOutUcastPkts</code></td><td>Counter</td><td>Unicast packets transmitted</td></tr>
+</tbody></table>
+</div>
+<p>Always use the <code>ifHC*</code> (high capacity, 64-bit) counters instead of the 32-bit <code>ifIn*</code>/<code>ifOut*</code> counters. On a 10 Gbps link, a 32-bit counter wraps in about 3.4 seconds, producing meaningless rate calculations.</p>
+<h3 id="interface-errors"><a class="header" href="#interface-errors">Interface Errors</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Type</th><th>What It Measures</th></tr></thead><tbody>
+<tr><td><code>ifInErrors</code></td><td>Counter</td><td>Inbound packets with errors (CRC, framing, etc.)</td></tr>
+<tr><td><code>ifOutErrors</code></td><td>Counter</td><td>Outbound packets with errors</td></tr>
+<tr><td><code>ifInDiscards</code></td><td>Counter</td><td>Inbound packets discarded (buffer full, policy, etc.)</td></tr>
+<tr><td><code>ifOutDiscards</code></td><td>Counter</td><td>Outbound packets discarded</td></tr>
+</tbody></table>
+</div>
+<p>A non-zero error rate on a port usually indicates a physical layer problem (bad cable, SFP, speed/duplex mismatch).</p>
+<h3 id="interface-status"><a class="header" href="#interface-status">Interface Status</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Type</th><th>Values</th></tr></thead><tbody>
+<tr><td><code>ifAdminStatus</code></td><td>Gauge</td><td>1 = up, 2 = down, 3 = testing</td></tr>
+<tr><td><code>ifOperStatus</code></td><td>Gauge</td><td>1 = up, 2 = down, 3 = testing, 5 = dormant, 6 = notPresent</td></tr>
+<tr><td><code>ifHighSpeed</code></td><td>Gauge</td><td>Interface speed in Mbps</td></tr>
+</tbody></table>
+</div>
+<p>The combination of <code>ifAdminStatus=1</code> (admin up) and <code>ifOperStatus=2</code> (oper down) is the classic "port is configured but the link is down" condition -- a common alerting target.</p>
+<h3 id="system-info"><a class="header" href="#system-info">System Info</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Type</th><th>What It Provides</th></tr></thead><tbody>
+<tr><td><code>sysUpTime</code></td><td>Gauge</td><td>Device uptime in hundredths of a second</td></tr>
+<tr><td><code>sysName</code></td><td>Info metric</td><td>Device hostname</td></tr>
+<tr><td><code>sysDescr</code></td><td>Info metric</td><td>Device model/firmware description</td></tr>
+</tbody></table>
+</div>
+<h2 id="promql-examples-for-network-monitoring"><a class="header" href="#promql-examples-for-network-monitoring">PromQL Examples for Network Monitoring</a></h2>
+<h3 id="interface-utilization-percentage-of-link-speed"><a class="header" href="#interface-utilization-percentage-of-link-speed">Interface utilization (percentage of link speed):</a></h3>
+<pre><code class="language-promql">rate(ifHCInOctets{job="integrations/snmp"}[5m]) * 8
+/ (ifHighSpeed{job="integrations/snmp"} * 1e6) * 100
+</code></pre>
+<h3 id="top-10-busiest-ports-by-inbound-traffic"><a class="header" href="#top-10-busiest-ports-by-inbound-traffic">Top 10 busiest ports by inbound traffic:</a></h3>
+<pre><code class="language-promql">topk(10, rate(ifHCInOctets{job="integrations/snmp"}[5m]) * 8)
+</code></pre>
+<h3 id="ports-with-errors-in-the-last-hour"><a class="header" href="#ports-with-errors-in-the-last-hour">Ports with errors in the last hour:</a></h3>
+<pre><code class="language-promql">increase(ifInErrors{job="integrations/snmp"}[1h]) &gt; 0
+</code></pre>
+<h3 id="ports-that-are-admin-up-but-operationally-down"><a class="header" href="#ports-that-are-admin-up-but-operationally-down">Ports that are admin up but operationally down:</a></h3>
+<pre><code class="language-promql">ifAdminStatus{job="integrations/snmp"} == 1
+and
+ifOperStatus{job="integrations/snmp"} == 2
+</code></pre>
+<h2 id="custom-mibs"><a class="header" href="#custom-mibs">Custom MIBs</a></h2>
+<p>When the default <code>snmp.yml</code> does not cover your device, you need to generate a custom module from the vendor's MIB files.</p>
+<h3 id="the-generator-workflow"><a class="header" href="#the-generator-workflow">The Generator Workflow</a></h3>
+<ol>
+<li>
+<p><strong>Obtain MIB files</strong> from the vendor (usually available on the vendor's support portal or the device itself via <code>show mib</code> / <code>copy mib</code>).</p>
+</li>
+<li>
+<p><strong>Install the generator tool:</strong></p>
+<pre><code class="language-bash">go install github.com/prometheus/snmp_exporter/generator@latest
+</code></pre>
+</li>
+<li>
+<p><strong>Create a <code>generator.yml</code></strong> that defines which MIB modules to include:</p>
+<pre><code class="language-yaml">modules:
+  my_switch:
+    walk:
+      - ifMIB
+      - 1.3.6.1.4.1.9.9.109  # Cisco CPU OIDs
+    lookups:
+      - source_indexes: [ifIndex]
+        lookup: ifAlias
+      - source_indexes: [ifIndex]
+        lookup: ifDescr
+    overrides:
+      ifAlias:
+        type: DisplayString
+      ifDescr:
+        type: DisplayString
+</code></pre>
+</li>
+<li>
+<p><strong>Run the generator:</strong></p>
+<pre><code class="language-bash">generator generate
+</code></pre>
+<p>This produces a new <code>snmp.yml</code> with your custom module.</p>
+</li>
+<li>
+<p><strong>Deploy the generated <code>snmp.yml</code></strong> to the Alloy host and update the <code>local.file</code> path.</p>
+</li>
+</ol>
+<h3 id="mib-version-matters"><a class="header" href="#mib-version-matters">MIB Version Matters</a></h3>
+<p>The MIB files used to generate <code>snmp.yml</code> must match the firmware version on the device. A MIB from firmware v15.x may define OIDs that do not exist in firmware v14.x (or vice versa). Mismatched MIBs result in SNMP walk timeouts and missing metrics.</p>
+<h2 id="testing-and-debugging"><a class="header" href="#testing-and-debugging">Testing and Debugging</a></h2>
+<h3 id="test-from-the-alloy-api"><a class="header" href="#test-from-the-alloy-api">Test from the Alloy API</a></h3>
+<p>Alloy exposes component metrics via its HTTP API. You can check if SNMP scrapes are succeeding:</p>
+<pre><code class="language-bash">curl -s http://localhost:12345/api/v0/component/prometheus.exporter.snmp.network_switches/metrics | head -20
+</code></pre>
+<h3 id="test-snmp-connectivity"><a class="header" href="#test-snmp-connectivity">Test SNMP Connectivity</a></h3>
+<p>Before configuring Alloy, verify that you can reach the device with <code>snmpwalk</code>:</p>
+<pre><code class="language-bash"># SNMP v2c
+snmpwalk -v2c -c $SNMP_COMMUNITY 10.0.1.1 sysDescr
+
+# SNMP v3
+snmpwalk -v3 -l authPriv -u monitoring -a SHA -A authpass -x AES -X privpass 10.0.1.1 sysDescr
+</code></pre>
+<p>If <code>snmpwalk</code> times out, check:</p>
+<ul>
+<li>Firewall rules (SNMP uses UDP port 161)</li>
+<li>The community string or v3 credentials</li>
+<li>Whether the device has SNMP enabled and accessible from the Alloy host's network</li>
+</ul>
+<h3 id="common-snmpwalk-output"><a class="header" href="#common-snmpwalk-output">Common snmpwalk Output</a></h3>
+<p>A successful query returns something like:</p>
+<pre><code>SNMPv2-MIB::sysDescr.0 = STRING: Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(7)E9
+</code></pre>
+<p>If you get <code>Timeout: No Response from 10.0.1.1</code>, the device is not reachable via SNMP from the Alloy host.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Mistake</th><th>Impact</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Hardcoding the community string in the config</td><td>Secret visible in config files, backups, FM UI</td><td>Use <code>sys.env("SNMP_COMMUNITY")</code></td></tr>
+<tr><td>Using 32-bit counters (<code>ifInOctets</code>) instead of 64-bit (<code>ifHCInOctets</code>)</td><td>Counter wraps every few seconds on fast links, producing incorrect rate() values</td><td>Always use <code>ifHC*</code> counters in the allow-list</td></tr>
+<tr><td>Monitoring all ports including admin-down</td><td>48-port switch has ~24 unused ports generating zero-value metrics</td><td>Drop <code>ifAdminStatus=2</code> in relabel rules</td></tr>
+<tr><td>MIB version mismatch with device firmware</td><td>Walk timeouts, missing metrics, wrong OID mappings</td><td>Regenerate <code>snmp.yml</code> from MIBs matching your firmware version</td></tr>
+<tr><td>Scrape timeout shorter than SNMP walk time</td><td>Scrape fails, no metrics collected</td><td>Set <code>scrape_timeout</code> to at least 2x the expected walk duration</td></tr>
+<tr><td>Too many devices in one exporter instance</td><td>Walks run sequentially, exceeding the scrape interval</td><td>Split targets across multiple <code>prometheus.exporter.snmp</code> instances (max 20-30 per instance)</td></tr>
+<tr><td>Not testing with <code>snmpwalk</code> first</td><td>Hours of debugging config issues that are actually network/firewall problems</td><td>Always verify SNMP connectivity with <code>snmpwalk</code> before configuring Alloy</td></tr>
+<tr><td>Forgetting UDP port 161 firewall rules</td><td>SNMP queries time out</td><td>Open UDP 161 from the Alloy host to the SNMP targets</td></tr>
+</tbody></table>
+</div>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li><code>prometheus.exporter.snmp</code> is built into Alloy -- no external snmp_exporter binary needed</li>
+<li>SNMP monitoring is for devices where you cannot install an agent (switches, routers, firewalls, UPS, NAS)</li>
+<li>The <code>snmp.yml</code> module file defines which OIDs to query; <code>if_mib</code> covers standard interface metrics</li>
+<li>Community strings and v3 credentials go in environment variables via <code>sys.env()</code>, never in the config file</li>
+<li>Cardinality scales as <code>devices x ports x metrics</code> -- a 100-switch campus can easily produce 30,000-72,000 series</li>
+<li>Control cardinality by filtering admin-down ports, using an allow-list, and setting appropriate scrape intervals</li>
+<li>Always test SNMP connectivity with <code>snmpwalk</code> before configuring Alloy</li>
+<li>Use 64-bit counters (<code>ifHC*</code>) for traffic metrics on modern networks</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch07-recipes/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch07-recipes/blackbox-exporter.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch07-recipes/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch07-recipes/blackbox-exporter.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

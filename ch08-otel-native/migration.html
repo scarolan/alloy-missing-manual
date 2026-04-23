@@ -1,0 +1,484 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Migration from Alloy Config - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch08-otel-native/migration.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="migration-from-alloy-config"><a class="header" href="#migration-from-alloy-config">Migration from Alloy Config</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>Migration between Alloy config syntax and OTel Engine YAML is not a simple find-and-replace. The two engines are different runtimes with different component ecosystems. This chapter walks through the mapping, the gaps, and a practical workflow for moving between them.</p>
+<blockquote>
+<p><strong>Important distinction:</strong> This chapter covers migrating <em>from Alloy config syntax to OTel Engine YAML</em> (for teams wanting to standardize on upstream OTEL). If you are coming <em>from an existing OTEL Collector to Alloy's Default Engine</em>, Grafana provides the <code>alloy convert --source-format=otelcol</code> tool and the <code>alloy run --config.format=otelcol</code> runtime flag -- see the <a href="https://grafana.com/docs/alloy/latest/set-up/migrate/from-otelcol/">official migration guide</a>.</p>
+</blockquote>
+<h2 id="component-mapping-alloy-config-to-otel-engine-yaml"><a class="header" href="#component-mapping-alloy-config-to-otel-engine-yaml">Component Mapping: Alloy Config to OTel Engine YAML</a></h2>
+<h3 id="receivers-data-ingestion"><a class="header" href="#receivers-data-ingestion">Receivers (Data Ingestion)</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Alloy Component</th><th>OTel Engine Equivalent</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>otelcol.receiver.otlp</code></td><td><code>otlp</code> receiver</td><td>Direct mapping; same underlying code</td></tr>
+<tr><td><code>otelcol.receiver.prometheus</code></td><td><code>prometheus</code> receiver</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.receiver.kafka</code></td><td><code>kafka</code> receiver</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.receiver.jaeger</code></td><td><code>jaeger</code> receiver</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.receiver.zipkin</code></td><td><code>zipkin</code> receiver</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.receiver.syslog</code></td><td><code>syslog</code> receiver</td><td>Direct mapping</td></tr>
+<tr><td><code>prometheus.exporter.unix</code></td><td><code>hostmetrics</code> receiver</td><td><strong>Different metric names</strong>: <code>node_*</code> becomes <code>system.*</code></td></tr>
+<tr><td><code>prometheus.exporter.windows</code></td><td><code>hostmetrics</code> receiver</td><td>Partial coverage only</td></tr>
+<tr><td><code>prometheus.scrape</code></td><td><code>prometheus</code> receiver</td><td>Different config structure</td></tr>
+<tr><td><code>loki.source.journal</code></td><td><code>filelog</code> receiver</td><td>Must target journal files manually; no native journal support</td></tr>
+<tr><td><code>loki.source.file</code></td><td><code>filelog</code> receiver</td><td>Similar but different config syntax</td></tr>
+<tr><td><code>loki.source.syslog</code></td><td><code>syslog</code> receiver</td><td>Direct mapping</td></tr>
+</tbody></table>
+</div>
+<h3 id="processors"><a class="header" href="#processors">Processors</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Alloy Component</th><th>OTel Engine Equivalent</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>otelcol.processor.batch</code></td><td><code>batch</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.memory_limiter</code></td><td><code>memorylimiter</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.attributes</code></td><td><code>attributes</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.filter</code></td><td><code>filter</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.transform</code></td><td><code>transform</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.tail_sampling</code></td><td><code>tailsampling</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.resourcedetection</code></td><td><code>resourcedetection</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.k8sattributes</code></td><td><code>k8sattributes</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.processor.deltatocumulative</code></td><td><code>deltatocumulative</code> processor</td><td>Direct mapping</td></tr>
+<tr><td><code>prometheus.relabel</code></td><td><code>transform</code> processor / <code>attributes</code> processor</td><td>No direct equivalent; use OTTL transform expressions</td></tr>
+</tbody></table>
+</div>
+<h3 id="exporters-data-output"><a class="header" href="#exporters-data-output">Exporters (Data Output)</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Alloy Component</th><th>OTel Engine Equivalent</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>otelcol.exporter.otlp</code></td><td><code>otlp</code> exporter</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.exporter.otlphttp</code></td><td><code>otlphttp</code> exporter</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.exporter.prometheus</code></td><td><code>prometheus</code> exporter</td><td>Direct mapping</td></tr>
+<tr><td><code>prometheus.remote_write</code></td><td><code>prometheusremotewrite</code> exporter</td><td>Different auth config structure</td></tr>
+<tr><td><code>otelcol.exporter.kafka</code></td><td><code>kafka</code> exporter</td><td>Direct mapping</td></tr>
+<tr><td><code>loki.write</code></td><td><code>otlphttp</code> exporter (to Loki's OTLP endpoint)</td><td>Loki now accepts OTLP; no native Loki exporter in OTel</td></tr>
+</tbody></table>
+</div>
+<h3 id="extensions-and-auth"><a class="header" href="#extensions-and-auth">Extensions and Auth</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Alloy Component</th><th>OTel Engine Equivalent</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>otelcol.auth.basic</code></td><td><code>basicauth</code> extension</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.auth.bearer</code></td><td><code>bearertokenauth</code> extension</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.auth.oauth2</code></td><td><code>oauth2clientauth</code> extension</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.auth.sigv4</code></td><td><code>sigv4auth</code> extension</td><td>Direct mapping</td></tr>
+<tr><td><code>otelcol.auth.headers</code></td><td><code>headerssetter</code> extension</td><td>Direct mapping</td></tr>
+</tbody></table>
+</div>
+<h3 id="no-otel-engine-equivalent"><a class="header" href="#no-otel-engine-equivalent">No OTel Engine Equivalent</a></h3>
+<p>These Alloy components have <strong>no equivalent</strong> in the OTel Engine:</p>
+<div class="table-wrapper"><table><thead><tr><th>Alloy Component</th><th>What It Does</th><th>Workaround</th></tr></thead><tbody>
+<tr><td><code>prometheus.exporter.unix</code> (systemd collector)</td><td>Monitors systemd unit states</td><td>None in pure OTel mode; use <code>alloyengine</code> hybrid</td></tr>
+<tr><td><code>prometheus.exporter.unix</code> (conntrack, entropy, ARP, PSI, schedstat, softnet, hwmon, timex, TCP states)</td><td>Specialized Linux kernel metrics</td><td>None; <code>hostmetrics</code> covers CPU/memory/disk/network only</td></tr>
+<tr><td><code>loki.source.journal</code></td><td>Native systemd journal reader</td><td><code>filelog</code> pointed at journal files (lossy)</td></tr>
+<tr><td><code>loki.process</code></td><td>Log processing pipeline</td><td><code>transform</code> processor with OTTL (different syntax)</td></tr>
+<tr><td><code>discovery.*</code> components</td><td>Service discovery</td><td>Use <code>prometheus</code> receiver's built-in discovery</td></tr>
+<tr><td><code>module.*</code> components</td><td>Reusable config modules</td><td>No equivalent; duplicate config or use config providers</td></tr>
+</tbody></table>
+</div>
+<h2 id="key-behavioral-differences"><a class="header" href="#key-behavioral-differences">Key Behavioral Differences</a></h2>
+<h3 id="metric-naming"><a class="header" href="#metric-naming">Metric Naming</a></h3>
+<p>This is the single biggest breaking change when moving from Alloy's <code>prometheus.exporter.unix</code> to the OTel Engine's <code>hostmetrics</code> receiver:</p>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Alloy (<code>node_*</code>)</th><th>OTel Engine (<code>system.*</code>)</th></tr></thead><tbody>
+<tr><td>CPU usage</td><td><code>node_cpu_seconds_total</code></td><td><code>system.cpu.time</code></td></tr>
+<tr><td>Memory</td><td><code>node_memory_MemTotal_bytes</code></td><td><code>system.memory.usage</code></td></tr>
+<tr><td>Disk I/O</td><td><code>node_disk_read_bytes_total</code></td><td><code>system.disk.io</code></td></tr>
+<tr><td>Network</td><td><code>node_network_receive_bytes_total</code></td><td><code>system.network.io</code></td></tr>
+<tr><td>Filesystem</td><td><code>node_filesystem_size_bytes</code></td><td><code>system.filesystem.usage</code></td></tr>
+</tbody></table>
+</div>
+<p><strong>Consequence:</strong> If you use Dashboard 1860 (Node Exporter Full), it will not work with OTel Engine metrics. You need OTel-native dashboards (e.g., dashboard 15983) or you need to stay on the Default Engine for host metrics.</p>
+<h3 id="pipeline-wiring"><a class="header" href="#pipeline-wiring">Pipeline Wiring</a></h3>
+<p><strong>Alloy config</strong> wires components explicitly through output blocks:</p>
+<pre><code>otelcol.receiver.otlp "default" {
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+  }
+}
+</code></pre>
+<p><strong>OTel Engine YAML</strong> uses the service/pipelines declaration:</p>
+<pre><code class="language-yaml">service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp]
+</code></pre>
+<h3 id="authentication"><a class="header" href="#authentication">Authentication</a></h3>
+<p><strong>Alloy config</strong> uses inline auth blocks within components:</p>
+<pre><code>otelcol.exporter.otlphttp "default" {
+  client {
+    endpoint = "https://otlp-gateway.example.com"
+    auth     = otelcol.auth.basic.creds.handler
+  }
+}
+</code></pre>
+<p><strong>OTel Engine YAML</strong> uses extensions referenced by name:</p>
+<pre><code class="language-yaml">extensions:
+  basicauth/creds:
+    client_auth:
+      username: ${env:USERNAME}
+      password: ${env:PASSWORD}
+
+exporters:
+  otlphttp:
+    endpoint: https://otlp-gateway.example.com
+    auth:
+      authenticator: basicauth/creds
+
+service:
+  extensions: [basicauth/creds]
+</code></pre>
+<h3 id="environment-variables"><a class="header" href="#environment-variables">Environment Variables</a></h3>
+<ul>
+<li><strong>Alloy config:</strong> <code>sys.env("VAR_NAME")</code></li>
+<li><strong>OTel Engine YAML:</strong> <code>${env:VAR_NAME}</code> (standard OTEL Collector syntax)</li>
+</ul>
+<h3 id="meta-monitoring-metrics"><a class="header" href="#meta-monitoring-metrics">Meta-monitoring Metrics</a></h3>
+<p>Alloy's Default Engine and the OTel Engine expose self-monitoring metrics with different names. If you have dashboards or alerts monitoring Alloy itself, those queries will need updating.</p>
+<h2 id="what-you-lose-in-migration"><a class="header" href="#what-you-lose-in-migration">What You Lose in Migration</a></h2>
+<p>Make sure your team understands these trade-offs before migrating:</p>
+<ol>
+<li><strong>Dashboard 1860 compatibility</strong> -- Your <code>node_*</code> dashboards will need to be replaced with OTel-native equivalents.</li>
+<li><strong>systemd monitoring</strong> -- No way to track unit states in pure OTel mode.</li>
+<li><strong>Journal log collection</strong> -- No native journal reader; <code>filelog</code> on <code>/var/log</code> is an alternative but not equivalent.</li>
+<li><strong>Web UI</strong> -- The OTel Engine has no pipeline visualization UI.</li>
+<li><strong>Fleet Management</strong> -- Not supported for the OTel Engine yet.</li>
+<li><strong>Reload endpoint</strong> -- No hot-reload via HTTP; must restart the process.</li>
+<li><strong>Support bundles</strong> -- Not available from the OTel Engine HTTP server.</li>
+<li><strong>Service installation</strong> -- No systemd/launchd service management in the initial release.</li>
+<li><strong>Specialized Linux metrics</strong> -- conntrack, entropy, ARP, PSI, hwmon, etc. are gone.</li>
+</ol>
+<h2 id="what-you-gain-in-migration"><a class="header" href="#what-you-gain-in-migration">What You Gain in Migration</a></h2>
+<ol>
+<li><strong>Standard YAML config</strong> -- Your OTEL Collector knowledge transfers directly.</li>
+<li><strong>Upstream component access</strong> -- Broader set of community contrib components.</li>
+<li><strong>Portability</strong> -- Same config works on vanilla OTEL Collector (minus <code>alloyengine</code> extension).</li>
+<li><strong>Ecosystem tools</strong> -- OpAMP, Collector Operator, OCB manifests become available.</li>
+<li><strong>Team onboarding</strong> -- New hires who know OTEL Collector are immediately productive.</li>
+<li><strong>Config providers</strong> -- Native <code>env</code>, <code>file</code>, <code>http</code>, <code>https</code>, <code>yaml</code> config providers.</li>
+</ol>
+<h2 id="practical-migration-workflow"><a class="header" href="#practical-migration-workflow">Practical Migration Workflow</a></h2>
+<h3 id="step-1-audit-your-current-config"><a class="header" href="#step-1-audit-your-current-config">Step 1: Audit your current config</a></h3>
+<p>List every Alloy component in your config and classify it:</p>
+<ul>
+<li><strong>Direct mapping</strong> -- <code>otelcol.*</code> components that have identical OTel Engine counterparts</li>
+<li><strong>Translatable</strong> -- Components with a different-but-functional OTel equivalent (e.g., <code>prometheus.exporter.unix</code> to <code>hostmetrics</code>)</li>
+<li><strong>No equivalent</strong> -- Alloy-only components with no OTel counterpart</li>
+</ul>
+<p>If your "No equivalent" list is long, consider the hybrid approach (Step 5) instead of full migration.</p>
+<h3 id="step-2-use-the-converter-as-a-reference"><a class="header" href="#step-2-use-the-converter-as-a-reference">Step 2: Use the converter as a reference</a></h3>
+<p>Even though you are moving to the OTel Engine (not the Default Engine), the Alloy converter can help you understand the mapping:</p>
+<pre><code class="language-bash"># Convert an OTEL Collector YAML to Alloy syntax to see the mapping
+alloy convert --source-format=otelcol --output=reference.alloy your-otel-config.yaml
+
+# Generate a diagnostic report
+alloy convert --source-format=otelcol --report=report.txt --output=reference.alloy your-otel-config.yaml
+</code></pre>
+<p>This shows you which OTEL components map to which Alloy components, helping you work backwards.</p>
+<h3 id="step-3-write-your-otel-engine-yaml"><a class="header" href="#step-3-write-your-otel-engine-yaml">Step 3: Write your OTel Engine YAML</a></h3>
+<p>Build your new config using standard OTEL Collector YAML format:</p>
+<pre><code class="language-yaml">receivers:
+  otlp:
+    protocols:
+      grpc: {}
+      http: {}
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 512
+
+exporters:
+  otlphttp/backend:
+    endpoint: https://your-backend.example.com
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp/backend]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp/backend]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp/backend]
+</code></pre>
+<h3 id="step-4-validate-before-running"><a class="header" href="#step-4-validate-before-running">Step 4: Validate before running</a></h3>
+<pre><code class="language-bash">alloy otel validate --config=config.yaml
+</code></pre>
+<h3 id="step-5-consider-the-hybrid-approach-for-alloy-only-features"><a class="header" href="#step-5-consider-the-hybrid-approach-for-alloy-only-features">Step 5: Consider the hybrid approach for Alloy-only features</a></h3>
+<p>If you need <code>prometheus.exporter.unix</code>, <code>loki.source.journal</code>, or other Alloy-only components alongside your OTel pipelines, use the <code>alloyengine</code> extension:</p>
+<pre><code class="language-yaml">extensions:
+  alloyengine:
+    config:
+      file: /etc/alloy/alloy-components.alloy
+    flags:
+      server.http.listen-addr: 0.0.0.0:12345
+
+service:
+  extensions: [alloyengine]
+  pipelines:
+    # ... your OTel pipelines here
+</code></pre>
+<p>The two engines run in parallel but <strong>cannot natively pass data between each other</strong>. Each engine ships its own telemetry independently.</p>
+<h3 id="step-6-run-and-compare"><a class="header" href="#step-6-run-and-compare">Step 6: Run and compare</a></h3>
+<p>Run both configs side by side (on different hosts or in containers) and compare:</p>
+<ul>
+<li>Metric names and label sets</li>
+<li>Log formats and metadata</li>
+<li>Trace span attributes</li>
+<li>Self-monitoring metrics</li>
+</ul>
+<h3 id="step-7-update-dashboards-and-alerts"><a class="header" href="#step-7-update-dashboards-and-alerts">Step 7: Update dashboards and alerts</a></h3>
+<p>This is the step teams underestimate. If you moved from <code>prometheus.exporter.unix</code> to <code>hostmetrics</code>, every dashboard panel and every alert rule that references <code>node_*</code> metrics needs updating to <code>system.*</code> metrics.</p>
+<h2 id="common-migration-mistakes"><a class="header" href="#common-migration-mistakes">Common Migration Mistakes</a></h2>
+<ol>
+<li>
+<p><strong>Assuming metric names are the same</strong> -- They are not. <code>node_*</code> and <code>system.*</code> are completely different naming conventions.</p>
+</li>
+<li>
+<p><strong>Forgetting auth extensions need to be in the service block</strong> -- In OTel YAML, you must list auth extensions in <code>service.extensions</code> <em>and</em> reference them in exporter configs. Missing either step silently fails.</p>
+</li>
+<li>
+<p><strong>Expecting the web UI to work</strong> -- The OTel Engine does not serve the Alloy pipeline visualization UI. If your team depends on it for debugging, use the hybrid approach.</p>
+</li>
+<li>
+<p><strong>Not accounting for port changes</strong> -- Default Engine uses port 12345; OTel Engine uses port 8888. Firewall rules, health checks, and monitoring configs all need updating.</p>
+</li>
+<li>
+<p><strong>Using <code>--storage.path</code> with the OTel Engine</strong> -- The OTel Engine uses the <code>filestorage</code> extension instead. The CLI flag is ignored.</p>
+</li>
+<li>
+<p><strong>Trying to hot-reload</strong> -- The OTel Engine does not support the <code>/-/reload</code> endpoint. You must restart the process for config changes.</p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch08-otel-native/what-changed.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch08-otel-native/when-to-use.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch08-otel-native/what-changed.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch08-otel-native/when-to-use.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

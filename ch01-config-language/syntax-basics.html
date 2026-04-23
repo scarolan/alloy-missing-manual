@@ -1,0 +1,458 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Syntax Basics - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch01-config-language/syntax-basics.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="syntax-basics"><a class="header" href="#syntax-basics">Syntax Basics</a></h1>
+<p>Alloy has its own configuration language. It is not YAML. It is not HCL (Terraform). It is not JSON. It looks like HCL at first glance, which is a trap -- you will assume things work the same way, and they do not. This section covers the actual rules so you can read and write configs without guessing.</p>
+<h2 id="blocks-and-labels"><a class="header" href="#blocks-and-labels">Blocks and Labels</a></h2>
+<p>Everything in an Alloy config lives inside a <strong>block</strong>. A block has a type, a label, and a body wrapped in curly braces:</p>
+<pre><code class="language-alloy">prometheus.scrape "node_metrics" {
+  targets    = prometheus.exporter.unix.default.targets
+  forward_to = [prometheus.relabel.allow_list.receiver]
+  scrape_interval = "60s"
+}
+</code></pre>
+<p>Breaking that down:</p>
+<div class="table-wrapper"><table><thead><tr><th>Part</th><th>Example</th><th>What It Is</th></tr></thead><tbody>
+<tr><td>Component type</td><td><code>prometheus.scrape</code></td><td>The kind of component. Determines what it does.</td></tr>
+<tr><td>Label</td><td><code>"node_metrics"</code></td><td>Your name for this instance. Must be unique per type. Must be a valid identifier (letters, digits, underscores).</td></tr>
+<tr><td>Body</td><td><code>{ ... }</code></td><td>The configuration for this component. Contains attributes and nested blocks.</td></tr>
+</tbody></table>
+</div>
+<p>The label is how you reference this component elsewhere. Other components refer to it as <code>prometheus.scrape.node_metrics</code> (note: the label drops its quotes when used as a reference).</p>
+<p>If you are coming from Prometheus YAML, the mental model is different. In Prometheus, you have a flat list of <code>scrape_configs</code>. In Alloy, each scrape job is its own named component that explicitly wires to other components.</p>
+<pre><code class="language-yaml"># Prometheus YAML -- flat list, implicit wiring
+scrape_configs:
+  - job_name: "node"
+    static_configs:
+      - targets: ["localhost:9100"]
+</code></pre>
+<pre><code class="language-alloy">// Alloy -- named component, explicit wiring
+prometheus.scrape "node" {
+  targets    = [{"__address__" = "localhost:9100"}]
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+</code></pre>
+<h2 id="attributes-vs-nested-blocks"><a class="header" href="#attributes-vs-nested-blocks">Attributes vs Nested Blocks</a></h2>
+<p>Inside a block body, you have two things: <strong>attributes</strong> and <strong>nested blocks</strong>.</p>
+<p><strong>Attributes</strong> use <code>=</code> to assign a value:</p>
+<pre><code class="language-alloy">scrape_interval = "60s"
+job_name        = "integrations/node_exporter"
+</code></pre>
+<p><strong>Nested blocks</strong> use <code>{ }</code> without an <code>=</code> sign:</p>
+<pre><code class="language-alloy">prometheus.remote_write "default" {
+  endpoint {
+    url = "https://prometheus-us-central1.grafana.net/api/prom/push"
+    basic_auth {
+      username = "000000"
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+</code></pre>
+<p>The rule is simple: if you see <code>name = value</code>, it is an attribute. If you see <code>name { }</code>, it is a nested block. Mixing them up (writing <code>endpoint = { ... }</code> instead of <code>endpoint { ... }</code>) is a common parse error.</p>
+<h2 id="types"><a class="header" href="#types">Types</a></h2>
+<p>Alloy supports a small set of types. You will use all of them.</p>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Syntax</th><th>Example</th></tr></thead><tbody>
+<tr><td>String</td><td>Double quotes</td><td><code>"hello"</code></td></tr>
+<tr><td>Multi-line string</td><td>Backticks</td><td><code>`line one\nline two`</code></td></tr>
+<tr><td>Number</td><td>Bare digits</td><td><code>42</code>, <code>3.14</code></td></tr>
+<tr><td>Boolean</td><td><code>true</code> / <code>false</code></td><td><code>enabled = true</code></td></tr>
+<tr><td>Duration</td><td>Quoted string</td><td><code>"60s"</code>, <code>"5m"</code>, <code>"1h"</code></td></tr>
+<tr><td>List</td><td>Square brackets</td><td><code>["a", "b", "c"]</code></td></tr>
+<tr><td>Map/Object</td><td>Curly braces with <code>=</code></td><td><code>{"key" = "value", "port" = 9090}</code></td></tr>
+<tr><td>Null</td><td><code>null</code></td><td><code>value = null</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="strings-and-multi-line-strings"><a class="header" href="#strings-and-multi-line-strings">Strings and Multi-Line Strings</a></h3>
+<p>Regular strings use double quotes. They support escape sequences like <code>\"</code> and <code>\\</code>.</p>
+<pre><code class="language-alloy">description = "This is a simple string"
+</code></pre>
+<p>Multi-line strings use backticks. Everything between the backticks is literal -- no escape processing. This is essential for embedding YAML, JSON, or regex patterns inline:</p>
+<pre><code class="language-alloy">local.file "config" {
+  filename = "/etc/alloy/extra.yaml"
+}
+
+// Or embed directly with a backtick string:
+prometheus.relabel "filter" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = `node_cpu_seconds_total|node_memory_MemTotal_bytes|node_disk_io_time_seconds_total`
+    action        = "keep"
+  }
+}
+</code></pre>
+<p>Backtick strings are how you avoid the backslash nightmare when writing regex. Compare:</p>
+<pre><code class="language-alloy">// Double-quoted: must escape backslashes
+regex = "node_(cpu|disk)_\\w+"
+
+// Backtick: write the regex as-is
+regex = `node_(cpu|disk)_\w+`
+</code></pre>
+<p>Use backticks for any string that contains regex, YAML, JSON, or anything where you would rather not think about escape sequences.</p>
+<h3 id="duration-strings"><a class="header" href="#duration-strings">Duration Strings</a></h3>
+<p>Durations look like bare identifiers, but they must be quoted strings:</p>
+<pre><code class="language-alloy">// CORRECT -- duration as a quoted string
+scrape_interval = "60s"
+scrape_timeout  = "10s"
+poll_frequency  = "5m"
+
+// WRONG -- this is a parse error
+scrape_interval = 60s
+</code></pre>
+<p>Valid duration units: <code>ns</code>, <code>us</code> (or <code>µs</code>), <code>ms</code>, <code>s</code>, <code>m</code>, <code>h</code>.</p>
+<h3 id="lists"><a class="header" href="#lists">Lists</a></h3>
+<p>Lists use square brackets with comma-separated values:</p>
+<pre><code class="language-alloy">forward_to = [prometheus.remote_write.default.receiver]
+
+targets = [
+  {"__address__" = "localhost:9090", "job" = "prometheus"},
+  {"__address__" = "localhost:9100", "job" = "node"},
+]
+</code></pre>
+<p>A trailing comma after the last element is allowed (and recommended -- it makes diffs cleaner).</p>
+<h3 id="maps-objects"><a class="header" href="#maps-objects">Maps (Objects)</a></h3>
+<p>Maps use curly braces with <code>key = value</code> pairs:</p>
+<pre><code class="language-alloy">labels = {
+  "env"     = "production",
+  "cluster" = "us-east-1",
+}
+</code></pre>
+<p>Map keys are usually quoted strings. Values can be any type.</p>
+<h2 id="expressions"><a class="header" href="#expressions">Expressions</a></h2>
+<p>Alloy supports several kinds of expressions for building dynamic values.</p>
+<h3 id="string-concatenation"><a class="header" href="#string-concatenation">String Concatenation</a></h3>
+<p>Use <code>+</code> to join strings:</p>
+<pre><code class="language-alloy">url = "https://" + sys.env("GRAFANA_HOST") + "/api/prom/push"
+</code></pre>
+<h3 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h3>
+<p>Standard math operators work on numbers:</p>
+<pre><code class="language-alloy">value = 1024 * 1024  // 1 MiB in bytes
+</code></pre>
+<h3 id="ternary-conditional-expressions"><a class="header" href="#ternary-conditional-expressions">Ternary (Conditional) Expressions</a></h3>
+<p>Alloy supports ternary expressions for conditional values:</p>
+<pre><code class="language-alloy">// condition ? true_value : false_value
+log_level = sys.env("DEBUG") != "" ? "debug" : "info"
+</code></pre>
+<h3 id="sysenv"><a class="header" href="#sysenv">sys.env()</a></h3>
+<p>The <code>sys.env()</code> function reads environment variables at runtime:</p>
+<pre><code class="language-alloy">password = sys.env("GCLOUD_RW_API_KEY")
+</code></pre>
+<p>This is the primary way to inject secrets and per-host values into configs. See the <a href="../ch03-credentials-and-secrets/sys-env-pattern.html">Credentials and Secrets</a> chapter for full details.</p>
+<h3 id="component-references"><a class="header" href="#component-references">Component References</a></h3>
+<p>You reference another component's exports using dot notation:</p>
+<pre><code class="language-alloy">// component_type.label.export_name
+forward_to = [prometheus.relabel.allow_list.receiver]
+targets    = prometheus.exporter.unix.default.targets
+</code></pre>
+<p>This is how the pipeline is wired together. The DAG (directed acyclic graph) of component references determines what data flows where. See <a href="component-wiring.html">Component Wiring</a> for the full picture.</p>
+<h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
+<p>Alloy supports two comment styles:</p>
+<pre><code class="language-alloy">// Single-line comment
+
+/*
+  Multi-line
+  comment
+*/
+</code></pre>
+<p>Alloy does <strong>not</strong> support <code>#</code> comments. If you are coming from YAML or Prometheus config, this will trip you up. The <code>#</code> character has no special meaning and will cause a parse error if used as a comment.</p>
+<h2 id="the-forward_to-pattern"><a class="header" href="#the-forward_to-pattern">The forward_to Pattern</a></h2>
+<p>This is the single most important concept in Alloy configuration. Every pipeline component that sends data somewhere has a <code>forward_to</code> attribute. It takes a <strong>list</strong> of receivers:</p>
+<pre><code class="language-alloy">prometheus.scrape "metrics" {
+  targets    = [{"__address__" = "localhost:9100"}]
+  forward_to = [prometheus.relabel.filter.receiver]
+}
+
+prometheus.relabel "filter" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = `node_cpu.*`
+    action        = "keep"
+  }
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+</code></pre>
+<p>The data flows: scrape --&gt; relabel --&gt; remote_write. Each component declares where it sends data, and the Alloy runtime builds the pipeline graph from those declarations.</p>
+<p>Key points about <code>forward_to</code>:</p>
+<ol>
+<li>It always takes a <strong>list</strong> (square brackets), even for a single destination.</li>
+<li>Each item in the list is a <code>.receiver</code> or <code>.input</code> export from another component.</li>
+<li>Multiple items in the list means fan-out -- data goes to all of them.</li>
+<li>The wiring is explicit. Nothing is implicit. If you do not wire it, data goes nowhere.</li>
+</ol>
+<h2 id="putting-it-all-together"><a class="header" href="#putting-it-all-together">Putting It All Together</a></h2>
+<p>Here is a minimal but complete config that scrapes the built-in node exporter and sends metrics to Grafana Cloud:</p>
+<pre><code class="language-alloy">// Enable the built-in node exporter
+prometheus.exporter.unix "default" { }
+
+// Scrape it every 60 seconds
+prometheus.scrape "node_metrics" {
+  targets         = prometheus.exporter.unix.default.targets
+  forward_to      = [prometheus.remote_write.metrics_service.receiver]
+  scrape_interval = "60s"
+}
+
+// Send metrics to Grafana Cloud
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_METRICS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+</code></pre>
+<p>Three components. Each one has a type and a label. The scrape component references the exporter's targets and forwards to the remote_write component's receiver. The pipeline is: exporter --&gt; scrape --&gt; remote_write.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>Alloy uses its own config language -- not YAML, not HCL, not JSON</li>
+<li>Everything lives in blocks: <code>component.type "label" { }</code></li>
+<li>Attributes use <code>=</code>, nested blocks use <code>{ }</code> without <code>=</code></li>
+<li>Strings are double-quoted, multi-line strings use backticks</li>
+<li>Durations must be quoted: <code>"60s"</code> not <code>60s</code></li>
+<li>Lists use <code>[ ]</code>, maps use <code>{ key = value }</code></li>
+<li><code>forward_to</code> is how every pipeline is wired -- it always takes a list</li>
+<li>Comments use <code>//</code> or <code>/* */</code> -- never <code>#</code></li>
+<li><code>sys.env()</code> reads environment variables at runtime</li>
+<li>Component references use dot notation: <code>component.type.label.export</code></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch01-config-language/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch01-config-language/gotchas-and-traps.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch01-config-language/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch01-config-language/gotchas-and-traps.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

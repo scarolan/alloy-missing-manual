@@ -1,0 +1,479 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Bootstrap vs Pipeline Scope - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch05-fleet-management/bootstrap-vs-pipeline.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="bootstrap-vs-pipeline-scope"><a class="header" href="#bootstrap-vs-pipeline-scope">Bootstrap vs Pipeline Scope</a></h1>
+<h2 id="two-config-layers"><a class="header" href="#two-config-layers">Two Config Layers</a></h2>
+<p>Fleet Management deployments have two distinct configuration layers:</p>
+<ol>
+<li>
+<p><strong>Bootstrap config</strong> -- a local file on disk (<code>/etc/alloy/config.alloy</code> on Linux, <code>C:\Program Files\GrafanaLabs\Alloy\config.alloy</code> on Windows). This runs when Alloy starts and connects it to Fleet Management.</p>
+</li>
+<li>
+<p><strong>FM pipelines</strong> -- delivered remotely from the Fleet Management UI. Each pipeline is wrapped in a sealed module (see <a href="sealed-module-gotcha.html">The Sealed-Module Gotcha</a>).</p>
+</li>
+</ol>
+<p>Understanding what belongs in each layer is essential. Put the wrong thing in the wrong place and you either break the FM connection or create components that nothing can reach.</p>
+<h2 id="what-goes-where"><a class="header" href="#what-goes-where">What Goes Where</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Bootstrap Config</th><th>FM Pipeline</th><th>Why</th></tr></thead><tbody>
+<tr><td><code>remotecfg</code> block</td><td><strong>Yes</strong></td><td>No</td><td>Must exist before FM can deliver anything</td></tr>
+<tr><td><code>prometheus.remote_write</code></td><td>Reference template only</td><td><strong>Yes, in every pipeline</strong></td><td>Sealed modules cannot reach parent-scope components</td></tr>
+<tr><td><code>loki.write</code></td><td>Reference template only</td><td><strong>Yes, in every pipeline</strong></td><td>Same reason</td></tr>
+<tr><td><code>prometheus.scrape</code></td><td>No</td><td><strong>Yes</strong></td><td>Collection config should be centrally managed</td></tr>
+<tr><td><code>prometheus.exporter.*</code></td><td>No</td><td><strong>Yes</strong></td><td>Same -- managed via FM</td></tr>
+<tr><td><code>prometheus.relabel</code></td><td>No</td><td><strong>Yes</strong></td><td>Same</td></tr>
+<tr><td><code>loki.source.*</code></td><td>No</td><td><strong>Yes</strong></td><td>Same</td></tr>
+<tr><td><code>loki.process</code></td><td>No</td><td><strong>Yes</strong></td><td>Same</td></tr>
+<tr><td><code>discovery.*</code></td><td>No</td><td><strong>Yes</strong></td><td>Same</td></tr>
+</tbody></table>
+</div>
+<p><strong>Rule of thumb:</strong> the bootstrap config should be as small as possible. It connects to FM and nothing else. Everything that collects, processes, or ships data goes in FM pipelines.</p>
+<h2 id="complete-bootstrap-config-example"><a class="header" href="#complete-bootstrap-config-example">Complete Bootstrap Config Example</a></h2>
+<p>This is the actual <code>fleet-config.alloy</code> from the hardened repos. It is deliberately tiny:</p>
+<pre><code class="language-alloy">// Connect to Fleet Management and poll for pipeline updates.
+remotecfg {
+  url            = "https://fleet-management-prod-008.grafana.net"
+  id             = constants.hostname
+  poll_frequency = "60s"
+  attributes     = encoding.from_json(coalesce(`{"env":"pov","team":"ops"}`, `{}`))
+
+  basic_auth {
+    username = "&lt;fleet-management-username&gt;"
+    password = sys.env("GCLOUD_RW_API_KEY")
+  }
+}
+
+// --- REFERENCE TEMPLATES (not reachable from FM pipelines) ---
+
+// Prometheus write endpoint -- copy this block into every FM pipeline
+// that ships metrics. Use sys.env() for credentials.
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push"
+    basic_auth {
+      username = "&lt;prometheus-username&gt;"
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+// Loki write endpoint -- copy this block into every FM pipeline
+// that ships logs. Use sys.env() for credentials.
+loki.write "grafana_cloud_loki" {
+  endpoint {
+    url = "https://logs-prod-006.grafana.net/loki/api/v1/push"
+    basic_auth {
+      username = "&lt;loki-username&gt;"
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+</code></pre>
+<h3 id="what-to-edit-before-deploying"><a class="header" href="#what-to-edit-before-deploying">What to Edit Before Deploying</a></h3>
+<p>Only two values need to be changed per stack:</p>
+<ol>
+<li>The <code>url</code> in the <code>remotecfg</code> block -- your regional FM URL (from Fleet Management -- Collector configuration)</li>
+<li>The <code>username</code> in the <code>remotecfg.basic_auth</code> block -- your FM instance ID (6-digit number, same page)</li>
+</ol>
+<p>The reference template <code>prometheus.remote_write</code> and <code>loki.write</code> blocks can have placeholder usernames/URLs because FM pipelines will not use them. They exist only as copy-paste references.</p>
+<h3 id="the-attributes-map"><a class="header" href="#the-attributes-map">The attributes Map</a></h3>
+<pre><code class="language-alloy">attributes = encoding.from_json(coalesce(`{"env":"pov","team":"ops"}`, `{}`))
+</code></pre>
+<p>Attributes are key/value pairs attached to the collector in the FM UI. You use them as matchers when targeting pipelines to specific groups of collectors. Examples:</p>
+<ul>
+<li><code>env=production</code> + <code>team=platform</code> -- target all production platform hosts</li>
+<li><code>env=staging</code> + <code>role=webserver</code> -- target staging web servers only</li>
+<li><code>os=linux</code> + <code>region=us-east-1</code> -- target Linux hosts in a specific region</li>
+</ul>
+<p>The <code>coalesce()</code> wrapper provides a fallback empty map (<code>{}</code>) in case the JSON string is malformed.</p>
+<h2 id="complete-fm-pipeline-example"><a class="header" href="#complete-fm-pipeline-example">Complete FM Pipeline Example</a></h2>
+<p>This is a self-contained FM pipeline for Linux host monitoring. Note that it includes its own <code>prometheus.remote_write</code> and <code>loki.write</code> blocks:</p>
+<pre><code class="language-alloy">// =================================================================
+// FM Pipeline: Linux Host Monitoring
+// =================================================================
+// Self-contained pipeline with its own write endpoints.
+// Uses sys.env() for all credentials (set once per host in
+// /etc/default/alloy or /etc/sysconfig/alloy).
+// =================================================================
+
+// --- Write Endpoints (must be inside every FM pipeline) ---
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_METRICS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+loki.write "grafana_cloud_loki" {
+  endpoint {
+    url = sys.env("GRAFANA_LOGS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_LOGS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+// --- Metrics Collection ---
+discovery.relabel "integrations_node_exporter" {
+  targets = prometheus.exporter.unix.integrations_node_exporter.targets
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+  rule {
+    target_label = "job"
+    replacement  = "integrations/node_exporter"
+  }
+}
+
+prometheus.exporter.unix "integrations_node_exporter" {
+  enable_collectors = ["tcpstat", "systemd"]
+
+  systemd {
+    unit_include = "(sshd?\\.service|crond?\\.service|chronyd?\\.service|systemd-journald\\.service|alloy\\.service|docker\\.service)"
+  }
+
+  filesystem {
+    fs_types_exclude     = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|tmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$"
+    mount_points_exclude = "^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+)($|/)"
+  }
+}
+
+prometheus.scrape "integrations_node_exporter" {
+  targets         = discovery.relabel.integrations_node_exporter.output
+  forward_to      = [prometheus.relabel.integrations_node_exporter.receiver]
+  scrape_interval = "60s"
+}
+
+prometheus.relabel "integrations_node_exporter" {
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+  // Layer 1: Allow-list (abbreviated for clarity -- full list in config.alloy)
+  rule {
+    source_labels = ["__name__"]
+    regex         = "up|node_cpu_seconds_total|node_memory_MemTotal_bytes|node_memory_MemAvailable_bytes|node_filesystem_size_bytes|node_filesystem_avail_bytes|node_network_receive_bytes_total|node_network_transmit_bytes_total|node_load1|node_load5|node_load15|node_boot_time_seconds|node_systemd_unit_state"
+    action        = "keep"
+  }
+}
+
+// --- Log Collection ---
+loki.relabel "journal" {
+  forward_to = [loki.write.grafana_cloud_loki.receiver]
+  rule {
+    target_label = "job"
+    replacement  = "integrations/node_exporter"
+  }
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+}
+
+loki.source.journal "default" {
+  max_age       = "12h0m0s"
+  forward_to    = [loki.process.journal.receiver]
+  relabel_rules = loki.relabel.journal_metadata.rules
+}
+
+loki.relabel "journal_metadata" {
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+  forward_to = []
+}
+
+loki.process "journal" {
+  forward_to = [loki.relabel.journal.receiver]
+}
+</code></pre>
+<h2 id="the-smoke-test-pipeline"><a class="header" href="#the-smoke-test-pipeline">The Smoke-Test Pipeline</a></h2>
+<p>Before deploying the full hardened config via FM, use a minimal smoke-test pipeline to verify the end-to-end loop (host -- FM -- pipeline delivered -- data lands in stack):</p>
+<pre><code class="language-alloy">prometheus.remote_write "smoke_test" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_METRICS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+prometheus.exporter.self "alloy_self" { }
+
+discovery.relabel "alloy_self" {
+  targets = prometheus.exporter.self.alloy_self.targets
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+  rule {
+    target_label = "job"
+    replacement  = "fm_smoke_test"
+  }
+}
+
+prometheus.scrape "alloy_self" {
+  targets         = discovery.relabel.alloy_self.output
+  forward_to      = [prometheus.remote_write.smoke_test.receiver]
+  scrape_interval = "30s"
+}
+</code></pre>
+<p>Verify with:</p>
+<pre><code class="language-promql">alloy_build_info{job="fm_smoke_test"}
+</code></pre>
+<p>If this returns data within ~2 minutes, the plumbing works. Replace the smoke-test pipeline with your real collection config.</p>
+<h2 id="pipeline-targeting-with-matchers"><a class="header" href="#pipeline-targeting-with-matchers">Pipeline Targeting with Matchers</a></h2>
+<p>When creating a pipeline in the FM UI, you target it to specific collectors using matchers:</p>
+<ul>
+<li><strong>By attribute:</strong> match the <code>env</code>, <code>team</code>, <code>role</code>, or any other attribute set in the bootstrap config's <code>attributes</code> map. Example: <code>env=production</code> targets all collectors with that attribute.</li>
+<li><strong>By collector ID:</strong> match the specific hostname (since <code>id = constants.hostname</code> in the bootstrap config).</li>
+</ul>
+<p>Attribute-based matching is recommended for fleet-wide pipelines. Collector ID matching is useful for one-off debugging or host-specific overrides.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Mistake</th><th>Impact</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Putting collection config in the bootstrap</td><td>Cannot update without touching every host</td><td>Move everything except <code>remotecfg</code> to FM pipelines</td></tr>
+<tr><td>Omitting write endpoints from FM pipeline</td><td>Pipeline fails to ship data</td><td>Include <code>prometheus.remote_write</code> and/or <code>loki.write</code> in every pipeline</td></tr>
+<tr><td>Hardcoding credentials in FM pipeline YAML</td><td>Secrets visible in FM UI, exports, backups</td><td>Use <code>sys.env()</code> for all credentials</td></tr>
+<tr><td>Forgetting to set env vars on the host</td><td>FM pipeline runs but <code>sys.env()</code> returns empty strings</td><td>Set all five env vars per the <a href="../../ch03-credentials-and-secrets/linux-env-setup.html">Linux</a> or <a href="../../ch03-credentials-and-secrets/windows-env-setup.html">Windows</a> setup</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch05-fleet-management/sealed-module-gotcha.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch05-fleet-management/write-endpoints.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch05-fleet-management/sealed-module-gotcha.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch05-fleet-management/write-endpoints.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

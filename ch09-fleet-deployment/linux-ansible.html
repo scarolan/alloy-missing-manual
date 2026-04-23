@@ -1,0 +1,735 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Linux: Ansible - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch09-fleet-deployment/linux-ansible.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="linux-ansible"><a class="header" href="#linux-ansible">Linux: Ansible</a></h1>
+<p>Ansible is the most common tool for deploying Alloy across Linux fleets. Grafana provides an official Ansible role in the <code>grafana.grafana</code> collection. This section covers both the official role and a custom role pattern for teams that need more control.</p>
+<h2 id="the-official-grafana-ansible-collection"><a class="header" href="#the-official-grafana-ansible-collection">The Official Grafana Ansible Collection</a></h2>
+<p>The <code>grafana.grafana</code> collection on Ansible Galaxy includes an <code>alloy</code> role that handles package installation, configuration, and service management across Debian, Ubuntu, RHEL, Rocky, AlmaLinux, SUSE, and macOS.</p>
+<h3 id="install-the-collection"><a class="header" href="#install-the-collection">Install the Collection</a></h3>
+<pre><code class="language-bash">ansible-galaxy collection install grafana.grafana
+</code></pre>
+<h3 id="minimal-playbook"><a class="header" href="#minimal-playbook">Minimal Playbook</a></h3>
+<pre><code class="language-yaml">- name: Deploy Alloy
+  hosts: alloy_fleet
+  become: true
+
+  tasks:
+    - name: Install and configure Alloy
+      ansible.builtin.include_role:
+        name: grafana.grafana.alloy
+      vars:
+        alloy_version: "1.8.1"
+        alloy_config: |
+          prometheus.scrape "default" {
+            targets = [{"__address__" = "localhost:12345"}]
+            forward_to = [prometheus.remote_write.default.receiver]
+          }
+
+          prometheus.remote_write "default" {
+            endpoint {
+              url = env("GRAFANA_METRICS_URL")
+              basic_auth {
+                username = env("GRAFANA_METRICS_USERNAME")
+                password = env("GCLOUD_RW_API_KEY")
+              }
+            }
+          }
+</code></pre>
+<h3 id="official-role-variables"><a class="header" href="#official-role-variables">Official Role Variables</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Variable</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>alloy_version</code></td><td><code>"latest"</code></td><td>Version to install. <strong>Always override this in production.</strong></td></tr>
+<tr><td><code>alloy_uninstall</code></td><td><code>false</code></td><td>Set to <code>true</code> to remove Alloy</td></tr>
+<tr><td><code>alloy_expose_port</code></td><td><code>false</code></td><td>Add a firewalld rule to expose the Alloy HTTP port</td></tr>
+<tr><td><code>alloy_user_groups</code></td><td><code>[]</code></td><td>Additional groups for the <code>alloy</code> user (e.g., <code>["systemd-journal"]</code>)</td></tr>
+<tr><td><code>alloy_env_file_vars</code></td><td><code>{}</code></td><td>Dictionary of environment variables written to the env file</td></tr>
+<tr><td><code>alloy_systemd_override</code></td><td><code>{}</code></td><td>Systemd drop-in override settings</td></tr>
+<tr><td><code>alloy_config</code></td><td><code>{}</code></td><td>The Alloy configuration block (written to <code>/etc/alloy/config.alloy</code>)</td></tr>
+<tr><td><code>alloy_github_api_url</code></td><td>GitHub API releases URL</td><td>Override for air-gapped environments</td></tr>
+<tr><td><code>alloy_download_url_rpm</code></td><td>GitHub releases URL</td><td>Custom RPM download URL</td></tr>
+<tr><td><code>alloy_download_url_deb</code></td><td>GitHub releases URL</td><td>Custom DEB download URL</td></tr>
+<tr><td><code>alloy_readiness_check_use_https</code></td><td><code>false</code></td><td>Use HTTPS for the post-deploy readiness check</td></tr>
+<tr><td><code>alloy_readiness_check_use_proxy</code></td><td><code>true</code></td><td>Use proxy for the readiness check</td></tr>
+</tbody></table>
+</div>
+<h3 id="official-role-handlers"><a class="header" href="#official-role-handlers">Official Role Handlers</a></h3>
+<p>The role defines two handlers:</p>
+<pre><code class="language-yaml"># Handler 1: Linux (systemd)
+- name: Restart alloy
+  listen: "restart alloy"
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: alloy.service
+    state: restarted
+    enabled: true
+  when: not ansible_check_mode
+
+# Handler 2: macOS (Homebrew)
+- name: Restart alloy macos
+  listen: "restart alloy macos"
+  ansible.builtin.command: "brew services restart alloy"
+  when:
+    - not ansible_check_mode
+    - ansible_facts['os_family'] == 'Darwin'
+</code></pre>
+<h3 id="uninstall"><a class="header" href="#uninstall">Uninstall</a></h3>
+<pre><code class="language-bash">ansible-playbook deploy-alloy.yml -e "alloy_uninstall=true"
+</code></pre>
+<h2 id="building-a-custom-role"><a class="header" href="#building-a-custom-role">Building a Custom Role</a></h2>
+<p>The official role is a good starting point, but many teams need more control: credential management via Ansible Vault, environment-specific config templates, config validation before restart, and separation of concerns between install, configure, and credentials. Here is a custom role structure.</p>
+<h3 id="role-directory-structure"><a class="header" href="#role-directory-structure">Role Directory Structure</a></h3>
+<pre><code>roles/alloy/
+├── defaults/
+│   └── main.yml           # Default variables (version, ports, paths)
+├── handlers/
+│   └── main.yml           # Restart and reload handlers
+├── tasks/
+│   ├── main.yml           # Entry point: routes to install/configure/credentials
+│   ├── repo.yml           # Add Grafana apt/yum repository
+│   ├── install.yml        # Install the alloy package
+│   ├── configure.yml      # Deploy config file from template
+│   └── credentials.yml    # Deploy credentials to env file
+├── templates/
+│   ├── config.alloy.j2    # Alloy configuration template
+│   └── alloy.env.j2       # Environment file template
+└── vars/
+    ├── Debian.yml          # Debian/Ubuntu-specific variables
+    └── RedHat.yml          # RHEL/Rocky/CentOS-specific variables
+</code></pre>
+<h3 id="defaultsmainyml"><a class="header" href="#defaultsmainyml">defaults/main.yml</a></h3>
+<pre><code class="language-yaml">---
+# Alloy version - always pin in production
+alloy_version: "1.8.1"
+
+# Package name
+alloy_package: "alloy"
+
+# Service settings
+alloy_service_name: "alloy"
+alloy_service_enabled: true
+alloy_service_state: started
+
+# Config paths
+alloy_config_dir: "/etc/alloy"
+alloy_config_file: "config.alloy"
+alloy_storage_path: "/var/lib/alloy"
+
+# HTTP server
+alloy_listen_addr: "127.0.0.1"
+alloy_listen_port: 12345
+
+# Grafana repository
+alloy_manage_repo: true
+
+# User and group
+alloy_user: "alloy"
+alloy_user_groups: []
+
+# Stagger start for thundering herd prevention
+alloy_stagger_start: false
+alloy_stagger_max_seconds: 60
+
+# Credentials (use Ansible Vault for values)
+alloy_grafana_metrics_url: ""
+alloy_grafana_metrics_username: ""
+alloy_grafana_logs_url: ""
+alloy_grafana_logs_username: ""
+alloy_grafana_api_key: ""
+</code></pre>
+<h3 id="varsdebianyml"><a class="header" href="#varsdebianyml">vars/Debian.yml</a></h3>
+<pre><code class="language-yaml">---
+alloy_env_file: "/etc/default/alloy"
+alloy_repo_gpg_key_url: "https://apt.grafana.com/gpg-full.key"
+alloy_repo_gpg_key_path: "/etc/apt/keyrings/grafana.asc"
+alloy_repo_url: "https://apt.grafana.com"
+alloy_repo_component: "stable main"
+</code></pre>
+<h3 id="varsredhatyml"><a class="header" href="#varsredhatyml">vars/RedHat.yml</a></h3>
+<pre><code class="language-yaml">---
+alloy_env_file: "/etc/sysconfig/alloy"
+alloy_repo_gpg_key_url: "https://rpm.grafana.com/gpg.key"
+alloy_repo_url: "https://rpm.grafana.com"
+</code></pre>
+<h3 id="tasksmainyml"><a class="header" href="#tasksmainyml">tasks/main.yml</a></h3>
+<pre><code class="language-yaml">---
+- name: Include OS-specific variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Add Grafana repository
+  ansible.builtin.include_tasks: repo.yml
+  when: alloy_manage_repo
+
+- name: Install Alloy package
+  ansible.builtin.include_tasks: install.yml
+
+- name: Deploy credentials
+  ansible.builtin.include_tasks: credentials.yml
+
+- name: Deploy configuration
+  ansible.builtin.include_tasks: configure.yml
+</code></pre>
+<h3 id="tasksrepoyml"><a class="header" href="#tasksrepoyml">tasks/repo.yml</a></h3>
+<pre><code class="language-yaml">---
+# --- Debian/Ubuntu ---
+- name: Add Grafana GPG key (Debian)
+  ansible.builtin.get_url:
+    url: "{{ alloy_repo_gpg_key_url }}"
+    dest: "{{ alloy_repo_gpg_key_path }}"
+    mode: "0644"
+  when: ansible_os_family == "Debian"
+
+- name: Add Grafana APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by={{ alloy_repo_gpg_key_path }}] {{ alloy_repo_url }} {{ alloy_repo_component }}"
+    state: present
+    filename: grafana
+  when: ansible_os_family == "Debian"
+
+# --- RedHat/CentOS/Rocky ---
+- name: Import Grafana RPM GPG key
+  ansible.builtin.rpm_key:
+    key: "{{ alloy_repo_gpg_key_url }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Add Grafana YUM repository
+  ansible.builtin.yum_repository:
+    name: grafana
+    description: Grafana Repository
+    baseurl: "{{ alloy_repo_url }}"
+    gpgcheck: true
+    gpgkey: "{{ alloy_repo_gpg_key_url }}"
+    sslverify: true
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    enabled: true
+  when: ansible_os_family == "RedHat"
+</code></pre>
+<h3 id="tasksinstallyml"><a class="header" href="#tasksinstallyml">tasks/install.yml</a></h3>
+<pre><code class="language-yaml">---
+- name: Install Alloy package (Debian)
+  ansible.builtin.apt:
+    name: "{{ alloy_package }}={{ alloy_version }}-1"
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Debian"
+  notify: restart alloy
+
+- name: Install Alloy package (RedHat)
+  ansible.builtin.dnf:
+    name: "{{ alloy_package }}-{{ alloy_version }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+  notify: restart alloy
+
+- name: Ensure storage directory exists
+  ansible.builtin.file:
+    path: "{{ alloy_storage_path }}"
+    state: directory
+    owner: "{{ alloy_user }}"
+    mode: "0755"
+
+- name: Add alloy user to additional groups
+  ansible.builtin.user:
+    name: "{{ alloy_user }}"
+    groups: "{{ alloy_user_groups }}"
+    append: true
+  when: alloy_user_groups | length &gt; 0
+  notify: restart alloy
+</code></pre>
+<h3 id="taskscredentialsyml"><a class="header" href="#taskscredentialsyml">tasks/credentials.yml</a></h3>
+<pre><code class="language-yaml">---
+- name: Deploy environment file with credentials
+  ansible.builtin.template:
+    src: alloy.env.j2
+    dest: "{{ alloy_env_file }}"
+    owner: root
+    group: root
+    mode: "0600"
+  notify: restart alloy
+  no_log: true  # Prevents credentials from appearing in Ansible output
+</code></pre>
+<h3 id="tasksconfigureyml"><a class="header" href="#tasksconfigureyml">tasks/configure.yml</a></h3>
+<pre><code class="language-yaml">---
+- name: Deploy Alloy configuration
+  ansible.builtin.template:
+    src: config.alloy.j2
+    dest: "{{ alloy_config_dir }}/{{ alloy_config_file }}"
+    owner: root
+    group: "{{ alloy_user }}"
+    mode: "0640"
+    validate: "alloy validate %s"
+  notify: reload alloy
+
+- name: Ensure Alloy service is enabled and started
+  ansible.builtin.systemd:
+    name: "{{ alloy_service_name }}"
+    enabled: "{{ alloy_service_enabled }}"
+    state: "{{ alloy_service_state }}"
+    daemon_reload: true
+</code></pre>
+<p>The <code>validate</code> parameter on the template task runs <code>alloy validate</code> against the rendered template before deploying it. If validation fails, the file is not deployed and the play fails. This is your safety net.</p>
+<h3 id="handlersmainyml"><a class="header" href="#handlersmainyml">handlers/main.yml</a></h3>
+<pre><code class="language-yaml">---
+# Reload: picks up config changes without restarting the process.
+# Does NOT pick up environment variable changes.
+- name: reload alloy
+  ansible.builtin.uri:
+    url: "http://{{ alloy_listen_addr }}:{{ alloy_listen_port }}/-/reload"
+    method: POST
+    status_code: 200
+  listen: "reload alloy"
+
+# Restart: full process restart. Required for env var changes,
+# version upgrades, and when reload fails.
+- name: restart alloy
+  ansible.builtin.systemd:
+    name: "{{ alloy_service_name }}"
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  listen: "restart alloy"
+</code></pre>
+<p><strong>Key distinction:</strong> Config file changes trigger a <strong>reload</strong> (POST to <code>/-/reload</code>), which is non-disruptive. Credential changes, package upgrades, and group membership changes trigger a <strong>restart</strong>, which briefly interrupts collection.</p>
+<h3 id="templatesalloyenvj2"><a class="header" href="#templatesalloyenvj2">templates/alloy.env.j2</a></h3>
+<pre><code class="language-jinja2"># Managed by Ansible - do not edit manually
+# Alloy environment file
+
+# Service arguments
+CONFIG_FILE={{ alloy_config_dir }}/{{ alloy_config_file }}
+CUSTOM_ARGS=--server.http.listen-addr={{ alloy_listen_addr }}:{{ alloy_listen_port }} --storage.path={{ alloy_storage_path }}
+
+# Grafana Cloud credentials
+{% if alloy_grafana_api_key %}
+GCLOUD_RW_API_KEY={{ alloy_grafana_api_key }}
+{% endif %}
+{% if alloy_grafana_metrics_url %}
+GRAFANA_METRICS_URL={{ alloy_grafana_metrics_url }}
+GRAFANA_METRICS_USERNAME={{ alloy_grafana_metrics_username }}
+{% endif %}
+{% if alloy_grafana_logs_url %}
+GRAFANA_LOGS_URL={{ alloy_grafana_logs_url }}
+GRAFANA_LOGS_USERNAME={{ alloy_grafana_logs_username }}
+{% endif %}
+</code></pre>
+<h3 id="templatesconfigalloyj2"><a class="header" href="#templatesconfigalloyj2">templates/config.alloy.j2</a></h3>
+<pre><code class="language-jinja2">// Managed by Ansible - do not edit manually
+// Host: {{ inventory_hostname }}
+// Generated: {{ ansible_date_time.iso8601 }}
+
+// ── Prometheus Scrape ──────────────────────────────────────
+prometheus.scrape "default" {
+  targets = [{"__address__" = "localhost:{{ alloy_listen_port }}"}]
+  forward_to = [prometheus.remote_write.default.receiver]
+  scrape_interval = "60s"
+}
+
+// ── Node Exporter (Linux metrics) ──────────────────────────
+{% if alloy_enable_node_exporter | default(true) %}
+prometheus.exporter.unix "default" { }
+
+prometheus.scrape "node" {
+  targets    = prometheus.exporter.unix.default.targets
+  forward_to = [prometheus.remote_write.default.receiver]
+  scrape_interval = "60s"
+}
+{% endif %}
+
+// ── Remote Write ───────────────────────────────────────────
+prometheus.remote_write "default" {
+  endpoint {
+    url = env("GRAFANA_METRICS_URL")
+    basic_auth {
+      username = env("GRAFANA_METRICS_USERNAME")
+      password = env("GCLOUD_RW_API_KEY")
+    }
+  }
+  external_labels = {
+    cluster    = "{{ alloy_cluster_name | default('default') }}",
+    environment = "{{ alloy_environment | default('production') }}",
+  }
+}
+
+{% if alloy_enable_logs | default(false) %}
+// ── Journal Logs ───────────────────────────────────────────
+loki.source.journal "default" {
+  forward_to = [loki.write.default.receiver]
+  labels = {
+    job = "systemd-journal",
+  }
+}
+
+loki.write "default" {
+  endpoint {
+    url = env("GRAFANA_LOGS_URL")
+    basic_auth {
+      username = env("GRAFANA_LOGS_USERNAME")
+      password = env("GCLOUD_RW_API_KEY")
+    }
+  }
+  external_labels = {
+    cluster     = "{{ alloy_cluster_name | default('default') }}",
+    environment = "{{ alloy_environment | default('production') }}",
+  }
+}
+{% endif %}
+</code></pre>
+<h2 id="ansible-vault-for-credentials"><a class="header" href="#ansible-vault-for-credentials">Ansible Vault for Credentials</a></h2>
+<p>Never store API keys in plain text in your playbook or inventory. Use Ansible Vault.</p>
+<h3 id="encrypt-the-credentials"><a class="header" href="#encrypt-the-credentials">Encrypt the credentials</a></h3>
+<pre><code class="language-bash">ansible-vault encrypt_string 'glc_xxxxxxxxxxxxx' --name 'alloy_grafana_api_key'
+</code></pre>
+<p>This outputs a block you paste into your inventory or group_vars:</p>
+<pre><code class="language-yaml">alloy_grafana_api_key: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  61626364656667...
+</code></pre>
+<h3 id="group-vars-structure"><a class="header" href="#group-vars-structure">Group vars structure</a></h3>
+<pre><code>inventory/
+├── hosts.yml
+├── group_vars/
+│   ├── all.yml                     # Common settings (version, features)
+│   ├── production.yml              # Production endpoints
+│   ├── staging.yml                 # Staging endpoints
+│   └── vault.yml                   # Encrypted credentials (ansible-vault)
+└── host_vars/
+    └── special-host.yml            # Host-specific overrides
+</code></pre>
+<p><strong>group_vars/all.yml:</strong></p>
+<pre><code class="language-yaml">alloy_version: "1.8.1"
+alloy_enable_node_exporter: true
+alloy_enable_logs: false
+alloy_cluster_name: "my-company"
+</code></pre>
+<p><strong>group_vars/production.yml:</strong></p>
+<pre><code class="language-yaml">alloy_environment: "production"
+alloy_grafana_metrics_url: "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push"
+alloy_grafana_metrics_username: "000000"
+alloy_grafana_logs_url: "https://logs-prod-006.grafana.net/loki/api/v1/push"
+alloy_grafana_logs_username: "000000"
+</code></pre>
+<p><strong>group_vars/vault.yml</strong> (encrypted with <code>ansible-vault encrypt</code>):</p>
+<pre><code class="language-yaml">alloy_grafana_api_key: "glc_xxxxxxxxxxxxx"
+</code></pre>
+<h3 id="example-inventory"><a class="header" href="#example-inventory">Example Inventory</a></h3>
+<pre><code class="language-yaml"># inventory/hosts.yml
+all:
+  children:
+    production:
+      children:
+        prod_webservers:
+          hosts:
+            web-[01:20].prod.example.com:
+        prod_databases:
+          hosts:
+            db-[01:05].prod.example.com:
+          vars:
+            alloy_user_groups:
+              - mysql
+    staging:
+      children:
+        staging_all:
+          hosts:
+            staging-[01:05].example.com:
+          vars:
+            alloy_environment: "staging"
+</code></pre>
+<h3 id="run-with-vault"><a class="header" href="#run-with-vault">Run with Vault</a></h3>
+<pre><code class="language-bash"># Prompted for vault password
+ansible-playbook -i inventory/hosts.yml deploy-alloy.yml --ask-vault-pass
+
+# Using a vault password file
+ansible-playbook -i inventory/hosts.yml deploy-alloy.yml \
+  --vault-password-file ~/.vault_password
+</code></pre>
+<h2 id="the-full-playbook"><a class="header" href="#the-full-playbook">The Full Playbook</a></h2>
+<pre><code class="language-yaml">---
+- name: Deploy Grafana Alloy
+  hosts: alloy_fleet
+  become: true
+  serial: 50  # Deploy in batches of 50 to avoid thundering herd
+
+  pre_tasks:
+    - name: Verify network connectivity to metrics endpoint
+      ansible.builtin.uri:
+        url: "{{ alloy_grafana_metrics_url }}"
+        method: HEAD
+        status_code: [200, 401, 405]
+        timeout: 10
+      when: alloy_grafana_metrics_url | length &gt; 0
+      ignore_errors: false
+
+  roles:
+    - role: alloy
+
+  post_tasks:
+    - name: Wait for Alloy to be ready
+      ansible.builtin.uri:
+        url: "http://{{ alloy_listen_addr }}:{{ alloy_listen_port }}/-/ready"
+        status_code: 200
+      register: ready_check
+      until: ready_check.status == 200
+      retries: 12
+      delay: 5
+
+    - name: Verify Alloy is healthy
+      ansible.builtin.uri:
+        url: "http://{{ alloy_listen_addr }}:{{ alloy_listen_port }}/-/healthy"
+        status_code: 200
+      register: healthy_check
+      failed_when: healthy_check.status != 200
+</code></pre>
+<h2 id="idempotency"><a class="header" href="#idempotency">Idempotency</a></h2>
+<p>Every task in this role is idempotent. Running the playbook 10 times produces the same result as running it once:</p>
+<ul>
+<li><strong>Repository tasks</strong>: <code>state: present</code> is a no-op if already present</li>
+<li><strong>Package install</strong>: <code>state: present</code> with a pinned version only installs if the version is not already installed</li>
+<li><strong>Template tasks</strong>: Only write the file (and notify the handler) if the rendered content differs from what is on disk</li>
+<li><strong>Service tasks</strong>: <code>state: started</code> is a no-op if already running</li>
+</ul>
+<p>This means you can safely run the playbook on a schedule (e.g., every hour via cron or AWX/Tower) to enforce desired state and correct drift.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Mistake</th><th>What Happens</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Using <code>alloy_version: "latest"</code></td><td>Different hosts get different versions over time</td><td>Always pin: <code>alloy_version: "1.8.1"</code></td></tr>
+<tr><td>Credentials in plain text in playbook</td><td>Secrets visible in version control</td><td>Use Ansible Vault</td></tr>
+<tr><td>No handler for config changes</td><td>Config deploys but Alloy keeps running old config</td><td>Use <code>notify: reload alloy</code> on the template task</td></tr>
+<tr><td>Using <code>restart</code> handler for config changes</td><td>Unnecessary service interruption</td><td>Use <code>reload</code> (POST to <code>/-/reload</code>) for config; <code>restart</code> only for env/package changes</td></tr>
+<tr><td>Missing <code>validate</code> on template</td><td>Bad config deployed, service crashes on restart</td><td>Add <code>validate: "alloy validate %s"</code> to the template task</td></tr>
+<tr><td>No <code>serial</code> on large fleets</td><td>Thundering herd on write endpoints</td><td>Set <code>serial: 50</code> or <code>serial: "10%"</code></td></tr>
+<tr><td><code>no_log: true</code> missing on credentials task</td><td>API keys visible in Ansible output</td><td>Add <code>no_log: true</code> to credential tasks</td></tr>
+<tr><td>Not adding <code>alloy</code> user to <code>systemd-journal</code> group</td><td>Journal log collection fails silently</td><td>Set <code>alloy_user_groups: ["systemd-journal"]</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>The <code>grafana.grafana.alloy</code> collection role handles the basics. For production fleets, build a custom role that separates repository setup, installation, credentials, and configuration into distinct task files. Use Jinja2 templates for environment-specific configs, Ansible Vault for credentials, and the <code>validate</code> parameter on template tasks as a pre-deploy safety net. Always pin the version, use <code>serial</code> to stagger deployment, and use <code>reload</code> instead of <code>restart</code> for config-only changes.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch09-fleet-deployment/deployment-strategy.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch09-fleet-deployment/linux-other.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch09-fleet-deployment/deployment-strategy.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch09-fleet-deployment/linux-other.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,754 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Layer 1: Allow-List - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch02-cardinality-control/layer1-allow-list.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="layer-1-allow-list"><a class="header" href="#layer-1-allow-list">Layer 1: Allow-List</a></h1>
+<p>The allow-list is the most impactful single filter in the entire cardinality control stack. It operates on metric names -- the <code>__name__</code> label -- and keeps only the metrics you explicitly list. Everything else is dropped before it leaves the host.</p>
+<p>This one rule typically eliminates 60-80% of unnecessary series.</p>
+<h2 id="why-allow-list-beats-deny-list"><a class="header" href="#why-allow-list-beats-deny-list">Why Allow-List Beats Deny-List</a></h2>
+<p>A deny-list says "drop these specific metrics." An allow-list says "keep only these specific metrics."</p>
+<p>The critical difference: <strong>what happens when the exporter is upgraded and adds new metrics?</strong></p>
+<ul>
+<li><strong>Deny-list</strong>: New metrics pass through silently. Your series count creeps up with every upgrade. You discover the increase weeks later on your bill.</li>
+<li><strong>Allow-list</strong>: New metrics are dropped by default. Your series count stays exactly where you set it. To add a new metric, you make a conscious decision.</li>
+</ul>
+<p>Allow-lists give you a closed system. Nothing unexpected gets through.</p>
+<h2 id="the-join-syntax"><a class="header" href="#the-join-syntax">The <code>join()</code> Syntax</a></h2>
+<p>Alloy's configuration language provides a <code>join()</code> function that builds a regex from an array of strings. This is the key to making allow-lists maintainable:</p>
+<pre><code class="language-alloy">rule {
+    source_labels = ["__name__"]
+    regex = join([
+        "metric_name_one",
+        "metric_name_two",
+        "metric_name_three",
+    ], "|")
+    action = "keep"
+}
+</code></pre>
+<p>The <code>join()</code> call produces the regex <code>metric_name_one|metric_name_two|metric_name_three</code> at runtime. The benefits over a raw regex string:</p>
+<ul>
+<li><strong>One metric per line</strong> -- easy to scan, diff, and review in pull requests</li>
+<li><strong>Comments between entries</strong> -- group metrics by category with <code>//</code> comments</li>
+<li><strong>No escaping issues</strong> -- each entry is a plain string, not embedded in a regex</li>
+<li><strong>Easy to add/remove</strong> -- add a line, remove a line, no worrying about trailing <code>|</code> or missing parentheses</li>
+</ul>
+<h2 id="complete-allow-list-node-exporter-full-dashboard-1860"><a class="header" href="#complete-allow-list-node-exporter-full-dashboard-1860">Complete Allow-List: Node Exporter Full (Dashboard 1860)</a></h2>
+<p>This is the full 208-metric allow-list for the <a href="https://grafana.com/grafana/dashboards/1860-node-exporter-full/">Node Exporter Full dashboard</a>. Every metric listed below powers at least one panel in the dashboard. The list is grouped by category with comments matching the organization in the hardened config.</p>
+<pre><code class="language-alloy">prometheus.relabel "integrations_node_exporter" {
+    forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+    // ===================================================================
+    // LAYER 1: Allow-list -- only dashboard-required metrics pass through
+    // ===================================================================
+    rule {
+        source_labels = ["__name__"]
+        regex = join([
+            // -- Uptime &amp; clock --
+            "up",
+            "node_boot_time_seconds",
+            "node_time_seconds",
+            "node_time_zone_offset_seconds",
+
+            // -- CPU --
+            "node_cpu_seconds_total",
+            "node_cpu_guest_seconds_total",
+            "node_cpu_scaling_frequency_hertz",
+            "node_cpu_scaling_frequency_max_hertz",
+            "node_cpu_scaling_frequency_min_hertz",
+            "node_load1",
+            "node_load5",
+            "node_load15",
+
+            // -- Memory --
+            "node_memory_MemTotal_bytes",
+            "node_memory_MemFree_bytes",
+            "node_memory_MemAvailable_bytes",
+            "node_memory_Buffers_bytes",
+            "node_memory_Cached_bytes",
+            "node_memory_SwapTotal_bytes",
+            "node_memory_SwapFree_bytes",
+            "node_memory_SwapCached_bytes",
+            "node_memory_Active_bytes",
+            "node_memory_Inactive_bytes",
+            "node_memory_Active_anon_bytes",
+            "node_memory_Inactive_anon_bytes",
+            "node_memory_Active_file_bytes",
+            "node_memory_Inactive_file_bytes",
+            "node_memory_AnonPages_bytes",
+            "node_memory_AnonHugePages_bytes",
+            "node_memory_Mapped_bytes",
+            "node_memory_Shmem_bytes",
+            "node_memory_ShmemHugePages_bytes",
+            "node_memory_ShmemPmdMapped_bytes",
+            "node_memory_Slab_bytes",
+            "node_memory_SReclaimable_bytes",
+            "node_memory_SUnreclaim_bytes",
+            "node_memory_Dirty_bytes",
+            "node_memory_Writeback_bytes",
+            "node_memory_WritebackTmp_bytes",
+            "node_memory_CommitLimit_bytes",
+            "node_memory_Committed_AS_bytes",
+            "node_memory_VmallocUsed_bytes",
+            "node_memory_VmallocTotal_bytes",
+            "node_memory_VmallocChunk_bytes",
+            "node_memory_DirectMap1G_bytes",
+            "node_memory_DirectMap2M_bytes",
+            "node_memory_DirectMap4k_bytes",
+            "node_memory_Unevictable_bytes",
+            "node_memory_Mlocked_bytes",
+            "node_memory_HugePages_Free",
+            "node_memory_HugePages_Rsvd",
+            "node_memory_HugePages_Surp",
+            "node_memory_HugePages_Total",
+            "node_memory_Hugepagesize_bytes",
+            "node_memory_HardwareCorrupted_bytes",
+            "node_memory_PageTables_bytes",
+            "node_memory_KernelStack_bytes",
+            "node_memory_Percpu_bytes",
+            "node_memory_Bounce_bytes",
+            "node_memory_NFS_Unstable_bytes",
+
+            // -- Disk I/O --
+            "node_disk_read_bytes_total",
+            "node_disk_written_bytes_total",
+            "node_disk_reads_completed_total",
+            "node_disk_writes_completed_total",
+            "node_disk_reads_merged_total",
+            "node_disk_writes_merged_total",
+            "node_disk_io_time_seconds_total",
+            "node_disk_discard_time_seconds_total",
+            "node_disk_discards_completed_total",
+            "node_disk_discards_merged_total",
+            "node_disk_io_now",
+            "node_disk_io_time_weighted_seconds_total",
+            "node_disk_read_time_seconds_total",
+            "node_disk_write_time_seconds_total",
+
+            // -- Filesystem --
+            "node_filesystem_size_bytes",
+            "node_filesystem_avail_bytes",
+            "node_filesystem_free_bytes",
+            "node_filesystem_files",
+            "node_filesystem_files_free",
+            "node_filesystem_device_error",
+            "node_filesystem_readonly",
+
+            // -- Network --
+            "node_network_receive_bytes_total",
+            "node_network_transmit_bytes_total",
+            "node_network_receive_packets_total",
+            "node_network_transmit_packets_total",
+            "node_network_receive_compressed_total",
+            "node_network_transmit_compressed_total",
+            "node_network_receive_errs_total",
+            "node_network_transmit_errs_total",
+            "node_network_receive_drop_total",
+            "node_network_transmit_drop_total",
+            "node_network_receive_fifo_total",
+            "node_network_transmit_fifo_total",
+            "node_network_receive_frame_total",
+            "node_network_receive_multicast_total",
+            "node_network_up",
+            "node_network_carrier",
+            "node_network_mtu_bytes",
+            "node_network_speed_bytes",
+            "node_network_transmit_carrier_total",
+            "node_network_transmit_colls_total",
+            "node_network_transmit_queue_length",
+
+            // -- Netstat --
+            "node_netstat_Tcp_InErrs",
+            "node_netstat_Tcp_OutRsts",
+            "node_netstat_Tcp_RetransSegs",
+            "node_netstat_Tcp_ActiveOpens",
+            "node_netstat_Tcp_PassiveOpens",
+            "node_netstat_Tcp_CurrEstab",
+            "node_netstat_Tcp_InSegs",
+            "node_netstat_Tcp_OutSegs",
+            "node_netstat_Tcp_MaxConn",
+            "node_netstat_TcpExt_ListenDrops",
+            "node_netstat_TcpExt_ListenOverflows",
+            "node_netstat_TcpExt_SyncookiesFailed",
+            "node_netstat_TcpExt_SyncookiesRecv",
+            "node_netstat_TcpExt_SyncookiesSent",
+            "node_netstat_TcpExt_TCPOFOQueue",
+            "node_netstat_TcpExt_TCPRcvQDrop",
+            "node_netstat_TcpExt_TCPSynRetrans",
+            "node_netstat_Udp_InErrors",
+            "node_netstat_Udp_InDatagrams",
+            "node_netstat_Udp_OutDatagrams",
+            "node_netstat_Udp_NoPorts",
+            "node_netstat_Udp_RcvbufErrors",
+            "node_netstat_Udp_SndbufErrors",
+            "node_netstat_UdpLite_InErrors",
+            "node_netstat_Icmp_InMsgs",
+            "node_netstat_Icmp_OutMsgs",
+            "node_netstat_Icmp_InErrors",
+            "node_netstat_IpExt_InOctets",
+            "node_netstat_IpExt_OutOctets",
+            "node_netstat_Ip_Forwarding",
+
+            // -- Sockstat --
+            "node_sockstat_FRAG_inuse",
+            "node_sockstat_FRAG_memory",
+            "node_sockstat_RAW_inuse",
+            "node_sockstat_TCP_alloc",
+            "node_sockstat_TCP_inuse",
+            "node_sockstat_TCP_mem",
+            "node_sockstat_TCP_mem_bytes",
+            "node_sockstat_TCP_orphan",
+            "node_sockstat_TCP_tw",
+            "node_sockstat_UDPLITE_inuse",
+            "node_sockstat_UDP_inuse",
+            "node_sockstat_UDP_mem",
+            "node_sockstat_UDP_mem_bytes",
+            "node_sockstat_sockets_used",
+
+            // -- Processes --
+            "node_processes_pids",
+            "node_processes_max_processes",
+            "node_processes_threads",
+            "node_processes_max_threads",
+            "node_processes_state",
+            "node_procs_blocked",
+            "node_procs_running",
+            "node_forks_total",
+            "node_context_switches_total",
+
+            // -- VMstat --
+            "node_vmstat_pgfault",
+            "node_vmstat_pgmajfault",
+            "node_vmstat_pgpgin",
+            "node_vmstat_pgpgout",
+            "node_vmstat_oom_kill",
+            "node_vmstat_pswpin",
+            "node_vmstat_pswpout",
+
+            // -- Hardware monitoring --
+            "node_hwmon_chip_names",
+            "node_hwmon_temp_celsius",
+            "node_hwmon_temp_crit_alarm_celsius",
+            "node_hwmon_temp_crit_celsius",
+            "node_hwmon_temp_crit_hyst_celsius",
+            "node_hwmon_temp_max_celsius",
+
+            // -- Time sync --
+            "node_timex_sync_status",
+            "node_timex_frequency_adjustment_ratio",
+            "node_timex_estimated_error_seconds",
+            "node_timex_loop_time_constant",
+            "node_timex_maxerror_seconds",
+            "node_timex_offset_seconds",
+            "node_timex_tai_offset_seconds",
+            "node_timex_tick_seconds",
+
+            // -- Entropy --
+            "node_entropy_available_bits",
+            "node_entropy_pool_size_bits",
+
+            // -- Exporter health --
+            "node_scrape_collector_success",
+            "node_scrape_collector_duration_seconds",
+            "node_textfile_scrape_error",
+
+            // -- System info --
+            "node_uname_info",
+
+            // -- File descriptors &amp; interrupts --
+            "node_filefd_allocated",
+            "node_filefd_maximum",
+            "node_interrupts_total",
+            "node_intr_total",
+
+            // -- Conntrack --
+            "node_nf_conntrack_entries",
+            "node_nf_conntrack_entries_limit",
+
+            // -- TCP connection states --
+            "node_tcp_connection_states",
+
+            // -- Power &amp; cooling --
+            "node_power_supply_online",
+            "node_cooling_device_cur_state",
+            "node_cooling_device_max_state",
+
+            // -- ARP --
+            "node_arp_entries",
+
+            // -- Pressure Stall Information (PSI) --
+            "node_pressure_cpu_waiting_seconds_total",
+            "node_pressure_io_stalled_seconds_total",
+            "node_pressure_io_waiting_seconds_total",
+            "node_pressure_memory_stalled_seconds_total",
+            "node_pressure_memory_waiting_seconds_total",
+
+            // -- Scheduler --
+            "node_schedstat_running_seconds_total",
+            "node_schedstat_timeslices_total",
+            "node_schedstat_waiting_seconds_total",
+
+            // -- Softnet --
+            "node_softnet_dropped_total",
+            "node_softnet_processed_total",
+            "node_softnet_times_squeezed_total",
+
+            // -- Systemd --
+            "node_systemd_socket_accepted_connections_total",
+            "node_systemd_units",
+            "node_systemd_unit_state",
+
+            // -- Process FDs --
+            "process_max_fds",
+            "process_open_fds",
+        ], "|")
+        action = "keep"
+    }
+
+    // ... Layers 2-4 follow ...
+}
+</code></pre>
+<h3 id="metric-count-by-category"><a class="header" href="#metric-count-by-category">Metric Count by Category</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Category</th><th>Count</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Uptime &amp; clock</td><td>4</td><td><code>up</code>, boot time, time, timezone offset</td></tr>
+<tr><td>CPU</td><td>9</td><td>seconds_total, guest, scaling freq (x3), load (x3)</td></tr>
+<tr><td>Memory</td><td>48</td><td>Every <code>/proc/meminfo</code> field the dashboard queries</td></tr>
+<tr><td>Disk I/O</td><td>14</td><td>Read/write bytes, ops, merges, io_time, discards</td></tr>
+<tr><td>Filesystem</td><td>7</td><td>Size, avail, free, files, files_free, device_error, readonly</td></tr>
+<tr><td>Network</td><td>21</td><td>RX/TX bytes, packets, errors, drops, fifo, carrier, MTU, speed</td></tr>
+<tr><td>Netstat</td><td>30</td><td>TCP, UDP, UDPLite, ICMP, IP counters</td></tr>
+<tr><td>Sockstat</td><td>14</td><td>TCP/UDP/FRAG/RAW socket counters</td></tr>
+<tr><td>Processes</td><td>9</td><td>PIDs, threads, state, forks, context switches</td></tr>
+<tr><td>VMstat</td><td>7</td><td>Page faults, paging, OOM kills, swap</td></tr>
+<tr><td>Hardware monitoring</td><td>6</td><td>Temperature sensors</td></tr>
+<tr><td>Time sync</td><td>8</td><td>NTP/timex health</td></tr>
+<tr><td>Entropy</td><td>2</td><td>Available bits, pool size</td></tr>
+<tr><td>Exporter health</td><td>3</td><td>Scrape success, duration, textfile errors</td></tr>
+<tr><td>System info</td><td>1</td><td><code>node_uname_info</code></td></tr>
+<tr><td>File descriptors &amp; interrupts</td><td>4</td><td>FD allocated/max, interrupts</td></tr>
+<tr><td>Conntrack</td><td>2</td><td>Entries, limit</td></tr>
+<tr><td>TCP connection states</td><td>1</td><td>States (11 TCP states as label values)</td></tr>
+<tr><td>Power &amp; cooling</td><td>3</td><td>Power supply, cooling devices</td></tr>
+<tr><td>ARP</td><td>1</td><td>ARP table entries</td></tr>
+<tr><td>PSI</td><td>5</td><td>CPU, IO, memory pressure</td></tr>
+<tr><td>Scheduler</td><td>3</td><td>Running, timeslices, waiting</td></tr>
+<tr><td>Softnet</td><td>3</td><td>Dropped, processed, squeezed</td></tr>
+<tr><td>Systemd</td><td>3</td><td>Socket connections, units, unit_state</td></tr>
+<tr><td>Process FDs</td><td>2</td><td>max_fds, open_fds (exporter process)</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>208</strong></td><td></td></tr>
+</tbody></table>
+</div>
+<h2 id="complete-allow-list-windows-exporter-dashboard-2025-dashboard-24390"><a class="header" href="#complete-allow-list-windows-exporter-dashboard-2025-dashboard-24390">Complete Allow-List: Windows Exporter Dashboard 2025 (Dashboard 24390)</a></h2>
+<p>The full 95-metric allow-list for the <a href="https://grafana.com/grafana/dashboards/24390-windows-exporter-dashboard-2025/">Windows Exporter Dashboard 2025</a>:</p>
+<pre><code class="language-alloy">prometheus.relabel "integrations_windows_exporter" {
+    forward_to = [prometheus.remote_write.metrics_service.receiver]
+
+    // ===================================================================
+    // LAYER 1: Allow-list -- only dashboard-required metrics pass through
+    // ===================================================================
+    rule {
+        source_labels = ["__name__"]
+        regex = join([
+            // -- Uptime &amp; general --
+            "up",
+            "windows_exporter_build_info",
+            "windows_exporter_collector_success",
+            "windows_exporter_collector_duration_seconds",
+
+            // -- OS info --
+            "windows_os_info",
+            "windows_os_hostname",
+            "windows_os_physical_memory_free_bytes",
+            "windows_os_time",
+            "windows_os_timezone",
+            "windows_os_visible_memory_bytes",
+            "windows_os_paging_free_bytes",
+            "windows_os_paging_limit_bytes",
+            "windows_os_processes",
+            "windows_os_processes_limit",
+            "windows_os_virtual_memory_bytes",
+            "windows_os_virtual_memory_free_bytes",
+            "windows_os_users",
+            "windows_cs_hostname",
+            "windows_cs_logical_processors",
+            "windows_cs_physical_memory_bytes",
+
+            // -- CPU --
+            "windows_cpu_time_total",
+            "windows_cpu_core_frequency_mhz",
+            "windows_cpu_logical_processor",
+            "windows_cpu_processor_performance_total",
+            "windows_cpu_clock_interrupts_total",
+            "windows_cpu_dpcs_total",
+            "windows_cpu_interrupts_total",
+            "windows_cpu_processor_utility_total",
+
+            // -- Memory --
+            "windows_memory_physical_total_bytes",
+            "windows_memory_physical_free_bytes",
+            "windows_memory_available_bytes",
+            "windows_memory_cache_bytes",
+            "windows_memory_cache_faults_total",
+            "windows_memory_commit_limit",
+            "windows_memory_committed_bytes",
+            "windows_memory_modified_page_list_bytes",
+            "windows_memory_page_faults_total",
+            "windows_memory_pool_nonpaged_alloc_bytes",
+            "windows_memory_pool_nonpaged_bytes",
+            "windows_memory_pool_paged_alloc_bytes",
+            "windows_memory_pool_paged_bytes",
+            "windows_memory_pool_paged_resident_bytes",
+            "windows_memory_standby_cache_bytes",
+            "windows_memory_standby_cache_core_bytes",
+            "windows_memory_standby_cache_normal_priority_bytes",
+            "windows_memory_standby_cache_reserve_bytes",
+            "windows_memory_swap_page_operations_total",
+            "windows_memory_swap_page_reads_total",
+            "windows_memory_swap_page_writes_total",
+            "windows_memory_transition_faults_total",
+
+            // -- Pagefile --
+            "windows_pagefile_usage_bytes",
+            "windows_pagefile_limit_bytes",
+            "windows_pagefile_current_usage_percent",
+
+            // -- Logical disk --
+            "windows_logical_disk_free_bytes",
+            "windows_logical_disk_size_bytes",
+            "windows_logical_disk_read_bytes_total",
+            "windows_logical_disk_write_bytes_total",
+            "windows_logical_disk_reads_total",
+            "windows_logical_disk_writes_total",
+            "windows_logical_disk_read_latency_seconds_total",
+            "windows_logical_disk_write_latency_seconds_total",
+            "windows_logical_disk_read_seconds_total",
+            "windows_logical_disk_write_seconds_total",
+            "windows_logical_disk_idle_seconds_total",
+            "windows_logical_disk_split_ios_total",
+            "windows_logical_disk_requests_queued",
+
+            // -- Physical disk (diskdrive) --
+            "windows_diskdrive_info",
+            "windows_diskdrive_size_bytes",
+            "windows_diskdrive_status",
+
+            // -- Network --
+            "windows_net_bytes_received_total",
+            "windows_net_bytes_sent_total",
+            "windows_net_bytes_total",
+            "windows_net_current_bandwidth_bytes",
+            "windows_net_packets_outbound_discarded_total",
+            "windows_net_packets_outbound_errors_total",
+            "windows_net_packets_received_discarded_total",
+            "windows_net_packets_received_errors_total",
+            "windows_net_packets_received_total",
+            "windows_net_packets_sent_total",
+
+            // -- System --
+            "windows_system_context_switches_total",
+            "windows_system_exception_dispatches_total",
+            "windows_system_processor_queue_length",
+            "windows_system_processes",
+            "windows_system_threads",
+            "windows_system_system_calls_total",
+            "windows_system_system_up_time",
+
+            // -- Time --
+            "windows_time_computed_time_offset_seconds",
+            "windows_time_ntp_round_trip_delay_seconds",
+            "windows_time_clock_frequency_adjustment_ppb_total",
+
+            // -- Service (filtered by Layer 2) --
+            "windows_service_state",
+            "windows_service_start_mode",
+            "windows_service_status",
+            "windows_service_info",
+
+            // -- Exporter process --
+            "process_cpu_seconds_total",
+            "process_resident_memory_bytes",
+        ], "|")
+        action = "keep"
+    }
+
+    // ... Layers 2-5 follow ...
+}
+</code></pre>
+<h3 id="windows-metric-count-by-category"><a class="header" href="#windows-metric-count-by-category">Windows Metric Count by Category</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Category</th><th>Count</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Uptime &amp; general</td><td>4</td><td><code>up</code>, build_info, collector success/duration</td></tr>
+<tr><td>OS info</td><td>17</td><td>OS details, hostname, memory, paging, processes, users</td></tr>
+<tr><td>CPU</td><td>8</td><td>time_total, frequency, performance, interrupts, dpcs, utility</td></tr>
+<tr><td>Memory</td><td>22</td><td>Physical, available, cache, pool, standby, swap, faults</td></tr>
+<tr><td>Pagefile</td><td>3</td><td>Usage, limit, percent</td></tr>
+<tr><td>Logical disk</td><td>13</td><td>Free, size, read/write bytes/ops/latency/seconds, idle, split, queued</td></tr>
+<tr><td>Physical disk</td><td>3</td><td>Info, size, status</td></tr>
+<tr><td>Network</td><td>10</td><td>Bytes in/out/total, bandwidth, packets, errors, discards</td></tr>
+<tr><td>System</td><td>7</td><td>Context switches, exceptions, processes, threads, queue, calls, uptime</td></tr>
+<tr><td>Time</td><td>3</td><td>NTP offset, round trip, frequency adjustment</td></tr>
+<tr><td>Service</td><td>4</td><td>State, start_mode, status, info (filtered by Layer 2)</td></tr>
+<tr><td>Exporter process</td><td>2</td><td>CPU seconds, resident memory</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>95</strong></td><td></td></tr>
+</tbody></table>
+</div>
+<h2 id="how-the-join-rule-works-at-runtime"><a class="header" href="#how-the-join-rule-works-at-runtime">How the <code>join()</code> Rule Works at Runtime</a></h2>
+<p>When Alloy evaluates the config, the <code>join()</code> call produces a single regex string:</p>
+<pre><code class="language-text">up|node_boot_time_seconds|node_time_seconds|...|process_open_fds
+</code></pre>
+<p>This regex is applied to the <code>__name__</code> label of every incoming metric. If the metric name matches any entry in the list, the <code>keep</code> action retains it. Everything else is dropped.</p>
+<p>Because the regex is an exact-match alternation (no wildcards), it is both precise and fast. The Prometheus relabeling engine compiles the regex once and evaluates it for every sample in the scrape.</p>
+<h2 id="building-your-own-allow-list"><a class="header" href="#building-your-own-allow-list">Building Your Own Allow-List</a></h2>
+<p>To create an allow-list for a different dashboard:</p>
+<ol>
+<li><strong>Open the dashboard JSON model</strong> (Dashboard Settings &gt; JSON Model)</li>
+<li><strong>Search for all <code>expr</code> fields</strong> -- these contain the PromQL queries</li>
+<li><strong>Extract every metric name</strong> referenced in those queries</li>
+<li><strong>Add standard overhead metrics</strong>: <code>up</code>, <code>scrape_duration_seconds</code>, <code>scrape_samples_scraped</code> (if you monitor scrape health)</li>
+<li><strong>Format as a <code>join()</code> array</strong> with comments grouping metrics by category</li>
+</ol>
+<p>The <code>mimirtool analyze grafana</code> command can automate steps 1-3 by extracting all metric names referenced across all dashboards in a Grafana instance.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<p><strong>Forgetting <code>up</code>.</strong> The <code>up</code> metric indicates whether the scrape target is reachable. Without it, you lose basic host-alive monitoring. Always include it.</p>
+<p><strong>Using a single giant regex string.</strong> Writing <code>regex = "up|node_boot_time_seconds|node_time_seconds|..."</code> as one long line makes the config impossible to review, diff, or maintain. Use <code>join()</code>.</p>
+<p><strong>Using wildcards in the allow-list.</strong> Writing <code>"node_memory_.*"</code> instead of listing specific metrics defeats the purpose of an allow-list. New memory metrics from exporter upgrades would pass through uncontrolled. List every metric explicitly.</p>
+<p><strong>Not updating the allow-list when changing dashboards.</strong> If you switch from Dashboard 1860 to a custom dashboard, the allow-list must be re-derived from the new dashboard's queries. The old allow-list may include metrics the new dashboard does not use (waste) or miss metrics the new dashboard needs (broken panels).</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>The allow-list is the single highest-impact cardinality control</li>
+<li>Use <code>join()</code> to build maintainable, reviewable regex from arrays of metric names</li>
+<li>The Linux config (Dashboard 1860) uses 208 metric names</li>
+<li>The Windows config (Dashboard 24390) uses 95 metric names</li>
+<li>Allow-lists are closed systems: nothing new passes through without explicit approval</li>
+<li>Derive your allow-list from your dashboards, not from guesswork</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch02-cardinality-control/why-cardinality-matters.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch02-cardinality-control/layer2-pattern-block.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch02-cardinality-control/why-cardinality-matters.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch02-cardinality-control/layer2-pattern-block.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

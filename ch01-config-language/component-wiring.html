@@ -1,0 +1,591 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Component Wiring - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch01-config-language/component-wiring.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="component-wiring"><a class="header" href="#component-wiring">Component Wiring</a></h1>
+<p>Understanding how components connect to each other is the difference between "I copied a config that works" and "I can build any pipeline I need." This section covers the wiring model, the common patterns, and how to debug pipelines when data is not flowing.</p>
+<h2 id="the-dag-model"><a class="header" href="#the-dag-model">The DAG Model</a></h2>
+<p>Alloy configs define a <strong>directed acyclic graph</strong> (DAG). Each component is a node. Each <code>forward_to</code>, <code>targets</code>, or similar reference is an edge. The Alloy runtime reads every component reference in your config and builds this graph at startup.</p>
+<pre><code class="language-text">                       +-----------------------+
+                       | prometheus.exporter    |
+                       | .unix "default"        |
+                       +----------+------------+
+                                  |
+                              .targets
+                                  |
+                                  v
+                       +-----------------------+
+                       | prometheus.scrape      |
+                       | "node_metrics"         |
+                       +----------+------------+
+                                  |
+                            forward_to
+                                  |
+                                  v
+                       +-----------------------+
+                       | prometheus.relabel     |
+                       | "allow_list"           |
+                       +----------+------------+
+                                  |
+                            forward_to
+                                  |
+                                  v
+                       +-----------------------+
+                       | prometheus.remote_write |
+                       | "metrics_service"       |
+                       +-----------------------+
+</code></pre>
+<p>Three key properties of the DAG:</p>
+<ol>
+<li><strong>Directed.</strong> Data flows one way along each edge. A scrape component sends to a relabel component, not the reverse.</li>
+<li><strong>Acyclic.</strong> You cannot create loops. Component A cannot forward to B if B (directly or indirectly) forwards back to A. Alloy rejects dependency cycles at startup.</li>
+<li><strong>Evaluated in dependency order.</strong> The runtime figures out which components depend on which others and evaluates them in the right order. You do not need to define components in any particular order in your config file.</li>
+</ol>
+<h2 id="how-components-connect-exports-and-arguments"><a class="header" href="#how-components-connect-exports-and-arguments">How Components Connect: Exports and Arguments</a></h2>
+<p>Every component has two sides:</p>
+<ul>
+<li><strong>Arguments</strong> -- the configuration you write inside the block (what the component consumes)</li>
+<li><strong>Exports</strong> -- values the component makes available for other components to reference</li>
+</ul>
+<p>The wiring happens when one component's argument references another component's export.</p>
+<div class="table-wrapper"><table><thead><tr><th>Export Type</th><th>Used By</th><th>Provides</th><th>Example Reference</th></tr></thead><tbody>
+<tr><td><code>.targets</code></td><td>Exporters, discovery</td><td>List of scrape targets</td><td><code>prometheus.exporter.unix.default.targets</code></td></tr>
+<tr><td><code>.receiver</code></td><td>Relabel, remote_write (Prometheus)</td><td>A metrics receiver endpoint</td><td><code>prometheus.relabel.filter.receiver</code></td></tr>
+<tr><td><code>.receiver</code></td><td>Process, write (Loki)</td><td>A logs receiver endpoint</td><td><code>loki.write.default.receiver</code></td></tr>
+<tr><td><code>.input</code></td><td>otelcol exporters</td><td>An OTLP receiver endpoint</td><td><code>otelcol.exporter.otlp.default.input</code></td></tr>
+<tr><td><code>.output</code></td><td>File/content components</td><td>The file contents or parsed data</td><td><code>local.file.config.content</code></td></tr>
+</tbody></table>
+</div>
+<p>The most common wiring pattern uses <code>forward_to</code> plus <code>.receiver</code>:</p>
+<pre><code class="language-alloy">// Component A sends metrics to Component B
+prometheus.scrape "app" {
+  targets    = [{"__address__" = "localhost:8080"}]
+  forward_to = [prometheus.relabel.filter.receiver]
+  //                                       ^^^^^^^^
+  //                            This is an export from Component B
+}
+
+// Component B receives from A, sends to C
+prometheus.relabel "filter" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    // ...
+  }
+}
+
+// Component C is the terminal -- receives metrics and ships them out
+prometheus.remote_write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+</code></pre>
+<h2 id="the-four-common-wiring-patterns"><a class="header" href="#the-four-common-wiring-patterns">The Four Common Wiring Patterns</a></h2>
+<h3 id="pattern-1-linear-pipeline"><a class="header" href="#pattern-1-linear-pipeline">Pattern 1: Linear Pipeline</a></h3>
+<p>The simplest pattern. Data flows through a chain of components in sequence.</p>
+<pre><code class="language-text">  [source] --&gt; [processor] --&gt; [processor] --&gt; [destination]
+</code></pre>
+<pre><code class="language-alloy">prometheus.exporter.unix "default" { }
+
+prometheus.scrape "node" {
+  targets    = prometheus.exporter.unix.default.targets
+  forward_to = [prometheus.relabel.allow_list.receiver]
+}
+
+prometheus.relabel "allow_list" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = `node_cpu_seconds_total|node_memory_MemTotal_bytes`
+    action        = "keep"
+  }
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+</code></pre>
+<h3 id="pattern-2-fan-out-one-source-multiple-destinations"><a class="header" href="#pattern-2-fan-out-one-source-multiple-destinations">Pattern 2: Fan-Out (One Source, Multiple Destinations)</a></h3>
+<p>Send the same data to multiple destinations. This is useful for dual-writing (sending to both Grafana Cloud and a local Mimir instance, for example) or for splitting data into different processing paths.</p>
+<pre><code class="language-text">                              +--&gt; [destination A]
+                             /
+  [source] --&gt; [processor] -+
+                             \
+                              +--&gt; [destination B]
+</code></pre>
+<pre><code class="language-alloy">prometheus.scrape "app" {
+  targets    = [{"__address__" = "localhost:8080"}]
+  forward_to = [
+    prometheus.remote_write.grafana_cloud.receiver,
+    prometheus.remote_write.local_mimir.receiver,
+  ]
+}
+
+prometheus.remote_write "grafana_cloud" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+
+prometheus.remote_write "local_mimir" {
+  endpoint {
+    url = "http://mimir.internal:9009/api/v1/push"
+  }
+}
+</code></pre>
+<p>The scrape component sends every metric to both destinations. There is no filtering -- both get the same data. If you want different metrics to go to different destinations, put a relabel component before each remote_write.</p>
+<h3 id="pattern-3-fan-in-multiple-sources-one-destination"><a class="header" href="#pattern-3-fan-in-multiple-sources-one-destination">Pattern 3: Fan-In (Multiple Sources, One Destination)</a></h3>
+<p>Multiple sources all forward to the same destination. This is the most common pattern in production -- you have many scrape targets and they all feed into a single remote_write.</p>
+<pre><code class="language-text">  [source A] --\
+                +--&gt; [processor] --&gt; [destination]
+  [source B] --/
+</code></pre>
+<pre><code class="language-alloy">prometheus.exporter.unix "default" { }
+
+prometheus.scrape "node_metrics" {
+  targets    = prometheus.exporter.unix.default.targets
+  forward_to = [prometheus.relabel.allow_list.receiver]
+}
+
+prometheus.scrape "app_metrics" {
+  targets    = [{"__address__" = "localhost:8080"}]
+  forward_to = [prometheus.relabel.allow_list.receiver]
+}
+
+prometheus.relabel "allow_list" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    // same filter rules applied to all incoming metrics
+  }
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+</code></pre>
+<p>Both scrape components feed into the same relabel component, which feeds into a single remote_write. The relabel rules apply to metrics from both sources.</p>
+<h3 id="pattern-4-diamond-fan-out-then-fan-in"><a class="header" href="#pattern-4-diamond-fan-out-then-fan-in">Pattern 4: Diamond (Fan-Out then Fan-In)</a></h3>
+<p>A combination where data splits for different processing, then merges back at a shared destination.</p>
+<pre><code class="language-text">                +--&gt; [relabel A] --\
+               /                    \
+  [scrape] --+                      +--&gt; [remote_write]
+               \                    /
+                +--&gt; [relabel B] --/
+</code></pre>
+<pre><code class="language-alloy">prometheus.scrape "app" {
+  targets = [{"__address__" = "localhost:8080"}]
+  forward_to = [
+    prometheus.relabel.high_cardinality.receiver,
+    prometheus.relabel.low_cardinality.receiver,
+  ]
+}
+
+// Path A: aggressive filtering for expensive metrics
+prometheus.relabel "high_cardinality" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = `http_request_duration_seconds_bucket`
+    action        = "keep"
+  }
+  rule {
+    regex  = `le`
+    action = "labeldrop"
+  }
+}
+
+// Path B: keep everything else as-is
+prometheus.relabel "low_cardinality" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = `http_request_duration_seconds_bucket`
+    action        = "drop"
+  }
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_METRICS_URL")
+  }
+}
+</code></pre>
+<p><strong>Warning:</strong> In the diamond pattern, every metric passes through the scrape component and hits both relabel paths. If your relabel rules are not mutually exclusive (one keeps what the other drops), you will get duplicate series at the remote_write. Always ensure each path handles a distinct subset.</p>
+<h2 id="logs-pipeline-wiring"><a class="header" href="#logs-pipeline-wiring">Logs Pipeline Wiring</a></h2>
+<p>Loki (logs) components use the same <code>forward_to</code> / <code>.receiver</code> pattern, but the component names are different:</p>
+<pre><code class="language-text">  [loki.source.*] --&gt; [loki.process] --&gt; [loki.write]
+</code></pre>
+<pre><code class="language-alloy">loki.source.journal "systemd" {
+  forward_to = [loki.process.filter.receiver]
+}
+
+loki.process "filter" {
+  forward_to = [loki.write.default.receiver]
+  stage.drop {
+    expression = `.*health check.*`
+  }
+}
+
+loki.write "default" {
+  endpoint {
+    url = sys.env("GRAFANA_LOGS_URL")
+    basic_auth {
+      username = sys.env("GRAFANA_LOGS_USERNAME")
+      password = sys.env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+</code></pre>
+<h2 id="opentelemetry-pipeline-wiring"><a class="header" href="#opentelemetry-pipeline-wiring">OpenTelemetry Pipeline Wiring</a></h2>
+<p>OpenTelemetry (<code>otelcol.*</code>) components have a different wiring style. Instead of a single <code>forward_to</code>, they use an <code>output</code> block that separates by signal type:</p>
+<pre><code class="language-text">  [otelcol.receiver.*] --&gt; [otelcol.processor.*] --&gt; [otelcol.exporter.*]
+</code></pre>
+<pre><code class="language-alloy">otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+    logs    = [otelcol.processor.batch.default.input]
+    traces  = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.otlp.default.input]
+    logs    = [otelcol.exporter.otlp.default.input]
+    traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+
+otelcol.exporter.otlp "default" {
+  client {
+    endpoint = "tempo.internal:4317"
+  }
+}
+</code></pre>
+<p>Key differences from Prometheus/Loki wiring:</p>
+<div class="table-wrapper"><table><thead><tr><th>Aspect</th><th>Prometheus / Loki</th><th>otelcol</th></tr></thead><tbody>
+<tr><td>Wiring attribute</td><td><code>forward_to = [...]</code> (top-level)</td><td><code>output { metrics = [...] }</code> (nested block)</td></tr>
+<tr><td>Export name</td><td><code>.receiver</code></td><td><code>.input</code></td></tr>
+<tr><td>Signal separation</td><td>One <code>forward_to</code> carries all data</td><td>Separate lists for <code>metrics</code>, <code>logs</code>, <code>traces</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="visualizing-the-pipeline"><a class="header" href="#visualizing-the-pipeline">Visualizing the Pipeline</a></h2>
+<p>Every Alloy instance runs a web UI on port 12345 by default. Open <code>http://localhost:12345</code> (or <code>http://&lt;host&gt;:12345</code>) to see a live visualization of your pipeline graph.</p>
+<p>The UI shows:</p>
+<ul>
+<li>Every component as a node</li>
+<li>Edges showing data flow between components</li>
+<li>Health status of each component (green = healthy, red = error, yellow = warning)</li>
+<li>Click on any component to see its current arguments, exports, and health details</li>
+</ul>
+<p>This is the single best debugging tool for wiring problems. If a component is red or disconnected, you can see exactly where the pipeline breaks.</p>
+<p>To change the port:</p>
+<pre><code class="language-bash"># Linux
+alloy run --server.http.listen-addr=0.0.0.0:9999 config.alloy
+
+# Or in the systemd unit
+Environment="CUSTOM_ARGS=--server.http.listen-addr=0.0.0.0:9999"
+</code></pre>
+<h2 id="debugging-broken-pipelines"><a class="header" href="#debugging-broken-pipelines">Debugging Broken Pipelines</a></h2>
+<h3 id="component-x-does-not-exist-or-is-out-of-scope"><a class="header" href="#component-x-does-not-exist-or-is-out-of-scope">"component X does not exist or is out of scope"</a></h3>
+<p><strong>Cause:</strong> You referenced a component that does not exist. Almost always a typo or a wrong label.</p>
+<p><strong>Debug steps:</strong></p>
+<ol>
+<li>Check the exact component name. Is it <code>prometheus.remote_write.default.receiver</code> or did you type <code>prometheus.remote_write.defaults.receiver</code>?</li>
+<li>Check the label. Did you name it <code>"metrics_service"</code> but reference it as <code>"metrics"</code>?</li>
+<li>If you are using modules, the referenced component might be inside a module scope that the referencing component cannot see. See <a href="../ch05-fleet-management/sealed-module-gotcha.html">The Sealed-Module Gotcha</a>.</li>
+</ol>
+<h3 id="data-is-going-nowhere"><a class="header" href="#data-is-going-nowhere">Data Is Going Nowhere</a></h3>
+<p><strong>Symptoms:</strong> Alloy starts without errors, but no data appears in your backend.</p>
+<p><strong>Debug steps:</strong></p>
+<ol>
+<li>Open the web UI (<code>http://localhost:12345</code>). Check if all components are green.</li>
+<li>Click on the scrape component. Check if <code>targets</code> is populated (not empty).</li>
+<li>Click on the remote_write component. Check if <code>samples_sent</code> is incrementing.</li>
+<li>Check if <code>sys.env()</code> values are set. Missing credentials cause 401 errors, not startup failures. Look at the component health details in the UI for HTTP response codes.</li>
+<li>Check the Alloy logs. On Linux: <code>journalctl -u alloy -f</code>. Look for <code>401</code>, <code>403</code>, or connection refused messages.</li>
+</ol>
+<h3 id="upstream-config-errors"><a class="header" href="#upstream-config-errors">Upstream Config Errors</a></h3>
+<p><strong>Symptoms:</strong> One component is red in the UI, and every downstream component is also unhealthy.</p>
+<p><strong>Explanation:</strong> If a source component fails (bad scrape target, connection refused, invalid config), everything downstream from it will have no data to process. Fix the upstream component first.</p>
+<p><strong>Debug steps:</strong></p>
+<ol>
+<li>In the web UI, find the first red component in the pipeline (the one closest to the source).</li>
+<li>Click on it. Read the health message.</li>
+<li>Fix that component. Downstream components will recover automatically.</li>
+</ol>
+<h3 id="wiring-that-compiles-but-does-nothing-useful"><a class="header" href="#wiring-that-compiles-but-does-nothing-useful">Wiring That Compiles but Does Nothing Useful</a></h3>
+<p><strong>Symptoms:</strong> Config is valid, all components are green, but data is missing or duplicated.</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>A relabel rule with <code>action = "keep"</code> and a regex that matches nothing. All data is dropped silently.</li>
+<li>Fan-out without mutually exclusive filters. Data is duplicated.</li>
+<li>A component with <code>forward_to = []</code> (empty list). Data enters the component and stops.</li>
+<li><code>forward_to</code> pointing to the wrong component. Data goes somewhere you did not intend.</li>
+</ul>
+<p>The web UI graph view is the fastest way to trace data flow and spot these problems.</p>
+<h2 id="cross-component-type-wiring-rules"><a class="header" href="#cross-component-type-wiring-rules">Cross-Component Type Wiring Rules</a></h2>
+<p>You cannot wire arbitrary components together. The receiver types must match:</p>
+<div class="table-wrapper"><table><thead><tr><th>Source Type</th><th>Can Forward To</th><th>Cannot Forward To</th></tr></thead><tbody>
+<tr><td><code>prometheus.scrape</code></td><td><code>prometheus.relabel</code>, <code>prometheus.remote_write</code></td><td><code>loki.*</code>, <code>otelcol.*</code></td></tr>
+<tr><td><code>loki.source.*</code></td><td><code>loki.process</code>, <code>loki.write</code></td><td><code>prometheus.*</code>, <code>otelcol.*</code></td></tr>
+<tr><td><code>otelcol.receiver.*</code></td><td><code>otelcol.processor.*</code>, <code>otelcol.exporter.*</code></td><td><code>prometheus.*</code>, <code>loki.*</code></td></tr>
+</tbody></table>
+</div>
+<p>There are bridge components for crossing between families:</p>
+<ul>
+<li><code>otelcol.receiver.prometheus</code> -- accepts Prometheus metrics and sends them into the otelcol pipeline</li>
+<li><code>otelcol.exporter.prometheus</code> -- exports otelcol metrics as Prometheus format</li>
+<li><code>otelcol.exporter.loki</code> -- exports otelcol logs to Loki pipeline</li>
+</ul>
+<p>If you get a type mismatch error, you likely need one of these bridge components.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>Alloy configs define a DAG -- components are nodes, references are edges</li>
+<li>Components have arguments (what you configure) and exports (what others reference)</li>
+<li><code>forward_to</code> + <code>.receiver</code> is the standard wiring pattern for Prometheus and Loki</li>
+<li><code>output { }</code> + <code>.input</code> is the pattern for otelcol components</li>
+<li>Four core patterns: linear, fan-out, fan-in, diamond</li>
+<li>The web UI at port 12345 is the primary debugging tool for pipeline visualization</li>
+<li>Type mismatches between component families (Prometheus/Loki/otelcol) require bridge components</li>
+<li>When debugging, start at the first red component in the upstream direction</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch01-config-language/gotchas-and-traps.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch01-config-language/error-messages.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch01-config-language/gotchas-and-traps.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch01-config-language/error-messages.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

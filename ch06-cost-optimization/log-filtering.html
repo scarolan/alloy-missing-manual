@@ -1,0 +1,608 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Log Filtering - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch06-cost-optimization/log-filtering.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="log-filtering"><a class="header" href="#log-filtering">Log Filtering</a></h1>
+<p>Logs are billed by volume -- gigabytes ingested -- not by series count. The cost model is simpler than metrics, but the waste can be just as large. Most log volume is debug/info noise, health check spam, and verbose output that nobody queries. Filtering at the edge in Alloy, before logs reach Loki, is the most effective way to control log costs.</p>
+<h2 id="the-log-cost-model"><a class="header" href="#the-log-cost-model">The Log Cost Model</a></h2>
+<p>Grafana Cloud Logs pricing is based on <strong>ingested volume</strong> (GB per month). The exact rate varies by plan, but the benchmark is approximately <strong>$0.50 per GB</strong> on the Pro plan. That sounds cheap until you calculate what an unfiltered fleet produces.</p>
+<div class="table-wrapper"><table><thead><tr><th>Source</th><th>Typical Volume/Host/Day</th><th>500 Hosts/Month</th><th>Monthly Cost (at $0.50/GB)</th></tr></thead><tbody>
+<tr><td>Journal logs (all priorities)</td><td>200 MB - 1 GB</td><td>3-15 TB</td><td>$1,500 - $7,500</td></tr>
+<tr><td>Journal logs (warning+ only)</td><td>20-100 MB</td><td>300 GB - 1.5 TB</td><td>$150 - $750</td></tr>
+<tr><td>Application logs (unfiltered)</td><td>500 MB - 5 GB</td><td>7.5-75 TB</td><td>$3,750 - $37,500</td></tr>
+<tr><td>Application logs (filtered)</td><td>50-500 MB</td><td>750 GB - 7.5 TB</td><td>$375 - $3,750</td></tr>
+</tbody></table>
+</div>
+<p>Filtering journal logs from all priorities to warning-and-above typically reduces volume by 60-80%. Filtering application logs by dropping health checks and debug output can reduce volume by 50-90%.</p>
+<h2 id="the-filter-at-the-edge-principle"><a class="header" href="#the-filter-at-the-edge-principle">The Filter-at-the-Edge Principle</a></h2>
+<p>Alloy runs on every host. Loki runs centrally (or in Grafana Cloud). Every byte that Alloy sends to Loki costs:</p>
+<ol>
+<li><strong>Network bandwidth</strong> to transmit it</li>
+<li><strong>Ingestion cost</strong> when Loki receives it</li>
+<li><strong>Storage cost</strong> for retention</li>
+<li><strong>Query cost</strong> when searching through it</li>
+</ol>
+<p>Filtering in Loki (at query time) saves nothing on the first three. Filtering in Alloy (at collection time) saves on all four. This is why every filtering strategy in this chapter operates in the Alloy pipeline, before logs leave the host.</p>
+<h2 id="strategy-1-drop-entire-streams-by-label"><a class="header" href="#strategy-1-drop-entire-streams-by-label">Strategy 1: Drop Entire Streams by Label</a></h2>
+<p>The most aggressive filter: drop all log entries matching a label selector. This is useful for eliminating entire categories of noise.</p>
+<h3 id="drop-by-log-level"><a class="header" href="#drop-by-log-level">Drop by Log Level</a></h3>
+<p>The most common and highest-impact filter. Drop debug and info entries, keep warnings and above:</p>
+<pre><code class="language-alloy">loki.process "filter_by_level" {
+    forward_to = [loki.write.default.receiver]
+
+    stage.match {
+        selector = "{level=~\"info|debug|notice\"}"
+        action   = "drop"
+    }
+}
+</code></pre>
+<p><strong>Volume impact:</strong> 60-80% reduction on most servers. The majority of journal entries and application logs are informational.</p>
+<h3 id="drop-by-unit-or-source"><a class="header" href="#drop-by-unit-or-source">Drop by Unit or Source</a></h3>
+<p>Drop logs from specific noisy services entirely:</p>
+<pre><code class="language-alloy">loki.process "filter_by_unit" {
+    forward_to = [loki.write.default.receiver]
+
+    stage.match {
+        selector = "{unit=\"snapd.service\"}"
+        action   = "drop"
+    }
+
+    stage.match {
+        selector = "{unit=\"systemd-resolved.service\"}"
+        action   = "drop"
+    }
+}
+</code></pre>
+<h3 id="drop-health-check-and-readiness-probe-logs"><a class="header" href="#drop-health-check-and-readiness-probe-logs">Drop Health Check and Readiness Probe Logs</a></h3>
+<p>Health checks and Kubernetes readiness/liveness probes generate enormous log volume with zero diagnostic value:</p>
+<pre><code class="language-alloy">loki.process "drop_health_checks" {
+    forward_to = [loki.write.default.receiver]
+
+    stage.drop {
+        expression = "(?i)(GET /health|GET /ready|GET /livez|GET /readyz|GET /metrics|health_check)"
+        source     = ""
+    }
+}
+</code></pre>
+<p><strong>Volume impact:</strong> On services with frequent health checks (every 5-10 seconds from a load balancer), these entries can account for 30-50% of that service's log volume.</p>
+<h2 id="strategy-2-rate-limiting"><a class="header" href="#strategy-2-rate-limiting">Strategy 2: Rate Limiting</a></h2>
+<p>Cap the throughput of any single log stream as a safety net against log storms (crash loops, debug logging accidentally enabled in production, chatty library output):</p>
+<pre><code class="language-alloy">loki.process "rate_limit" {
+    forward_to = [loki.write.default.receiver]
+
+    stage.limit {
+        rate  = 100    // lines per second per stream
+        burst = 500    // burst allowance above the rate
+        drop  = true   // drop excess lines (vs applying backpressure)
+    }
+}
+</code></pre>
+<p>Rate limiting operates per unique label combination (per stream). A host with 20 systemd units generates 20 streams, each independently limited to 100 lines/second.</p>
+<p><strong>When to use:</strong> Always. Even if your other filters are working perfectly, rate limiting is a safety net against unexpected log volume spikes. A crash-looping service can emit thousands of lines per second. Without a rate limit, that one service can cost more in log ingestion than your entire fleet.</p>
+<p><strong>Setting the rate:</strong> 100 lines/second per stream is a reasonable starting point. Adjust based on your environment:</p>
+<div class="table-wrapper"><table><thead><tr><th>Environment</th><th>Suggested Rate</th><th>Suggested Burst</th></tr></thead><tbody>
+<tr><td>Infrastructure hosts (low log volume)</td><td>50-100</td><td>200-500</td></tr>
+<tr><td>Application servers</td><td>100-500</td><td>500-2000</td></tr>
+<tr><td>High-throughput services</td><td>500-1000</td><td>2000-5000</td></tr>
+</tbody></table>
+</div>
+<h2 id="strategy-3-sampling-1-in-n"><a class="header" href="#strategy-3-sampling-1-in-n">Strategy 3: Sampling (1-in-N)</a></h2>
+<p>For log streams where you need some entries but not all -- typically high-volume info-level logs where statistical sampling is sufficient:</p>
+<pre><code class="language-alloy">loki.process "sample_info_logs" {
+    forward_to = [loki.write.default.receiver]
+
+    // Keep all warnings and above at full fidelity
+    // Sample info logs at 10%
+    stage.match {
+        selector = "{level=\"info\"}"
+
+        stage.sampling {
+            rate = 0.1   // keep 10% of matching entries
+        }
+    }
+}
+</code></pre>
+<p><strong>Volume impact:</strong> A sampling rate of 0.1 (10%) reduces the volume of matched logs by 90%.</p>
+<p><strong>When to use:</strong> Sampling is appropriate for high-volume, low-criticality log streams where:</p>
+<ul>
+<li>You need enough entries to spot patterns but do not need every line</li>
+<li>Individual log entries are not actionable (you query aggregates, not specific events)</li>
+<li>The log source is too noisy to keep at full volume but too useful to drop entirely</li>
+</ul>
+<p><strong>When NOT to use:</strong> Do not sample security logs, error logs, audit logs, or any stream where individual entries matter. Use level-based filtering (Strategy 1) instead -- keep all errors at full fidelity, sample info/debug only.</p>
+<h2 id="strategy-4-journal-log-filtering-linux"><a class="header" href="#strategy-4-journal-log-filtering-linux">Strategy 4: Journal Log Filtering (Linux)</a></h2>
+<p>The systemd journal is the primary log source on modern Linux. The <code>loki.source.journal</code> component reads from it. See <a href="../ch04-platform-guides/linux/journal-logs.html">Linux: Journal Logs</a> for the complete pipeline setup.</p>
+<h3 id="filter-by-priority"><a class="header" href="#filter-by-priority">Filter by Priority</a></h3>
+<p>Journal priorities follow syslog conventions:</p>
+<div class="table-wrapper"><table><thead><tr><th>Priority</th><th>Keyword</th><th>Typical Action</th></tr></thead><tbody>
+<tr><td>0-2</td><td>emerg, alert, crit</td><td>Always keep</td></tr>
+<tr><td>3</td><td>err</td><td>Always keep</td></tr>
+<tr><td>4</td><td>warning</td><td>Keep</td></tr>
+<tr><td>5</td><td>notice</td><td>Keep or drop (depends on environment)</td></tr>
+<tr><td>6</td><td>info</td><td>Drop in production</td></tr>
+<tr><td>7</td><td>debug</td><td>Always drop</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-alloy">loki.process "journal_filter" {
+    forward_to = [loki.write.default.receiver]
+
+    stage.match {
+        selector = "{level=~\"info|debug|notice\"}"
+        action   = "drop"
+    }
+}
+</code></pre>
+<h3 id="filter-by-systemd-unit"><a class="header" href="#filter-by-systemd-unit">Filter by Systemd Unit</a></h3>
+<p>Use <code>matches</code> in the journal source to restrict collection to specific units. This is more efficient than processing and dropping because the entries never enter the Alloy pipeline:</p>
+<pre><code class="language-alloy">loki.source.journal "default" {
+    max_age    = "12h0m0s"
+    forward_to = [loki.process.default.receiver]
+    relabel_rules = loki.relabel.default.rules
+    matches    = "_SYSTEMD_UNIT=sshd.service OR _SYSTEMD_UNIT=docker.service OR _SYSTEMD_UNIT=kubelet.service"
+}
+</code></pre>
+<p>The <code>matches</code> parameter uses the systemd journal matching syntax. Only entries from the specified units are read from the journal. Everything else is ignored at the source level.</p>
+<h3 id="combining-priority-and-unit-filters"><a class="header" href="#combining-priority-and-unit-filters">Combining Priority and Unit Filters</a></h3>
+<p>For maximum cost reduction, combine both: restrict to specific units and then drop low-priority entries from those units:</p>
+<pre><code class="language-alloy">loki.source.journal "default" {
+    max_age    = "12h0m0s"
+    forward_to = [loki.process.journal.receiver]
+    relabel_rules = loki.relabel.default.rules
+    matches    = "_SYSTEMD_UNIT=sshd.service OR _SYSTEMD_UNIT=docker.service OR _SYSTEMD_UNIT=kubelet.service OR _SYSTEMD_UNIT=alloy.service"
+}
+
+loki.process "journal" {
+    forward_to = [loki.write.default.receiver]
+
+    // Drop info and below, even from the units we keep
+    stage.match {
+        selector = "{level=~\"info|debug|notice\"}"
+        action   = "drop"
+    }
+
+    // Safety net: rate limit per stream
+    stage.limit {
+        rate  = 100
+        burst = 500
+        drop  = true
+    }
+
+    // Belt and suspenders: drop anything too old
+    stage.drop {
+        older_than          = "4h"
+        drop_counter_reason = "too old"
+    }
+}
+</code></pre>
+<h2 id="strategy-5-windows-event-log-filtering"><a class="header" href="#strategy-5-windows-event-log-filtering">Strategy 5: Windows Event Log Filtering</a></h2>
+<p>Windows Event Logs are collected via <code>loki.source.windowsevent</code>. The <code>xpath_query</code> parameter filters events at the source using XPath, which is the most efficient approach because filtered events never enter the pipeline. See <a href="../ch04-platform-guides/windows/event-logs.html">Windows: Event Logs</a> for the complete pipeline setup.</p>
+<h3 id="filter-by-severity-level"><a class="header" href="#filter-by-severity-level">Filter by Severity Level</a></h3>
+<p>Windows Event Log levels:</p>
+<div class="table-wrapper"><table><thead><tr><th>Level</th><th>Meaning</th><th>Typical Action</th></tr></thead><tbody>
+<tr><td>1</td><td>Critical</td><td>Always keep</td></tr>
+<tr><td>2</td><td>Error</td><td>Always keep</td></tr>
+<tr><td>3</td><td>Warning</td><td>Keep</td></tr>
+<tr><td>4</td><td>Information</td><td>Drop in production</td></tr>
+<tr><td>5</td><td>Verbose</td><td>Always drop</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-alloy">loki.source.windowsevent "application" {
+    eventlog_name          = "Application"
+    use_incoming_timestamp = true
+    xpath_query            = "*[System[(Level=1 or Level=2 or Level=3)]]"
+    forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h3 id="filter-by-provider"><a class="header" href="#filter-by-provider">Filter by Provider</a></h3>
+<p>Collect events only from specific providers (sources):</p>
+<pre><code class="language-alloy">loki.source.windowsevent "system" {
+    eventlog_name          = "System"
+    use_incoming_timestamp = true
+    xpath_query            = "*[System[Provider[@Name='Service Control Manager' or @Name='Microsoft-Windows-Kernel-General' or @Name='Microsoft-Windows-WindowsUpdateClient']]]"
+    forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h3 id="combine-severity-and-provider"><a class="header" href="#combine-severity-and-provider">Combine Severity and Provider</a></h3>
+<pre><code class="language-alloy">loki.source.windowsevent "application" {
+    eventlog_name          = "Application"
+    use_incoming_timestamp = true
+    xpath_query            = "*[System[(Level=1 or Level=2 or Level=3) and Provider[@Name='MSSQLSERVER' or @Name='Application Error' or @Name='.NET Runtime']]]"
+    forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h3 id="the-security-log-problem"><a class="header" href="#the-security-log-problem">The Security Log Problem</a></h3>
+<p>On domain controllers, the Security log can generate millions of events per day (logon/logoff, privilege use, object access). Shipping it unfiltered is a cost disaster:</p>
+<pre><code class="language-alloy">// Only keep failed logon events (Event ID 4625) and account lockouts (4740)
+loki.source.windowsevent "security" {
+    eventlog_name          = "Security"
+    use_incoming_timestamp = true
+    xpath_query            = "*[System[(EventID=4625 or EventID=4740 or EventID=4771 or EventID=1102)]]"
+    forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h2 id="strategy-6-structured-log-processing"><a class="header" href="#strategy-6-structured-log-processing">Strategy 6: Structured Log Processing</a></h2>
+<p>For applications that emit structured (JSON) logs, Alloy can parse the structure and make filtering decisions based on specific fields. This is more surgical than regex matching.</p>
+<h3 id="parse-json-and-filter-by-field"><a class="header" href="#parse-json-and-filter-by-field">Parse JSON and Filter by Field</a></h3>
+<pre><code class="language-alloy">loki.process "structured_logs" {
+    forward_to = [loki.write.default.receiver]
+
+    // Parse the JSON log line
+    stage.json {
+        expressions = {
+            level      = "level",
+            logger     = "logger",
+            request_id = "request_id",
+            path       = "path",
+        }
+    }
+
+    // Drop debug-level entries
+    stage.match {
+        selector = "{level=\"debug\"}"
+        action   = "drop"
+    }
+
+    // Drop health check paths
+    stage.drop {
+        expression = "^/health$|^/ready$|^/metrics$"
+        source     = "path"
+    }
+
+    // Remove high-cardinality fields from labels
+    // (keep them in the log line, just don't index them)
+    stage.label_drop {
+        values = ["request_id", "path"]
+    }
+}
+</code></pre>
+<p>The key insight: <code>stage.json</code> extracts fields into labels for processing. <code>stage.label_drop</code> removes them before sending to Loki. The fields remain in the original log line (queryable via Loki's JSON parser at query time) but are not indexed as labels (which would increase stream cardinality and cost).</p>
+<h3 id="extract-only-what-you-need"><a class="header" href="#extract-only-what-you-need">Extract Only What You Need</a></h3>
+<p>Do not promote high-cardinality log fields to Loki labels. Labels in Loki determine stream identity, and high-cardinality labels create the same explosion problem as in metrics:</p>
+<div class="table-wrapper"><table><thead><tr><th>Field</th><th>As Loki Label?</th><th>Why</th></tr></thead><tbody>
+<tr><td><code>level</code></td><td>Yes</td><td>Bounded (5-7 values), essential for filtering</td></tr>
+<tr><td><code>service</code></td><td>Yes</td><td>Bounded, essential for routing</td></tr>
+<tr><td><code>environment</code></td><td>Yes</td><td>Bounded (dev/staging/prod)</td></tr>
+<tr><td><code>request_id</code></td><td>No</td><td>Unique per request, unbounded</td></tr>
+<tr><td><code>user_id</code></td><td>No</td><td>Unique per user, unbounded</td></tr>
+<tr><td><code>path</code></td><td>No</td><td>High cardinality with path parameters</td></tr>
+<tr><td><code>trace_id</code></td><td>No</td><td>Unique per trace, unbounded</td></tr>
+</tbody></table>
+</div>
+<p>Keep high-cardinality fields in the log line body and query them with Loki's parser at query time. This costs nothing extra in storage and does not affect stream counts.</p>
+<h2 id="before-and-after-volume-estimates"><a class="header" href="#before-and-after-volume-estimates">Before and After: Volume Estimates</a></h2>
+<p>Here are realistic volume estimates for common filtering strategies applied to a fleet of 100 Linux hosts:</p>
+<div class="table-wrapper"><table><thead><tr><th>Strategy</th><th>Volume/Host/Day</th><th>Fleet Total/Month</th><th>Monthly Cost</th></tr></thead><tbody>
+<tr><td>Unfiltered (all journal entries)</td><td>500 MB</td><td>1.5 TB</td><td>$750</td></tr>
+<tr><td>Priority filter (warning+)</td><td>75 MB</td><td>225 GB</td><td>$112</td></tr>
+<tr><td>Priority + unit filter</td><td>25 MB</td><td>75 GB</td><td>$37</td></tr>
+<tr><td>Priority + unit + rate limit</td><td>20 MB</td><td>60 GB</td><td>$30</td></tr>
+<tr><td><strong>Reduction from unfiltered</strong></td><td></td><td></td><td><strong>$720/mo saved</strong></td></tr>
+</tbody></table>
+</div>
+<p>For a fleet of 100 Windows servers:</p>
+<div class="table-wrapper"><table><thead><tr><th>Strategy</th><th>Volume/Host/Day</th><th>Fleet Total/Month</th><th>Monthly Cost</th></tr></thead><tbody>
+<tr><td>All three event logs, unfiltered</td><td>200 MB</td><td>600 GB</td><td>$300</td></tr>
+<tr><td>Severity filter (warning+)</td><td>30 MB</td><td>90 GB</td><td>$45</td></tr>
+<tr><td>Severity + provider filter</td><td>10 MB</td><td>30 GB</td><td>$15</td></tr>
+<tr><td><strong>Reduction from unfiltered</strong></td><td></td><td></td><td><strong>$285/mo saved</strong></td></tr>
+</tbody></table>
+</div>
+<p>Combined, filtering logs on a mixed fleet of 100 Linux + 100 Windows hosts saves approximately <strong>$1,000/month</strong> ($12,000/year) in log ingestion costs alone.</p>
+<h2 id="putting-it-all-together-a-complete-pipeline"><a class="header" href="#putting-it-all-together-a-complete-pipeline">Putting It All Together: A Complete Pipeline</a></h2>
+<p>Here is a complete log processing pipeline that combines multiple strategies:</p>
+<pre><code class="language-alloy">// Journal source with unit filtering
+loki.source.journal "default" {
+    max_age    = "12h0m0s"
+    forward_to = [loki.process.default.receiver]
+    relabel_rules = loki.relabel.journal.rules
+    matches    = "_SYSTEMD_UNIT=sshd.service OR _SYSTEMD_UNIT=docker.service OR _SYSTEMD_UNIT=kubelet.service OR _SYSTEMD_UNIT=alloy.service"
+}
+
+// Extract journal metadata into labels
+loki.relabel "journal" {
+    rule {
+        source_labels = ["__journal__systemd_unit"]
+        target_label  = "unit"
+    }
+    rule {
+        source_labels = ["__journal_priority_keyword"]
+        target_label  = "level"
+    }
+    forward_to = []
+}
+
+// Processing pipeline: filter, limit, protect
+loki.process "default" {
+    forward_to = [loki.relabel.add_labels.receiver]
+
+    // 1. Drop low-priority entries
+    stage.match {
+        selector = "{level=~\"info|debug|notice\"}"
+        action   = "drop"
+    }
+
+    // 2. Drop health check patterns from any remaining entries
+    stage.drop {
+        expression = "(?i)(health.check|readiness.probe|liveness.probe)"
+        source     = ""
+    }
+
+    // 3. Rate limit as a safety net
+    stage.limit {
+        rate  = 100
+        burst = 500
+        drop  = true
+    }
+
+    // 4. Drop entries older than 4 hours
+    stage.drop {
+        older_than          = "4h"
+        drop_counter_reason = "too old"
+    }
+}
+
+// Add standard labels
+loki.relabel "add_labels" {
+    forward_to = [loki.write.default.receiver]
+
+    rule {
+        target_label = "job"
+        replacement  = "integrations/node_exporter"
+    }
+    rule {
+        target_label = "instance"
+        replacement  = constants.hostname
+    }
+}
+</code></pre>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<p><strong>Not filtering logs at all.</strong> The default Alloy configuration ships everything. On a busy server, that can be gigabytes per day of info/debug noise. Always add at least a priority/level filter.</p>
+<p><strong>Filtering at query time instead of ingestion time.</strong> A Loki query like <code>{job="syslog"} |= "error"</code> filters at read time -- you still pay for ingesting and storing all the lines that do not match. Filter in Alloy before the data reaches Loki.</p>
+<p><strong>Not rate limiting.</strong> A single crash-looping service can emit 10,000+ lines per second. Without a rate limit in the pipeline, that one service can generate more log volume in an hour than your entire fleet does in a day.</p>
+<p><strong>Promoting high-cardinality fields to Loki labels.</strong> Every unique label combination creates a new Loki stream. Streams have overhead. If you add <code>request_id</code> as a label, you create one stream per request. Use <code>stage.label_drop</code> to remove high-cardinality fields from labels while keeping them in the log line for query-time extraction.</p>
+<p><strong>Forgetting <code>max_age</code> on journal sources.</strong> Without it, Alloy restarts ship the entire journal history to Loki -- potentially days or weeks of old logs in a single burst.</p>
+<p><strong>Ignoring the Security event log on Windows domain controllers.</strong> This log alone can generate hundreds of megabytes per day on a busy DC. Use <code>xpath_query</code> to filter to specific Event IDs, or do not collect it at all.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>Logs are billed per GB ingested; filtering at the edge in Alloy saves on network, ingestion, storage, and query costs</li>
+<li>Priority/level filtering (drop info/debug) is the single highest-impact log optimization: 60-80% volume reduction</li>
+<li>Rate limiting is a safety net every pipeline should have, regardless of other filters</li>
+<li>Sampling (1-in-N) is appropriate for high-volume, low-criticality streams where statistical coverage is sufficient</li>
+<li>Journal filtering uses <code>matches</code> for unit selection and <code>stage.match</code> for priority; both operate before data leaves the host</li>
+<li>Windows Event Log filtering uses <code>xpath_query</code> for source-level severity and provider filtering</li>
+<li>Structured log processing: extract fields with <code>stage.json</code>, filter on them, then <code>stage.label_drop</code> to prevent label cardinality explosion</li>
+<li>Keep high-cardinality fields in the log line body, not as Loki labels</li>
+<li>A mixed fleet of 200 hosts saves approximately $12,000/year with basic log filtering</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch06-cost-optimization/dangerous-labels.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch08-otel-native/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch06-cost-optimization/dangerous-labels.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch08-otel-native/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

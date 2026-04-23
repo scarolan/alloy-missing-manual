@@ -1,0 +1,417 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Deployment Strategy - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch09-fleet-deployment/deployment-strategy.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="deployment-strategy"><a class="header" href="#deployment-strategy">Deployment Strategy</a></h1>
+<p>Rolling Alloy out to five servers is a manual task. Rolling it out to five thousand servers requires a strategy. This section covers the principles that apply regardless of whether you use Ansible, SCCM, GPO, or something else entirely.</p>
+<h2 id="the-phased-rollout"><a class="header" href="#the-phased-rollout">The Phased Rollout</a></h2>
+<p>Never deploy to the entire fleet at once. Use a progressive expansion pattern:</p>
+<div class="table-wrapper"><table><thead><tr><th>Phase</th><th>Scope</th><th>Duration</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>0 - Lab</td><td>1-2 VMs you own</td><td>Hours</td><td>Prove the config works at all</td></tr>
+<tr><td>1 - Dev</td><td>Dev/test environment</td><td>1-2 days</td><td>Catch config errors, permission issues</td></tr>
+<tr><td>2 - Staging</td><td>Staging environment</td><td>2-3 days</td><td>Validate under realistic load</td></tr>
+<tr><td>3 - Canary</td><td>1-5% of production</td><td>1 week</td><td>Detect write-endpoint impact, cardinality surprises</td></tr>
+<tr><td>4 - Expansion</td><td>25% increments</td><td>Days per step</td><td>Monitor each tranche before proceeding</td></tr>
+<tr><td>5 - Full</td><td>100% of production</td><td>Ongoing</td><td>Steady-state monitoring</td></tr>
+</tbody></table>
+</div>
+<p>The temptation is to skip phases 2 and 3. Resist it. A cardinality explosion that hits 100% of production at once can cost thousands of dollars in a single day on a metered backend.</p>
+<h2 id="the-deployment-checklist"><a class="header" href="#the-deployment-checklist">The Deployment Checklist</a></h2>
+<p>Every host goes through the same sequence, whether you run it manually or encode it in automation:</p>
+<h3 id="1-network-connectivity"><a class="header" href="#1-network-connectivity">1. Network Connectivity</a></h3>
+<p>Before you install anything, verify the host can reach your write endpoints. On Linux:</p>
+<pre><code class="language-bash">curl -s -o /dev/null -w "%{http_code}" \
+  https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push
+# Expect: 401 (unauthorized but reachable) or 200
+</code></pre>
+<p>On Windows (PowerShell):</p>
+<pre><code class="language-powershell">(Invoke-WebRequest -Uri "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push" `
+  -Method HEAD -UseBasicParsing).StatusCode
+# Expect: 401 or 200
+</code></pre>
+<p>If you get a timeout or connection refused, fix the firewall or proxy before proceeding. Installing Alloy on a host that cannot reach the backend wastes everyone's time.</p>
+<blockquote>
+<p><strong>Tip:</strong> The <a href="../ch07-recipes/network-testing.html">Network Testing</a> recipe has a comprehensive connectivity test you can run from any host.</p>
+</blockquote>
+<h3 id="2-credentials-provisioned"><a class="header" href="#2-credentials-provisioned">2. Credentials Provisioned</a></h3>
+<p>Deploy credentials to the host <strong>before</strong> installing Alloy. If Alloy starts with no credentials, it logs errors and retries, which is noisy and creates false alerts.</p>
+<ul>
+<li><strong>Linux:</strong> Write to <code>/etc/default/alloy</code> (Debian/Ubuntu) or <code>/etc/sysconfig/alloy</code> (RHEL/SUSE). See <a href="../ch03-credentials-and-secrets/linux-env-setup.html">Linux Environment Setup</a>.</li>
+<li><strong>Windows:</strong> Set Machine-scope environment variables or write to the registry key <code>HKLM\Software\GrafanaLabs\Alloy\Environment</code>. See <a href="../ch03-credentials-and-secrets/windows-env-setup.html">Windows Environment Setup</a>.</li>
+</ul>
+<h3 id="3-configuration-validated"><a class="header" href="#3-configuration-validated">3. Configuration Validated</a></h3>
+<p>Never push a config to production without validating it first:</p>
+<pre><code class="language-bash">alloy validate config.alloy
+</code></pre>
+<p>The <code>validate</code> command exits with code 0 if the config is valid, non-zero with diagnostic output on stderr if it is not. Run this in your CI pipeline or as a pre-deployment step in your automation.</p>
+<p>You can also validate configs written in other formats:</p>
+<pre><code class="language-bash">alloy validate --config.format=prometheus prometheus.yml
+alloy validate --config.format=otelcol otel-config.yaml
+</code></pre>
+<p>For formatting consistency:</p>
+<pre><code class="language-bash">alloy fmt config.alloy
+</code></pre>
+<h3 id="4-package-installed-and-service-configured"><a class="header" href="#4-package-installed-and-service-configured">4. Package Installed and Service Configured</a></h3>
+<p>Install the Alloy package and deploy the config file. The specifics depend on your platform and tool:</p>
+<ul>
+<li>Linux: apt/yum package from the Grafana repository (see <a href="linux-ansible.html">Linux: Ansible</a> and <a href="linux-other.html">Linux: Other Automation</a>)</li>
+<li>Windows: NSIS installer with <code>/S</code> flag (see <a href="windows-sccm.html">Windows: SCCM</a> and <a href="windows-gpo.html">Windows: GPO</a>)</li>
+</ul>
+<h3 id="5-service-started-and-health-verified"><a class="header" href="#5-service-started-and-health-verified">5. Service Started and Health Verified</a></h3>
+<p>After installation, verify the service is running and healthy:</p>
+<pre><code class="language-bash"># Linux
+sudo systemctl is-active alloy          # returns "active"
+curl -s http://localhost:12345/-/ready   # returns "Alloy is ready."
+curl -s http://localhost:12345/-/healthy # returns "All Alloy components are healthy."
+</code></pre>
+<pre><code class="language-powershell"># Windows
+Get-Service Alloy | Select-Object Status   # returns "Running"
+Invoke-RestMethod http://localhost:12345/-/ready   # returns "Alloy is ready."
+Invoke-RestMethod http://localhost:12345/-/healthy # returns healthy message
+</code></pre>
+<h3 id="6-metrics-flowing"><a class="header" href="#6-metrics-flowing">6. Metrics Flowing</a></h3>
+<p>Within 2 minutes of starting the service, check your backend (Grafana Cloud, Mimir, etc.) for metrics from the new host. A quick PromQL query:</p>
+<pre><code class="language-promql">up{instance=~"new-host.*"}
+</code></pre>
+<h3 id="7-logs-collected-if-applicable"><a class="header" href="#7-logs-collected-if-applicable">7. Logs Collected (if applicable)</a></h3>
+<p>If you are collecting logs, verify in Loki:</p>
+<pre><code class="language-logql">{hostname="new-host"} | limit 10
+</code></pre>
+<h2 id="version-pinning"><a class="header" href="#version-pinning">Version Pinning</a></h2>
+<p><strong>Always pin the Alloy version. Never use "latest" in production.</strong></p>
+<p>The <code>grafana.grafana.alloy</code> Ansible role defaults <code>alloy_version</code> to <code>"latest"</code>, which downloads whatever is current at deploy time. Override this:</p>
+<pre><code class="language-yaml">alloy_version: "1.8.1"
+</code></pre>
+<p>For apt/yum, pin with:</p>
+<pre><code class="language-bash"># Debian/Ubuntu
+sudo apt-get install alloy=1.8.1-1
+# RHEL/Fedora
+sudo dnf install alloy-1.8.1-1
+</code></pre>
+<p>Why pin? Because:</p>
+<ol>
+<li><strong>Reproducibility</strong> -- deploying the same playbook next week should produce the same result</li>
+<li><strong>Rollback clarity</strong> -- you know exactly which version to roll back to</li>
+<li><strong>Change control</strong> -- version upgrades are deliberate, not accidental</li>
+<li><strong>Fleet consistency</strong> -- every host runs the same version</li>
+</ol>
+<h3 id="the-upgrade-workflow"><a class="header" href="#the-upgrade-workflow">The Upgrade Workflow</a></h3>
+<ol>
+<li>Pin the new version in your automation</li>
+<li>Deploy to Phase 0 (lab)</li>
+<li>Run through the validation checklist</li>
+<li>Promote through each phase</li>
+<li>Update your "known-good version" record</li>
+</ol>
+<h2 id="thundering-herd-mitigation"><a class="header" href="#thundering-herd-mitigation">Thundering Herd Mitigation</a></h2>
+<p>When you deploy Alloy to 500 hosts simultaneously, all 500 start scraping and remote-writing at the same time. This creates a burst of traffic to your write endpoints that can:</p>
+<ul>
+<li>Trigger rate limiting on your backend</li>
+<li>Cause queue buildup and OOM kills on the Alloy instances</li>
+<li>Create a monitoring gap while everything recovers</li>
+</ul>
+<h3 id="mitigation-strategies"><a class="header" href="#mitigation-strategies">Mitigation Strategies</a></h3>
+<p><strong>Stagger deployments.</strong> Use your automation tool's batching feature:</p>
+<pre><code class="language-yaml"># Ansible: deploy in batches of 50
+- hosts: alloy_fleet
+  serial: 50
+  # ...tasks...
+</code></pre>
+<pre><code class="language-ini"># Ansible: 10% of the fleet at a time
+[alloy_fleet]
+serial: "10%"
+</code></pre>
+<p><strong>Add a random startup delay.</strong> In the Alloy config, if using Fleet Management, stagger the initial scrape intervals. In your automation, add a random sleep before starting the service:</p>
+<pre><code class="language-yaml"># Ansible task
+- name: Random startup delay to avoid thundering herd
+  ansible.builtin.pause:
+    seconds: "{{ 60 | random }}"
+  when: alloy_stagger_start | default(false)
+</code></pre>
+<p><strong>Monitor your write endpoints during rollout.</strong> Watch these metrics on your backend:</p>
+<ul>
+<li><code>cortex_distributor_received_samples_total</code> -- spike indicates the herd arriving</li>
+<li><code>cortex_ingester_memory_series</code> -- sharp increase means cardinality impact</li>
+<li>Remote write queue depth on the Alloy side: check the Alloy dashboard</li>
+</ul>
+<h3 id="batch-size-guidelines"><a class="header" href="#batch-size-guidelines">Batch Size Guidelines</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Fleet Size</th><th>Recommended Batch</th><th>Wait Between Batches</th></tr></thead><tbody>
+<tr><td>&lt; 100</td><td>10-20 hosts</td><td>2 minutes</td></tr>
+<tr><td>100-500</td><td>25-50 hosts</td><td>5 minutes</td></tr>
+<tr><td>500-2000</td><td>50-100 hosts</td><td>5-10 minutes</td></tr>
+<tr><td>&gt; 2000</td><td>100-200 hosts</td><td>10 minutes</td></tr>
+</tbody></table>
+</div>
+<p>These are starting points. Adjust based on your backend's capacity and your observed write-endpoint behavior.</p>
+<h2 id="rollback-planning"><a class="header" href="#rollback-planning">Rollback Planning</a></h2>
+<p>Before you deploy, know how you will undo it.</p>
+<h3 id="what-to-keep-ready"><a class="header" href="#what-to-keep-ready">What to Keep Ready</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Artifact</th><th>Where to Store It</th><th>Why</th></tr></thead><tbody>
+<tr><td>Previous Alloy version number</td><td>Your automation repo</td><td>To pin the rollback version</td></tr>
+<tr><td>Previous config file</td><td>Version control</td><td>To restore known-good config</td></tr>
+<tr><td>Previous credentials</td><td>Credential store (Vault, etc.)</td><td>In case credential format changed</td></tr>
+<tr><td>Rollback runbook</td><td>Wiki or automation repo</td><td>Steps are hard to remember under pressure</td></tr>
+</tbody></table>
+</div>
+<h3 id="rollback-triggers"><a class="header" href="#rollback-triggers">Rollback Triggers</a></h3>
+<p>Define these <strong>before</strong> you deploy:</p>
+<ul>
+<li>Error rate in Alloy logs exceeds N errors/minute</li>
+<li>Metric delivery latency exceeds N seconds</li>
+<li>Series count increases by more than N% (cardinality explosion)</li>
+<li>Backend returns 429 (rate limit) or 503 (overloaded)</li>
+<li>No data received from deployed hosts after 5 minutes</li>
+</ul>
+<h3 id="rollback-procedure-generic"><a class="header" href="#rollback-procedure-generic">Rollback Procedure (Generic)</a></h3>
+<ol>
+<li><strong>Stop the bleeding</strong>: Halt the deployment pipeline (do not deploy to more hosts)</li>
+<li><strong>Diagnose</strong>: Check Alloy logs on affected hosts, check backend health</li>
+<li><strong>Revert config</strong>: Push the previous config version to affected hosts</li>
+<li><strong>Revert package</strong> (if needed): Downgrade the Alloy package to the previous version</li>
+<li><strong>Restart service</strong>: Restart Alloy on affected hosts</li>
+<li><strong>Verify</strong>: Run the validation checklist on affected hosts</li>
+<li><strong>Post-mortem</strong>: Document what went wrong and update your deployment process</li>
+</ol>
+<p>Tool-specific rollback procedures are covered in each deployment section.</p>
+<h2 id="the-day-two-problem"><a class="header" href="#the-day-two-problem">The "Day Two" Problem</a></h2>
+<p>Deploying Alloy is day one. Keeping it running correctly is day two. Plan for:</p>
+<ul>
+<li><strong>Config drift</strong>: Use your automation tool in enforcement mode, not just deployment mode. Run it periodically to detect and correct drift.</li>
+<li><strong>Version drift</strong>: If some hosts miss an upgrade window, you end up with mixed versions. Track this with an inventory label or a Prometheus metric.</li>
+<li><strong>Credential rotation</strong>: API keys expire. Build rotation into your automation, not your runbook.</li>
+<li><strong>Certificate expiry</strong>: If using mTLS to your backend, certificates expire. Monitor expiry dates.</li>
+</ul>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>The deployment sequence is always the same: verify network, provision credentials, validate config, install package, start service, verify health, confirm data flow. The phased rollout protects you from blast-radius mistakes. Version pinning gives you reproducibility and clean rollbacks. Staggered deployment prevents thundering-herd overload. And having a rollback plan means the inevitable bad deploy is a 10-minute fix instead of a 2-hour incident.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch09-fleet-deployment/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch09-fleet-deployment/linux-ansible.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch09-fleet-deployment/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch09-fleet-deployment/linux-ansible.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

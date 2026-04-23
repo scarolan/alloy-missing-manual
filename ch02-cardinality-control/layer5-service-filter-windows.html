@@ -1,0 +1,450 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Layer 5: Service Filter (Windows) - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch02-cardinality-control/layer5-service-filter-windows.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="layer-5-service-filter-windows"><a class="header" href="#layer-5-service-filter-windows">Layer 5: Service Filter (Windows)</a></h1>
+<p>This is the single biggest cardinality trap on Windows. Without filtering, the Windows service collector alone generates <strong>2,672 series</strong> on a standard server -- more than all other collectors combined. The hardened config reduces this to <strong>~24 series</strong>.</p>
+<p>This layer only applies to Windows. Linux does not have an equivalent service-state explosion (systemd filtering is handled at the collector level; see Chapter 4).</p>
+<h2 id="the-problem-services-x-states--explosion"><a class="header" href="#the-problem-services-x-states--explosion">The Problem: Services x States = Explosion</a></h2>
+<p>A standard Windows Server 2022 installation runs approximately 200 services. The Windows exporter's <code>service</code> collector generates <code>windows_service_state</code> with a <code>state</code> label that has 8 possible values for each service:</p>
+<ul>
+<li><code>running</code></li>
+<li><code>stopped</code></li>
+<li><code>start pending</code></li>
+<li><code>stop pending</code></li>
+<li><code>continue pending</code></li>
+<li><code>pause pending</code></li>
+<li><code>paused</code></li>
+<li><code>unknown</code></li>
+</ul>
+<p>Additionally, it generates:</p>
+<ul>
+<li><code>windows_service_start_mode</code> with 5 modes per service (<code>auto</code>, <code>manual</code>, <code>disabled</code>, <code>auto (delayed)</code>, <code>auto (trigger)</code>)</li>
+<li><code>windows_service_info</code> with 1 series per service</li>
+<li><code>windows_service_status</code> with 1 series per service</li>
+</ul>
+<p>The unfiltered math on a server with 200 services:</p>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Calculation</th><th>Series</th></tr></thead><tbody>
+<tr><td><code>windows_service_state</code></td><td>200 services x 7 states</td><td>1,400</td></tr>
+<tr><td><code>windows_service_start_mode</code></td><td>200 services x 5 modes</td><td>1,000</td></tr>
+<tr><td><code>windows_service_info</code></td><td>200 services x 1</td><td>200</td></tr>
+<tr><td><code>windows_service_process</code></td><td>72 (varies)</td><td>72</td></tr>
+<tr><td><strong>Total</strong></td><td></td><td><strong>2,672</strong></td></tr>
+</tbody></table>
+</div>
+<p>That is <strong>92% of the total 2,909 unfiltered series</strong> from a standard Windows server.</p>
+<h2 id="the-filtered-math"><a class="header" href="#the-filtered-math">The Filtered Math</a></h2>
+<p>The hardened config:</p>
+<ul>
+<li>Monitors <strong>12 essential services</strong> (not 200)</li>
+<li>Keeps only <strong>2 states</strong>: <code>running</code> and <code>stopped</code> (not 8)</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Metric</th><th>Calculation</th><th>Series</th></tr></thead><tbody>
+<tr><td><code>windows_service_state</code></td><td>12 services x 2 states</td><td>24</td></tr>
+<tr><td><code>windows_service_start_mode</code></td><td>12 services x ~2 modes</td><td>~15</td></tr>
+<tr><td><code>windows_service_info</code></td><td>12 services</td><td>12</td></tr>
+<tr><td><code>windows_service_status</code></td><td>12 services</td><td>12</td></tr>
+<tr><td><strong>Total</strong></td><td></td><td><strong>~24</strong> (state) + supporting metrics</td></tr>
+</tbody></table>
+</div>
+<p>From 2,672 series to ~24. That is a <strong>99% reduction</strong> in service-related cardinality.</p>
+<h2 id="the-default-essential-services"><a class="header" href="#the-default-essential-services">The Default Essential Services</a></h2>
+<p>The hardened config monitors these 12 services by default:</p>
+<div class="table-wrapper"><table><thead><tr><th>Service Name</th><th>Description</th><th>Why It's Essential</th></tr></thead><tbody>
+<tr><td><code>windefend</code></td><td>Windows Defender</td><td>Security -- antivirus must be running</td></tr>
+<tr><td><code>alloy</code></td><td>Grafana Alloy</td><td>Monitoring agent -- meta-monitoring</td></tr>
+<tr><td><code>winrm</code></td><td>Windows Remote Management</td><td>Remote management access</td></tr>
+<tr><td><code>w32time</code></td><td>Windows Time</td><td>Time synchronization -- critical for log correlation</td></tr>
+<tr><td><code>wuauserv</code></td><td>Windows Update</td><td>Patch compliance</td></tr>
+<tr><td><code>eventlog</code></td><td>Windows Event Log</td><td>Logging infrastructure</td></tr>
+<tr><td><code>dhcp</code></td><td>DHCP Client</td><td>Network configuration</td></tr>
+<tr><td><code>dnscache</code></td><td>DNS Client</td><td>Name resolution</td></tr>
+<tr><td><code>lanmanserver</code></td><td>Server (SMB)</td><td>File sharing and SMB access</td></tr>
+<tr><td><code>lanmanworkstation</code></td><td>Workstation (SMB Client)</td><td>SMB client for accessing shares</td></tr>
+<tr><td><code>mpssvc</code></td><td>Windows Firewall</td><td>Network security</td></tr>
+<tr><td><code>bits</code></td><td>Background Intelligent Transfer</td><td>Windows Update delivery, SCCM</td></tr>
+</tbody></table>
+</div>
+<p>To add your own services, append them to the regex:</p>
+<pre><code class="language-text">"windows_service_state@(windefend|alloy|winrm|w32time|...|my_custom_svc)"
+</code></pre>
+<h2 id="the-__keepme-temp-label-technique"><a class="header" href="#the-__keepme-temp-label-technique">The <code>__keepme</code> Temp-Label Technique</a></h2>
+<p>The service filter cannot be done with a simple <code>keep</code> or <code>drop</code> rule because it needs to apply <strong>only</strong> to <code>windows_service_state</code> metrics. A <code>keep</code> rule on the <code>name</code> label would affect ALL metrics in the pipeline. A <code>drop</code> rule on specific service names would require listing every service you want to drop (hundreds of them).</p>
+<p>The solution is a multi-step technique using temporary labels (prefixed with <code>__</code>) as intermediate state. Prometheus-style relabeling drops all <code>__</code>-prefixed labels before the final write, so they never reach your backend.</p>
+<p>Here is the complete technique, step by step:</p>
+<h3 id="step-1-tag-monitored-services-with-__keepme"><a class="header" href="#step-1-tag-monitored-services-with-__keepme">Step 1: Tag Monitored Services with <code>__keepme</code></a></h3>
+<pre><code class="language-alloy">// Step 2a: Tag service metrics for monitored services
+rule {
+    source_labels = ["__name__", "name"]
+    separator     = "@"
+    regex         = "windows_service_state@(windefend|alloy|winrm|w32time|wuauserv|eventlog|dhcp|dnscache|lanmanserver|lanmanworkstation|mpssvc|bits)"
+    target_label  = "__keepme"
+    replacement   = "1"
+}
+</code></pre>
+<p><strong>What happens:</strong> For every <code>windows_service_state</code> metric where the <code>name</code> label matches one of the 12 monitored services, a temporary label <code>__keepme</code> is set to <code>"1"</code>.</p>
+<p><strong>Why <code>@</code> separator:</strong> The default separator is <code>;</code>, but service names could theoretically contain semicolons. Using <code>@</code> as the separator and matching <code>windows_service_state@servicename</code> makes the pattern unambiguous.</p>
+<p><strong>After this step:</strong></p>
+<ul>
+<li><code>windows_service_state{name="windefend", state="running"}</code> has <code>__keepme="1"</code></li>
+<li><code>windows_service_state{name="spooler", state="running"}</code> has no <code>__keepme</code> label</li>
+</ul>
+<h3 id="step-2-drop-untagged-service-state-metrics"><a class="header" href="#step-2-drop-untagged-service-state-metrics">Step 2: Drop Untagged Service State Metrics</a></h3>
+<pre><code class="language-alloy">// Step 2b: Drop service_state for non-monitored services
+rule {
+    source_labels = ["__name__", "__keepme"]
+    separator     = "@"
+    regex         = "windows_service_state@"
+    action        = "drop"
+}
+</code></pre>
+<p><strong>What happens:</strong> This drops any <code>windows_service_state</code> metric where <code>__keepme</code> is empty (not set). The regex <code>windows_service_state@</code> matches when <code>__keepme</code> is empty -- the <code>@</code> is immediately followed by end of string.</p>
+<p>Metrics that have <code>__keepme="1"</code> produce the concatenated value <code>windows_service_state@1</code>, which does NOT match <code>windows_service_state@</code> (there is content after <code>@</code>).</p>
+<p><strong>After this step:</strong> Only the 12 monitored services remain.</p>
+<h3 id="step-3-clean-up-the-temp-label"><a class="header" href="#step-3-clean-up-the-temp-label">Step 3: Clean Up the Temp Label</a></h3>
+<pre><code class="language-alloy">// Step 2c: Clean up temp label
+rule {
+    source_labels = ["__name__"]
+    regex         = "windows_service_state"
+    target_label  = "__keepme"
+    replacement   = ""
+}
+</code></pre>
+<p><strong>What happens:</strong> For all surviving <code>windows_service_state</code> metrics, clear the <code>__keepme</code> label. This is technically optional (labels starting with <code>__</code> are dropped before remote write), but cleaning up explicitly makes the pipeline behavior clear and prevents interference with later rules.</p>
+<h3 id="step-4-tag-desired-states-with-__keepme2"><a class="header" href="#step-4-tag-desired-states-with-__keepme2">Step 4: Tag Desired States with <code>__keepme2</code></a></h3>
+<pre><code class="language-alloy">// Step 2d: Tag service metrics for desired states
+rule {
+    source_labels = ["__name__", "state"]
+    separator     = "@"
+    regex         = "windows_service_state@(running|stopped)"
+    target_label  = "__keepme2"
+    replacement   = "1"
+}
+</code></pre>
+<p><strong>What happens:</strong> Of the surviving 12 services, tag those in <code>running</code> or <code>stopped</code> state with <code>__keepme2="1"</code>. This discards the 6 other states (start pending, stop pending, continue pending, pause pending, paused, unknown) which are transient and rarely useful for monitoring.</p>
+<h3 id="step-5-drop-undesired-states"><a class="header" href="#step-5-drop-undesired-states">Step 5: Drop Undesired States</a></h3>
+<pre><code class="language-alloy">// Step 2e: Drop service_state for non-desired states
+rule {
+    source_labels = ["__name__", "__keepme2"]
+    separator     = "@"
+    regex         = "windows_service_state@"
+    action        = "drop"
+}
+</code></pre>
+<p><strong>What happens:</strong> Same pattern as Step 2 -- drop <code>windows_service_state</code> metrics where <code>__keepme2</code> is empty (meaning the state was not <code>running</code> or <code>stopped</code>).</p>
+<h3 id="step-6-clean-up-second-temp-label"><a class="header" href="#step-6-clean-up-second-temp-label">Step 6: Clean Up Second Temp Label</a></h3>
+<pre><code class="language-alloy">// Step 2f: Clean up temp label
+rule {
+    source_labels = ["__name__"]
+    regex         = "windows_service_state"
+    target_label  = "__keepme2"
+    replacement   = ""
+}
+</code></pre>
+<h3 id="steps-7-9-apply-same-filter-to-other-service-metrics"><a class="header" href="#steps-7-9-apply-same-filter-to-other-service-metrics">Steps 7-9: Apply Same Filter to Other Service Metrics</a></h3>
+<p>The same service-name filter (but not the state filter) is applied to <code>windows_service_start_mode</code>, <code>windows_service_status</code>, and <code>windows_service_info</code>:</p>
+<pre><code class="language-alloy">// Apply same service name filter to windows_service_start_mode, _status, _info
+rule {
+    source_labels = ["__name__", "name"]
+    separator     = "@"
+    regex         = "windows_service_(start_mode|status|info)@(windefend|alloy|winrm|w32time|wuauserv|eventlog|dhcp|dnscache|lanmanserver|lanmanworkstation|mpssvc|bits)"
+    target_label  = "__keepme3"
+    replacement   = "1"
+}
+
+rule {
+    source_labels = ["__name__", "__keepme3"]
+    separator     = "@"
+    regex         = "windows_service_(start_mode|status|info)@"
+    action        = "drop"
+}
+
+rule {
+    source_labels = ["__name__"]
+    regex         = "windows_service_(start_mode|status|info)"
+    target_label  = "__keepme3"
+    replacement   = ""
+}
+</code></pre>
+<p>These three metrics do not have a <code>state</code> label, so they only need the service-name filter, not the state filter. The <code>__keepme3</code> label avoids collision with the <code>__keepme</code>/<code>__keepme2</code> labels used in the state filtering steps.</p>
+<h2 id="why-not-just-use-keep"><a class="header" href="#why-not-just-use-keep">Why Not Just Use <code>keep</code>?</a></h2>
+<p>You might wonder: why not simply use <code>action = "keep"</code> with a regex matching the desired services?</p>
+<pre><code class="language-alloy">// THIS WOULD BE WRONG -- DO NOT USE
+rule {
+    source_labels = ["name"]
+    regex         = "(windefend|alloy|winrm|...)"
+    action        = "keep"
+}
+</code></pre>
+<p>The problem: <code>keep</code> applies to ALL metrics in the pipeline, not just service metrics. CPU metrics, memory metrics, disk metrics -- none of them have a <code>name</code> label, so the regex would not match them, and they would all be dropped.</p>
+<p>The <code>__keepme</code> technique scopes the filter to specific metric names (<code>windows_service_state</code>, <code>windows_service_start_mode</code>, etc.) while leaving all other metrics untouched.</p>
+<h2 id="why-two-filtering-passes"><a class="header" href="#why-two-filtering-passes">Why Two Filtering Passes?</a></h2>
+<p>The service filter uses two independent filtering passes (services, then states) rather than a single combined regex. This is intentional:</p>
+<ol>
+<li><strong>Readability</strong>: The service list and state list are separate concerns. Combining them into one regex like <code>windows_service_state@(windefend|alloy|...)@(running|stopped)</code> would require a triple-label source and be harder to maintain.</li>
+<li><strong>Flexibility</strong>: You might want to keep all 8 states for debugging. Just remove Steps 4-6. Or you might want different state filters for different services. Two separate passes make customization straightforward.</li>
+<li><strong>The secondary metrics</strong>: <code>start_mode</code>, <code>status</code>, and <code>info</code> need the service filter but NOT the state filter (they do not have a <code>state</code> label). Keeping the passes separate means you reuse the service list without entangling state logic.</li>
+</ol>
+<h2 id="customizing-the-service-list"><a class="header" href="#customizing-the-service-list">Customizing the Service List</a></h2>
+<p>To add monitoring for SQL Server and IIS:</p>
+<ol>
+<li>Add the service names to all three regex patterns:</li>
+</ol>
+<pre><code class="language-text">// In Step 2a (service_state):
+"windows_service_state@(windefend|alloy|...|bits|mssqlserver|w3svc)"
+
+// In Steps 7-9 (start_mode/status/info):
+"windows_service_(start_mode|status|info)@(windefend|alloy|...|bits|mssqlserver|w3svc)"
+</code></pre>
+<ol start="2">
+<li>The series impact: each new service adds ~2 <code>windows_service_state</code> series (running + stopped) plus ~3-4 supporting series. Adding 2 services adds approximately 10 series total.</li>
+</ol>
+<p>To find the correct service name, run on the Windows host:</p>
+<pre><code class="language-powershell">Get-Service | Select-Object Name, DisplayName, Status | Sort-Object Name
+</code></pre>
+<p>Use the <code>Name</code> column value (not <code>DisplayName</code>) in the regex.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<p><strong>Filtering services but not states.</strong> If you only filter by service name but keep all 8 states, you still get <code>12 services x 8 states = 96</code> series instead of <code>12 x 2 = 24</code>. Always filter both dimensions.</p>
+<p><strong>Forgetting to update all three regex groups.</strong> The service name list appears in three places: <code>windows_service_state</code> (Step 1), and <code>windows_service_(start_mode|status|info)</code> (Step 7). If you add a service to one but not the other, you get inconsistent data.</p>
+<p><strong>Using service DisplayNames instead of Names.</strong> Windows services have both a <code>Name</code> (e.g., <code>wuauserv</code>) and a <code>DisplayName</code> (e.g., <code>Windows Update</code>). The exporter uses the <code>Name</code>. Using the DisplayName in the regex will not match.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<ul>
+<li>The Windows service collector is the #1 cardinality trap: 200 services x 8 states = 1,200+ series</li>
+<li>The hardened config filters to 12 essential services x 2 states = ~24 series (99% reduction)</li>
+<li>The <code>__keepme</code> temp-label technique enables metric-name-scoped filtering without affecting other metrics in the pipeline</li>
+<li>The filter uses two passes: service name filtering, then state filtering</li>
+<li>The same service-name filter is applied to <code>start_mode</code>, <code>status</code>, and <code>info</code> metrics</li>
+<li>Temporary <code>__</code> labels are automatically dropped before remote write</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ch02-cardinality-control/layer4-value-limits.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../ch02-cardinality-control/before-and-after.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ch02-cardinality-control/layer4-value-limits.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../ch02-cardinality-control/before-and-after.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

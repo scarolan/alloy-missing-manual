@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Windows: Event Logs - Alloy - The Missing Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practical, opinionated guide to Grafana Alloy for SEs, customers, and community users.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy - The Missing Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/scarolan/alloy-missing-manual/edit/main/src/ch04-platform-guides/windows/event-logs.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="windows-event-logs"><a class="header" href="#windows-event-logs">Windows: Event Logs</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>Windows Event Logs are the Windows equivalent of the Linux systemd journal. Alloy collects them using the <code>loki.source.windowsevent</code> component, which reads from the Windows Event Log API and forwards entries to Loki.</p>
+<p>The hardened Windows config ships three event logs by default: Application, System, and Security. Each gets its own source component.</p>
+<h2 id="the-complete-event-log-pipeline"><a class="header" href="#the-complete-event-log-pipeline">The Complete Event Log Pipeline</a></h2>
+<pre><code class="language-alloy">// Relabel rules to add job and instance labels
+loki.relabel "integrations_windows_exporter" {
+  forward_to = [loki.write.grafana_cloud_loki.receiver]
+  rule {
+    target_label = "job"
+    replacement  = "integrations/windows_exporter"
+  }
+  rule {
+    target_label = "instance"
+    replacement  = constants.hostname
+  }
+}
+
+// Application log
+loki.source.windowsevent "application" {
+  eventlog_name          = "Application"
+  use_incoming_timestamp = true
+  forward_to             = [loki.process.windows_events.receiver]
+}
+
+// System log
+loki.source.windowsevent "system" {
+  eventlog_name          = "System"
+  use_incoming_timestamp = true
+  forward_to             = [loki.process.windows_events.receiver]
+}
+
+// Security log
+loki.source.windowsevent "security" {
+  eventlog_name          = "Security"
+  use_incoming_timestamp = true
+  forward_to             = [loki.process.windows_events.receiver]
+}
+
+// Processing pipeline (rate limiting, etc.)
+loki.process "windows_events" {
+  forward_to = [loki.relabel.integrations_windows_exporter.receiver]
+}
+</code></pre>
+<h2 id="key-parameters"><a class="header" href="#key-parameters">Key Parameters</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Parameter</th><th>Value</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>eventlog_name</code></td><td><code>"Application"</code>, <code>"System"</code>, <code>"Security"</code></td><td>Which Windows Event Log channel to read</td></tr>
+<tr><td><code>use_incoming_timestamp</code></td><td><code>true</code></td><td>Use the event's original timestamp rather than the time Alloy processes it</td></tr>
+<tr><td><code>forward_to</code></td><td><code>[loki.process.windows_events.receiver]</code></td><td>Route through the processing pipeline</td></tr>
+</tbody></table>
+</div>
+<h2 id="filtering-with-xpath_query"><a class="header" href="#filtering-with-xpath_query">Filtering with xpath_query</a></h2>
+<p>The <code>xpath_query</code> parameter filters events at the source using XPath syntax. This is the most efficient way to reduce volume because filtered events never enter the Alloy pipeline.</p>
+<h3 id="filter-by-level-severity"><a class="header" href="#filter-by-level-severity">Filter by Level (Severity)</a></h3>
+<p>Windows Event Log levels:</p>
+<div class="table-wrapper"><table><thead><tr><th>Level Value</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>1</td><td>Critical</td></tr>
+<tr><td>2</td><td>Error</td></tr>
+<tr><td>3</td><td>Warning</td></tr>
+<tr><td>4</td><td>Information</td></tr>
+<tr><td>5</td><td>Verbose</td></tr>
+</tbody></table>
+</div>
+<p>To ship only warnings and above (levels 1-3):</p>
+<pre><code class="language-alloy">loki.source.windowsevent "security" {
+  eventlog_name          = "Security"
+  use_incoming_timestamp = true
+  xpath_query            = "*[System[(Level=1 or Level=2 or Level=3)]]"
+  forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h3 id="filter-by-provider-source"><a class="header" href="#filter-by-provider-source">Filter by Provider (Source)</a></h3>
+<p>To collect events only from specific providers:</p>
+<pre><code class="language-alloy">loki.source.windowsevent "application" {
+  eventlog_name          = "Application"
+  use_incoming_timestamp = true
+  xpath_query            = "*[System[Provider[@Name='MSSQLSERVER' or @Name='Application Error' or @Name='.NET Runtime']]]"
+  forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h3 id="combine-level-and-provider-filters"><a class="header" href="#combine-level-and-provider-filters">Combine Level and Provider Filters</a></h3>
+<pre><code class="language-alloy">loki.source.windowsevent "system" {
+  eventlog_name          = "System"
+  use_incoming_timestamp = true
+  xpath_query            = "*[System[(Level=1 or Level=2 or Level=3) and Provider[@Name='Service Control Manager' or @Name='Microsoft-Windows-Kernel-General']]]"
+  forward_to             = [loki.process.windows_events.receiver]
+}
+</code></pre>
+<h2 id="rate-limiting"><a class="header" href="#rate-limiting">Rate Limiting</a></h2>
+<p>Add a <code>stage.limit</code> block in the processing pipeline as a safety net:</p>
+<pre><code class="language-alloy">loki.process "windows_events" {
+  stage.limit {
+    rate  = 100   // lines per second per stream
+    burst = 500   // burst allowance
+    drop  = true  // drop excess (vs backpressure)
+  }
+
+  forward_to = [loki.relabel.integrations_windows_exporter.receiver]
+}
+</code></pre>
+<h2 id="selecting-which-logs-to-collect"><a class="header" href="#selecting-which-logs-to-collect">Selecting Which Logs to Collect</a></h2>
+<p>Not all three logs are necessary for every host:</p>
+<div class="table-wrapper"><table><thead><tr><th>Log</th><th>Typical Volume</th><th>When to Collect</th></tr></thead><tbody>
+<tr><td><strong>Application</strong></td><td>Low to moderate</td><td>Always. Application errors and warnings are essential.</td></tr>
+<tr><td><strong>System</strong></td><td>Low to moderate</td><td>Always. Service starts/stops, driver issues, hardware events.</td></tr>
+<tr><td><strong>Security</strong></td><td>Varies wildly</td><td>With caution. Low on member servers, extremely high on domain controllers.</td></tr>
+</tbody></table>
+</div>
+<p>On a standard member server, Application and System are usually safe to ship unfiltered. Security requires careful consideration -- see <a href="domain-controller.html">Domain Controller Considerations</a>.</p>
+<h2 id="structured-event-data"><a class="header" href="#structured-event-data">Structured Event Data</a></h2>
+<p>Windows Event Log entries contain structured data (event ID, provider name, level, task, keywords, etc.). When shipped to Loki, this metadata is available for querying. The event XML is included in the log line, so you can use Loki's <code>json</code> or <code>pattern</code> parsers in queries to extract specific fields.</p>
+<h2 id="common-mistakes"><a class="header" href="#common-mistakes">Common Mistakes</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Mistake</th><th>Impact</th><th>Fix</th></tr></thead><tbody>
+<tr><td>Collecting Security log without filtering on a DC</td><td>Millions of events per day</td><td>Use <code>xpath_query</code> to filter by level, or comment out the Security source on DCs</td></tr>
+<tr><td>Not using <code>use_incoming_timestamp</code></td><td>Events timestamped when processed, not when they occurred</td><td>Always set <code>use_incoming_timestamp = true</code></td></tr>
+<tr><td>No rate limiting</td><td>A burst of events can overwhelm Loki</td><td>Add <code>stage.limit</code> in <code>loki.process</code></td></tr>
+<tr><td>Using <code>eventlog_name</code> with the wrong case</td><td>Component fails silently</td><td>Use exact Windows log names: <code>"Application"</code>, <code>"System"</code>, <code>"Security"</code></td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../ch04-platform-guides/windows/env-var-inheritance.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../ch04-platform-guides/windows/domain-controller.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../ch04-platform-guides/windows/env-var-inheritance.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../ch04-platform-guides/windows/domain-controller.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
