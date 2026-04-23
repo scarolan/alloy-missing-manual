@@ -73,6 +73,11 @@
   - [Starter Configs](ch07-recipes/starter-configs.md)
   - [Alloy vs OpenTelemetry Collector](ch07-recipes/alloy-vs-otel.md)
 
+- [Useful Links](ch10-useful-links/README.md)
+  - [Official Documentation](ch10-useful-links/official-docs.md)
+  - [Community Resources](ch10-useful-links/community.md)
+  - [Dashboards and Tools](ch10-useful-links/dashboards-and-tools.md)
+
 ---
 
 [Resources](appendix/resources.md)
