@@ -23,6 +23,23 @@ jobs:
       - name: Build book
         run: mdbook build
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Encrypt site with StatiCrypt
+        run: |
+          npx staticrypt@3.5.4 book/*.html book/**/*.html \
+            -p "$STATICRYPT_PASSWORD" \
+            -d book \
+            --short \
+            --remember 30 \
+            --template-title "Alloy - The Missing Manual" \
+            --template-instructions "Enter the password to access this guide."
+        env:
+          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
