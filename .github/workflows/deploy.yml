@@ -30,19 +30,19 @@ jobs:
 
       - name: Encrypt HTML files with StatiCrypt
         run: |
-          # Encrypt into a temp directory to avoid clobbering assets
-          find book -name '*.html' > /tmp/html-files.txt
+          cd book
+          find . -name '*.html' > /tmp/html-files.txt
           npx staticrypt@3.5.4 $(cat /tmp/html-files.txt) \
             -p "$STATICRYPT_PASSWORD" \
-            -d encrypted \
+            -d ../encrypted \
             --short \
             --remember 30 \
             --template-title "Alloy - The Missing Manual" \
             --template-instructions "Enter the password to access this guide."
 
-          # Replace only the HTML files, keeping CSS/JS/fonts intact
+          # Copy encrypted HTML back over originals, keeping CSS/JS/fonts intact
           while read -r f; do
-            cp "encrypted/$f" "$f"
+            cp "../encrypted/$f" "$f"
           done < /tmp/html-files.txt
         env:
           STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
