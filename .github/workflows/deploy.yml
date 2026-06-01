@@ -29,21 +29,15 @@ jobs:
           node-version: '22'
 
       - name: Encrypt HTML files with StatiCrypt
+        working-directory: book
         run: |
-          cd book
-          find . -name '*.html' > /tmp/html-files.txt
-          npx staticrypt@3.5.4 $(cat /tmp/html-files.txt) \
+          npx staticrypt@3.5.4 -r . \
             -p "$STATICRYPT_PASSWORD" \
-            -d ../encrypted \
+            -d . \
             --short \
             --remember 30 \
             --template-title "Alloy - The Missing Manual" \
             --template-instructions "Enter the password to access this guide."
-
-          # Copy encrypted HTML back over originals, keeping CSS/JS/fonts intact
-          while read -r f; do
-            cp "../encrypted/$f" "$f"
-          done < /tmp/html-files.txt
         env:
           STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
 
