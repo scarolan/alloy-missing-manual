@@ -33,11 +33,17 @@ jobs:
         run: |
           npx staticrypt@3.5.4 -r . \
             -p "$STATICRYPT_PASSWORD" \
-            -d . \
+            -d ../encrypted \
             --short \
             --remember 30 \
             --template-title "Alloy - The Missing Manual" \
             --template-instructions "Enter the password to access this guide."
+
+          # StatiCrypt nests output in a book/ subdirectory — copy HTML back over originals
+          find ../encrypted/book -name '*.html' | while read f; do
+            relpath="${f#../encrypted/book/}"
+            cp "$f" "$relpath"
+          done
         env:
           STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
 
