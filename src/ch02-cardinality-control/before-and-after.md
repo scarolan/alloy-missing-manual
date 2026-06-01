@@ -205,3 +205,4 @@ The numbers in this chapter come from controlled benchmarks:
 - At $8/1k series, a mixed fleet of 1,200 hosts saves ~$196,000/year with hardened configs
 - The Windows service filter is the single highest-ROI optimization: 2,672 series to ~24
 - Measure your own counts with `count({instance="...", job="..."})` and compare against these benchmarks
+- Complete hardened configs with test suites and deployment guides: [Linux](https://github.com/scarolan/hardened-grafana-alloy-linux) | [Windows](https://github.com/scarolan/hardened-grafana-alloy-windows)

@@ -275,3 +275,4 @@ Use the `Name` column value (not `DisplayName`) in the regex.
 - The filter uses two passes: service name filtering, then state filtering
 - The same service-name filter is applied to `start_mode`, `status`, and `info` metrics
 - Temporary `__` labels are automatically dropped before remote write
+- Complete production config with all 5 layers: [hardened-grafana-alloy-windows](https://github.com/scarolan/hardened-grafana-alloy-windows)

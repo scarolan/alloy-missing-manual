@@ -173,3 +173,4 @@ The hardened configs in this book address these patterns through Layer 2 (Patter
 - Cost scales linearly with active series count
 - The dashboard test -- "does this metric power a panel?" -- is the foundation of cardinality control
 - The 5-layer pattern in this chapter systematically eliminates waste while preserving every panel your dashboards need
+- Production-ready implementations: [hardened-grafana-alloy-linux](https://github.com/scarolan/hardened-grafana-alloy-linux) and [hardened-grafana-alloy-windows](https://github.com/scarolan/hardened-grafana-alloy-windows)

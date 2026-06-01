@@ -8,6 +8,8 @@ Multiply that across a fleet of hundreds or thousands of hosts and you're lookin
 
 This chapter teaches a layered protection pattern that gives you predictable, controlled series counts without losing the metrics you actually need.
 
+> **Want the complete configs?** The production-ready implementations of everything in this chapter are available as standalone repositories: [hardened-grafana-alloy-linux](https://github.com/scarolan/hardened-grafana-alloy-linux) and [hardened-grafana-alloy-windows](https://github.com/scarolan/hardened-grafana-alloy-windows). Each includes the full 5-layer config, deployment guides, and test suites.
+
 ## What you'll learn
 
 - Why cardinality is the #1 cost driver in observability

@@ -40,7 +40,7 @@ The `join()` call produces the regex `metric_name_one|metric_name_two|metric_nam
 
 ## Complete Allow-List: Node Exporter Full (Dashboard 1860)
 
-This is the full 208-metric allow-list for the [Node Exporter Full dashboard](https://grafana.com/grafana/dashboards/1860-node-exporter-full/). Every metric listed below powers at least one panel in the dashboard. The list is grouped by category with comments matching the organization in the hardened config.
+This is the full 208-metric allow-list for the [Node Exporter Full dashboard](https://grafana.com/grafana/dashboards/1860-node-exporter-full/). Every metric listed below powers at least one panel in the dashboard. The list is grouped by category with comments matching the [hardened-grafana-alloy-linux](https://github.com/scarolan/hardened-grafana-alloy-linux) production config.
 
 ```alloy
 prometheus.relabel "integrations_node_exporter" {
@@ -350,7 +350,7 @@ prometheus.relabel "integrations_node_exporter" {
 
 ## Complete Allow-List: Windows Exporter Dashboard 2025 (Dashboard 24390)
 
-The full 95-metric allow-list for the [Windows Exporter Dashboard 2025](https://grafana.com/grafana/dashboards/24390-windows-exporter-dashboard-2025/):
+The full 95-metric allow-list for the [Windows Exporter Dashboard 2025](https://grafana.com/grafana/dashboards/24390-windows-exporter-dashboard-2025/), matching the [hardened-grafana-alloy-windows](https://github.com/scarolan/hardened-grafana-alloy-windows) production config:
 
 ```alloy
 prometheus.relabel "integrations_windows_exporter" {
@@ -548,3 +548,4 @@ The `mimirtool analyze grafana` command can automate steps 1-3 by extracting all
 - The Windows config (Dashboard 24390) uses 95 metric names
 - Allow-lists are closed systems: nothing new passes through without explicit approval
 - Derive your allow-list from your dashboards, not from guesswork
+- Complete production configs with all 5 layers applied: [Linux](https://github.com/scarolan/hardened-grafana-alloy-linux) | [Windows](https://github.com/scarolan/hardened-grafana-alloy-windows)
