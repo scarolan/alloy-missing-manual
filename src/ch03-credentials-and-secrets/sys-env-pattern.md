@@ -123,5 +123,5 @@ URLs and usernames are not secret, so why put them in environment variables? Two
 
 - The env file should be `chmod 600` and owned by root (Linux) or set via Machine-scope / registry (Windows)
 - Never commit `.env` files to version control (only `.env.example` with placeholder values)
-- Never paste the API key into Fleet Management pipeline YAML -- always use `sys.env("GCLOUD_RW_API_KEY")`
+- Never paste the API key into Fleet Management pipeline config -- always use `sys.env("GCLOUD_RW_API_KEY")`
 - Rotate tokens by creating a new one, updating the env file, restarting, verifying data flow, then deleting the old token

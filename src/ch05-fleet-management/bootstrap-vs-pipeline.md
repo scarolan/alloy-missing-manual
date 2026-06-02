@@ -28,7 +28,7 @@ Understanding what belongs in each layer is essential. Put the wrong thing in th
 
 ## Complete Bootstrap Config Example
 
-This is the actual `fleet-config.alloy` from the hardened repos. It is deliberately tiny:
+This is the actual bootstrap config from the hardened repos (deployed as `/etc/alloy/config.alloy`). It is deliberately tiny:
 
 ```alloy
 // Connect to Fleet Management and poll for pipeline updates.
@@ -266,5 +266,5 @@ Attribute-based matching is recommended for fleet-wide pipelines. Collector ID m
 |---|---|---|
 | Putting collection config in the bootstrap | Cannot update without touching every host | Move everything except `remotecfg` to FM pipelines |
 | Omitting write endpoints from FM pipeline | Pipeline fails to ship data | Include `prometheus.remote_write` and/or `loki.write` in every pipeline |
-| Hardcoding credentials in FM pipeline YAML | Secrets visible in FM UI, exports, backups | Use `sys.env()` for all credentials |
-| Forgetting to set env vars on the host | FM pipeline runs but `sys.env()` returns empty strings | Set all five env vars per the [Linux](../../ch03-credentials-and-secrets/linux-env-setup.md) or [Windows](../../ch03-credentials-and-secrets/windows-env-setup.md) setup |
+| Hardcoding credentials in FM pipeline config | Secrets visible in FM UI, exports, backups | Use `sys.env()` for all credentials |
+| Forgetting to set env vars on the host | FM pipeline runs but `sys.env()` returns empty strings | Set all five env vars per the [Linux](../ch03-credentials-and-secrets/linux-env-setup.md) or [Windows](../ch03-credentials-and-secrets/windows-env-setup.md) setup |

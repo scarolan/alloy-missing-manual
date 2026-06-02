@@ -175,7 +175,7 @@ check "No errors in recent logs" \
     bash -c '! journalctl -u alloy --since "5 minutes ago" --priority=err --quiet | grep -q .'
 
 check "Remote write WAL active" \
-    bash -c 'curl -sf "http://${HOST}:${PORT}/metrics" | grep -q "prometheus_remote_write_wal_samples_appended_total"'
+    bash -c "curl -sf 'http://${HOST}:${PORT}/metrics' | grep -q 'prometheus_remote_write_wal_samples_appended_total'"
 
 echo ""
 if [ $ERRORS -eq 0 ]; then

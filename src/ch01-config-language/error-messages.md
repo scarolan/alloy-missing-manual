@@ -148,7 +148,7 @@ alloy run --stability.level=experimental config.alloy
 Environment="CUSTOM_ARGS=--stability.level=experimental"
 ```
 
-The stability levels from least to most restrictive: `experimental` > `public_preview` > `generally_available`. Setting a less restrictive level enables all levels above it (so `experimental` enables everything).
+The stability levels from least to most restrictive: `experimental` > `public_preview` > `generally_available`. Setting a less restrictive level also enables all more restrictive levels (so `experimental` enables `public_preview` and `generally_available` components as well).
 
 **Fix for typos:** Check the [component reference](https://grafana.com/docs/alloy/latest/reference/components/) for the exact name.
 

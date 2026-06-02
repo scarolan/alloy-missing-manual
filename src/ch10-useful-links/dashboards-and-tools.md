@@ -8,7 +8,7 @@ These are the dashboards you will import into Grafana to visualize the data Allo
 
 | Link | What it monitors | Priority |
 |------|-----------------|----------|
-| [Node Exporter Full (ID: 1860)](https://grafana.com/grafana/dashboards/1860) | The most popular Linux monitoring dashboard. Visualizes nearly all default metrics exported by the Prometheus node exporter -- CPU, memory, disk, network, systemd, and more. Requires a `node` job targeting port 9100. Recommend running node-exporter with `--collector.systemd` and `--collector.processes` for full coverage. | Essential |
+| [Node Exporter Full (ID: 1860)](https://grafana.com/grafana/dashboards/1860) | The most popular Linux monitoring dashboard. Visualizes nearly all default metrics exported by the Prometheus Node Exporter -- CPU, memory, disk, network, systemd, and more. Requires a `node` job targeting port 9100. Recommend running node-exporter with `--collector.systemd` and `--collector.processes` for full coverage. | Essential |
 | [Windows Exporter Dashboard 2025 (ID: 24390)](https://grafana.com/grafana/dashboards/24390) | Windows system performance dashboard compatible with prometheus-windows-exporter 0.31.3+. Uses bargauge, gauge, stat, table, and timeseries panels. Includes job filter for disk analysis. | Essential |
 | [Grafana Dashboards library](https://grafana.com/grafana/dashboards/) | Browse all community and official dashboards. Search for specific exporters or use cases. | Supplementary |
 

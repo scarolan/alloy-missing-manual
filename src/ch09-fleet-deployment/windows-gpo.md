@@ -120,13 +120,13 @@ Right-click in the Environment panel > **New > Environment Variable**. Create on
 
 | Action | Name | Value | Variable Type |
 |---|---|---|---|
-| Create | `GCLOUD_RW_API_KEY` | `glc_xxxxxxxxxxxxx` | Machine |
-| Create | `GRAFANA_METRICS_URL` | `https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push` | Machine |
-| Create | `GRAFANA_METRICS_USERNAME` | `000000` | Machine |
-| Create | `GRAFANA_LOGS_URL` | `https://logs-prod-006.grafana.net/loki/api/v1/push` | Machine |
-| Create | `GRAFANA_LOGS_USERNAME` | `000000` | Machine |
+| Replace | `GCLOUD_RW_API_KEY` | `glc_xxxxxxxxxxxxx` | Machine |
+| Replace | `GRAFANA_METRICS_URL` | `https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push` | Machine |
+| Replace | `GRAFANA_METRICS_USERNAME` | `000000` | Machine |
+| Replace | `GRAFANA_LOGS_URL` | `https://logs-prod-006.grafana.net/loki/api/v1/push` | Machine |
+| Replace | `GRAFANA_LOGS_USERNAME` | `000000` | Machine |
 
-Set the **Action** to **Replace** (not Create) to ensure changes propagate on credential rotation. Replace creates the variable if it does not exist and updates it if it does.
+Use the **Replace** action (not Create) to ensure changes propagate on credential rotation. Replace creates the variable if it does not exist and updates it if it does.
 
 > **Security note:** GPO Preferences environment variables are stored in the SYSVOL share in XML files (`Registry.xml`). They are readable by all authenticated users. For sensitive credentials, consider writing to the Alloy-specific registry key instead (covered below). Machine-scope env vars in the registry (`HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment`) are only writable by administrators but readable by any local process.
 
@@ -241,7 +241,7 @@ Group Policy processes in this order: **Local > Site > Domain > OU** (LSDOU). Wi
 
 1. **Computer vs. User Configuration**: All Alloy settings go under **Computer Configuration** because the Alloy service runs as SYSTEM, not as a logged-in user.
 
-2. **Policy vs. Preferences**: Use **Preferences** (not Policies) for environment variables and files. Preferences are non-tattooing -- they do not revert when the GPO is unlinked. Policies are tattooing -- they actively enforce and revert.
+2. **Policy vs. Preferences**: Use **Preferences** (not Policies) for environment variables and files. Preferences are tattooing -- they persist even when the GPO is unlinked. Policies are non-tattooing -- they actively enforce and revert when the GPO is removed.
 
 3. **Startup script timing**: Startup scripts run before the user logon screen appears. Network-dependent scripts (copying from a share) require the network to be available. Enable **Computer Configuration > Administrative Templates > System > Group Policy > Configure startup script delay** if startup scripts run before network initialization.
 

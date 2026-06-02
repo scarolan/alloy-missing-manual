@@ -322,8 +322,8 @@ prometheus.relabel "integrations_node_exporter" {
 | Category | Count | Notes |
 |----------|-------|-------|
 | Uptime & clock | 4 | `up`, boot time, time, timezone offset |
-| CPU | 9 | seconds_total, guest, scaling freq (x3), load (x3) |
-| Memory | 48 | Every `/proc/meminfo` field the dashboard queries |
+| CPU | 8 | seconds_total, guest, scaling freq (x3), load (x3) |
+| Memory | 47 | Every `/proc/meminfo` field the dashboard queries |
 | Disk I/O | 14 | Read/write bytes, ops, merges, io_time, discards |
 | Filesystem | 7 | Size, avail, free, files, files_free, device_error, readonly |
 | Network | 21 | RX/TX bytes, packets, errors, drops, fifo, carrier, MTU, speed |
@@ -346,7 +346,7 @@ prometheus.relabel "integrations_node_exporter" {
 | Softnet | 3 | Dropped, processed, squeezed |
 | Systemd | 3 | Socket connections, units, unit_state |
 | Process FDs | 2 | max_fds, open_fds (exporter process) |
-| **Total** | **208** | |
+| **Total** | **206** | |
 
 ## Complete Allow-List: Windows Exporter Dashboard 2025 (Dashboard 24390)
 
@@ -493,7 +493,7 @@ prometheus.relabel "integrations_windows_exporter" {
 | Category | Count | Notes |
 |----------|-------|-------|
 | Uptime & general | 4 | `up`, build_info, collector success/duration |
-| OS info | 17 | OS details, hostname, memory, paging, processes, users |
+| OS info | 16 | OS details, hostname, memory, paging, processes, users |
 | CPU | 8 | time_total, frequency, performance, interrupts, dpcs, utility |
 | Memory | 22 | Physical, available, cache, pool, standby, swap, faults |
 | Pagefile | 3 | Usage, limit, percent |

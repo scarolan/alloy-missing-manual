@@ -16,7 +16,7 @@
 
 **Forward To** — The wiring pattern that connects a source component's output to a destination component's receiver. Example: `forward_to = [prometheus.relabel.filter.receiver]`.
 
-**OTEL-Native Mode** — Alloy's ability to consume standard OpenTelemetry Collector YAML configuration directly.
+**OTEL-Native Mode** — Alloy's experimental ability to consume standard OpenTelemetry Collector YAML configuration directly, via the `alloy otel` subcommand.
 
 **Pipeline** — A chain of connected components that processes telemetry data from source to destination.
 

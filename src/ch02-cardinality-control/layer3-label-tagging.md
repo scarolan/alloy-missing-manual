@@ -184,7 +184,7 @@ In practice, quality warnings appear when:
 
 ## Common Mistakes
 
-**Dropping instead of tagging.** If you change the `replacement` action to `drop`, you lose the metric entirely. When debugging missing data, you will have no trace that the metric ever existed in the pipeline.
+**Dropping instead of tagging.** If you change the action to `drop`, you lose the metric entirely. When debugging missing data, you will have no trace that the metric ever existed in the pipeline.
 
 **Not monitoring the quality_warning label.** Tagging is only useful if someone looks at the tags. Set up a simple alert or dashboard panel that queries `{quality_warning=~".+"}` so you are notified when quality issues appear.
 

@@ -136,18 +136,18 @@ At **$8 per 1,000 active series per month**:
 | Configuration | Series/Host | Fleet Total | Monthly Cost | Annual Cost |
 |---|---|---|---|---|
 | Unfiltered | 2,909 | 581,800 | **$4,654** | **$55,854** |
-| Hardened | ~190 | 38,000 | **$304** | **$3,648** |
-| **Savings** | | 543,800 | **$4,350/mo** | **$52,206/yr** |
+| Hardened | ~135 | 27,000 | **$216** | **$2,592** |
+| **Savings** | | 554,800 | **$4,438/mo** | **$53,262/yr** |
 
 ### Mixed Fleet (500 Linux + 200 Windows)
 
 | Configuration | Fleet Total | Monthly Cost | Annual Cost |
 |---|---|---|---|
 | Unfiltered | 1,581,800 | **$12,654** | **$151,854** |
-| Hardened | 288,000 | **$2,304** | **$27,648** |
-| **Savings** | 1,293,800 | **$10,350/mo** | **$124,206/yr** |
+| Hardened | 277,000 | **$2,216** | **$26,592** |
+| **Savings** | 1,304,800 | **$10,438/mo** | **$125,262/yr** |
 
-That is over $124,000 per year saved with no loss of dashboard coverage.
+That is over $125,000 per year saved with no loss of dashboard coverage.
 
 ## Metrics vs Logs vs Traces
 
@@ -199,7 +199,7 @@ If you have a specific metric that genuinely needs sub-minute resolution (applic
 - A time series is one unique metric name + label combination; series counts are multiplicative
 - Unfiltered Linux hosts generate ~2,000 series; hardened configs produce 400-600
 - Unfiltered Windows hosts generate ~2,909 series; hardened configs produce ~135
-- A mixed fleet of 700 hosts saves over $124,000/year by applying the hardened configs
+- A mixed fleet of 700 hosts saves over $125,000/year by applying the hardened configs
 - 80% of series are never queried -- the biggest savings come from not collecting data nobody uses
 - Scrape interval is a direct cost multiplier: 15s costs 4x what 60s costs
 - Metrics dominate most observability bills, but logs and traces need their own cost controls too

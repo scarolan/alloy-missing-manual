@@ -9,10 +9,10 @@ Benchmarked on a Linux t3.micro (1 vCPU, 1 GB RAM, 1 disk, 1 NIC):
 | Configuration | Active Series | Unique Metric Names | Description |
 |---|---|---|---|
 | Bare minimum (CPU/Disk/Mem/Net) | **11** | ~7 | Just enough to answer "is this host alive?" |
-| Dashboard-optimized (hardened) | **~50** | ~208 | Full Dashboard 1860 coverage, all 4 layers active |
+| Dashboard-optimized (hardened) | **~50** | ~206 | Full Dashboard 1860 coverage, all 4 layers active |
 | Unfiltered (all default collectors) | **337** | ~300+ | Every default collector enabled, no filtering |
 
-The hardened config ships 208 metric names but only ~50 series on a minimal VM because most of those names are singleton metrics (no per-device label multiplication). On larger hosts with more CPUs, disks, and NICs, series grow predictably.
+The hardened config ships 206 metric names but only ~50 series on a minimal VM because most of those names are singleton metrics (no per-device label multiplication). On larger hosts with more CPUs, disks, and NICs, series grow predictably.
 
 A typical cloud VM (2-4 vCPU, 2 disks, 2 NICs) lands at **400-600 series** with the hardened config.
 
@@ -61,10 +61,10 @@ The hardened config provides complete dashboard coverage at **4.6% of the unfilt
 
 | What's eliminated | How | Series saved |
 |---|---|---|
-| Service explosion (200 services x states/modes) | Layer 2 (in Windows numbering): Service filter | **2,672 to ~24** |
-| Virtual NICs (isatap, Teredo, vEthernet, 6to4, WFP) | Layer 3: Pattern block | 10-50+ per host |
-| Hidden volumes (HarddiskVolume, GUID volumes) | Layer 3: Pattern block | 10-30 |
-| _Total pseudo-instances (disk and network) | Layer 3: Pattern block | ~23 (13 disk + 10 network) |
+| Service explosion (200 services x states/modes) | Layer 5: Service filter | **2,672 to ~24** |
+| Virtual NICs (isatap, Teredo, vEthernet, 6to4, WFP) | Layer 2: Pattern block | 10-50+ per host |
+| Hidden volumes (HarddiskVolume, GUID volumes) | Layer 2: Pattern block | 10-30 |
+| _Total pseudo-instances (disk and network) | Layer 2: Pattern block | ~23 (13 disk + 10 network) |
 | Unused metric names | Layer 1: Allow-list | Varies |
 
 The service filter alone accounts for **96% of the savings** (2,648 of 2,774 eliminated series).

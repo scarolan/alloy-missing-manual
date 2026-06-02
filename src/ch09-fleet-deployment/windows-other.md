@@ -556,7 +556,13 @@ For remote execution across multiple machines:
 $servers = @("server01", "server02", "server03")
 $cred = Get-Credential
 
-Invoke-Command -ComputerName $servers -Credential $cred -FilePath .\Deploy-Alloy.ps1 `
+$scriptBlock = {
+    param($Version, $MetricsUrl, $MetricsUsername, $ApiKey)
+    & "$PSScriptRoot\Deploy-Alloy.ps1" -Version $Version -MetricsUrl $MetricsUrl `
+        -MetricsUsername $MetricsUsername -ApiKey $ApiKey
+}
+
+Invoke-Command -ComputerName $servers -Credential $cred -ScriptBlock $scriptBlock `
     -ArgumentList "1.8.1", `
         "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push", `
         "000000", `

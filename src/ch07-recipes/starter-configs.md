@@ -862,7 +862,7 @@ prometheus.scrape "integrations_windows_exporter" {
   scrape_interval = "60s"
 }
 
-// --- Cardinality Control (Layers 1-5) ---
+// --- Cardinality Control (Layers 1-4) ---
 prometheus.relabel "integrations_windows_exporter" {
   forward_to = [prometheus.remote_write.metrics_service.receiver]
 
@@ -992,12 +992,21 @@ prometheus.relabel "integrations_windows_exporter" {
     action = "keep"
   }
 
-  // Layer 2: Service filter -- already handled by WMI where_clause above,
-  // but this catches any that leak through via the exporter
+  // Layer 2: Service filter -- tag monitored services, drop the rest
   rule {
     source_labels = ["__name__", "name"]
     regex         = "windows_service_.+;(?i)(Alloy|MSSQLSERVER|W3SVC|WinRM|Spooler|EventLog|LanmanServer|Dhcp|Dnscache|TermService|WinDefend|wuauserv|Schedule)"
-    action        = "keep"
+    target_label  = "__keepservice"
+    replacement   = "true"
+  }
+  rule {
+    source_labels = ["__name__", "__keepservice"]
+    regex         = "windows_service_.+;"
+    action        = "drop"
+  }
+  rule {
+    regex  = "__keepservice"
+    action = "labeldrop"
   }
 
   // Layer 3: Drop virtual NICs
@@ -1124,7 +1133,7 @@ prometheus.scrape "integrations_windows_exporter" {
   scrape_interval = "60s"
 }
 
-// --- Metrics Cardinality Control (Layers 1-5) ---
+// --- Metrics Cardinality Control (Layers 1-4) ---
 prometheus.relabel "integrations_windows_exporter" {
   forward_to = [prometheus.remote_write.metrics_service.receiver]
 
@@ -1231,11 +1240,21 @@ prometheus.relabel "integrations_windows_exporter" {
     action = "keep"
   }
 
-  // Layer 2: Service filter
+  // Layer 2: Service filter -- tag monitored services, drop the rest
   rule {
     source_labels = ["__name__", "name"]
     regex         = "windows_service_.+;(?i)(Alloy|MSSQLSERVER|W3SVC|WinRM|Spooler|EventLog|LanmanServer|Dhcp|Dnscache|TermService|WinDefend|wuauserv|Schedule)"
-    action        = "keep"
+    target_label  = "__keepservice"
+    replacement   = "true"
+  }
+  rule {
+    source_labels = ["__name__", "__keepservice"]
+    regex         = "windows_service_.+;"
+    action        = "drop"
+  }
+  rule {
+    regex  = "__keepservice"
+    action = "labeldrop"
   }
 
   // Layer 3: Drop virtual NICs
@@ -1341,7 +1360,7 @@ This config turns Alloy into a gateway -- it does not collect host metrics. Comb
 
 **Expected series count:** Depends entirely on what your applications send. The gateway itself adds no series. Monitor `otelcol.exporter.otlphttp` metrics to track throughput.
 
-**Environment variables required:** `GCLOUD_RW_API_KEY`, `GRAFANA_METRICS_URL`, `GRAFANA_METRICS_USERNAME`, `GRAFANA_LOGS_URL`, `GRAFANA_LOGS_USERNAME`
+**Environment variables required:** `GCLOUD_RW_API_KEY`, `GRAFANA_OTLP_URL`, `GRAFANA_OTLP_USERNAME`
 
 **Additional environment variables for traces:**
 

@@ -43,11 +43,12 @@ docker push myrepo.example.com/grafana/alloy-custom:v1
 
 ### What DAC_READ_SEARCH Does
 
-`DAC_READ_SEARCH` (also referred to as `DAC_OVERRIDE` in some contexts) grants a process the ability to:
+`DAC_READ_SEARCH` grants a process the ability to:
 
 - Read files regardless of file permission bits
-- Traverse directories regardless of directory permission bits
-- Search directories without execute permission
+- Read and search directories regardless of directory permission bits
+
+This is more restrictive than `DAC_OVERRIDE`, which would also grant write and execute bypass on all files.
 
 The `+eip` flags mean:
 

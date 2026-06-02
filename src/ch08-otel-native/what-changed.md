@@ -59,10 +59,10 @@ The OTel Engine is fundamentally different from the converter approaches. The co
 
 As of v1.15.1, the OTel Engine bundles **OpenTelemetry Collector v0.147.0** components from both core and contrib repositories:
 
-### Receivers (26)
+### Receivers (25)
 `awscloudwatch`, `awsecscontainermetrics`, `awss3`, `cloudflare`, `datadog`, `faro`, `filelog`, `filestats`, `fluentforward`, `googlecloudpubsub`, `hostmetrics`, `influxdb`, `jaeger`, `k8sobjectsreceiver`, `kafka`, `kubeletstatsreceiver`, `otlp`, `prometheus`, `prometheusremotewrite`, `solace`, `splunkhec`, `syslog`, `tcplog`, `vcenter`, `zipkin`
 
-### Processors (17)
+### Processors (16)
 `attributes`, `batch`, `cumulativetodelta`, `deltatocumulative`, `filter`, `groupbyattrs`, `interval`, `k8sattributes`, `memorylimiter`, `metricstarttime`, `probabilisticsampler`, `resource`, `resourcedetection`, `span`, `tailsampling`, `transform`
 
 ### Exporters (16)

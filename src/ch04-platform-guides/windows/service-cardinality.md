@@ -4,7 +4,7 @@
 
 The Windows service collector is the single largest source of metric cardinality on a Windows host. This is not a hypothetical concern -- it is the dominant cost driver, often producing more series than all other collectors combined.
 
-A standard Windows Server 2022 has approximately 200 installed services. The `windows_exporter` generates state metrics for each service across 8 possible state values (running, stopped, start pending, stop pending, continue pending, pause pending, paused, unknown).
+A standard Windows Server 2022 has approximately 200 installed services. The `windows_exporter` generates state metrics for each service across 7 possible state values (running, stopped, start pending, stop pending, continue pending, pause pending, paused).
 
 ### The Math Without Filtering
 
@@ -103,7 +103,7 @@ rule {
 }
 ```
 
-The same service-name filter is also applied to `windows_service_start_mode`, `windows_service_status`, and `windows_service_info` to ensure no unfiltered service metrics leak through.
+The same service-name filter is also applied to `windows_service_start_mode`, `windows_service_state`, and `windows_service_info` to ensure no unfiltered service metrics leak through.
 
 ### Result
 

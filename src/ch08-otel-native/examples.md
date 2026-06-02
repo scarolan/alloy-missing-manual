@@ -138,6 +138,9 @@ otelcol.processor.batch "default" {
 otelcol.exporter.otlp "backend" {
   client {
     endpoint = "tempo.example.com:4317"
+    tls {
+      insecure = true
+    }
   }
 }
 ```

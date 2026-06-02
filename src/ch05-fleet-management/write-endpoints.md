@@ -187,6 +187,6 @@ One env file per host. N pipelines read from it. Credentials change in one place
 | Mistake | Impact | Fix |
 |---|---|---|
 | Referencing bootstrap write endpoints from FM pipeline | "Component does not exist or is out of scope" | Define write endpoints inside each FM pipeline |
-| Hardcoding credentials in FM pipeline YAML | Secrets visible in FM UI and exports | Use `sys.env()` for all credential fields |
+| Hardcoding credentials in FM pipeline config | Secrets visible in FM UI and exports | Use `sys.env()` for all credential fields |
 | Forgetting to include write endpoint in a new pipeline | Pipeline runs but data goes nowhere | Start every pipeline from the template pattern above |
 | Different component labels across pipelines | Confusing debugging | Use consistent labels (`"metrics_service"`, `"grafana_cloud_loki"`) across all pipelines |

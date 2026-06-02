@@ -142,7 +142,7 @@ Before enabling Security log collection on a DC, estimate the volume:
 ```powershell
 # Count Security events in the last 24 hours
 $yesterday = (Get-Date).AddDays(-1)
-(Get-WinEvent -LogName Security -Oldest | Where-Object { $_.TimeCreated -gt $yesterday }).Count
+(Get-WinEvent -FilterHashtable @{LogName='Security'; StartTime=$yesterday}).Count
 
 # Or, faster -- check the log size directly
 Get-WinEvent -ListLog Security | Select-Object LogName, RecordCount, FileSize, MaximumSizeInBytes

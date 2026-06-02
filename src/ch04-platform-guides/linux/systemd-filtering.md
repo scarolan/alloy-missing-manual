@@ -76,10 +76,10 @@ The `node_systemd_unit_state` metric has a `state` label with values: `active`, 
 After deploying, check your series count in Grafana Cloud:
 
 ```promql
--- How many systemd series is this host sending?
+# How many systemd series is this host sending?
 count({__name__=~"node_systemd.*", instance="<your-hostname>"})
 
--- Which units are being tracked?
+# Which units are being tracked?
 group by (name) (node_systemd_unit_state{instance="<your-hostname>"})
 ```
 

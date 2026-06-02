@@ -112,9 +112,9 @@ This one matters a lot, especially if you use Fleet Management.
 
 **`sys.env()`** is a runtime function. It reads the environment variable from the host's actual environment when the config is evaluated. It is the function you want in almost every case.
 
-**`env()`** was an older function that read environment variables at parse time. It has been deprecated and removed from newer versions. In some older versions, using `env()` instead of `sys.env()` could cause different behavior during config reloads.
+**`env()`** was an older function that read environment variables at parse time. It has been deprecated in newer versions and may be removed in the future. In some older versions, using `env()` instead of `sys.env()` could cause different behavior during config reloads.
 
-**The Fleet Management implication:** When Fleet Management pushes a pipeline config to a collector, `sys.env()` reads from the host's local environment. This is exactly what you want -- the API key lives on the host, not in the pipeline YAML stored in Fleet Management. If you mistakenly hardcode credentials in the pipeline config, they are visible to anyone with Fleet Management access.
+**The Fleet Management implication:** When Fleet Management pushes a pipeline config to a collector, `sys.env()` reads from the host's local environment. This is exactly what you want -- the API key lives on the host, not in the pipeline config stored in Fleet Management. If you mistakenly hardcode credentials in the pipeline config, they are visible to anyone with Fleet Management access.
 
 **Fix:** Always use `sys.env()`. If you see `env()` in old configs or blog posts, replace it.
 

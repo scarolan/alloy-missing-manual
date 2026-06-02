@@ -167,10 +167,11 @@ When you deploy Alloy to 500 hosts simultaneously, all 500 start scraping and re
   # ...tasks...
 ```
 
-```ini
+```yaml
 # Ansible: 10% of the fleet at a time
-[alloy_fleet]
-serial: "10%"
+- hosts: alloy_fleet
+  serial: "10%"
+  # ...tasks...
 ```
 
 **Add a random startup delay.** In the Alloy config, if using Fleet Management, stagger the initial scrape intervals. In your automation, add a random sleep before starting the service:

@@ -160,7 +160,7 @@ Make sure your team understands these trade-offs before migrating:
 
 1. **Dashboard 1860 compatibility** -- Your `node_*` dashboards will need to be replaced with OTel-native equivalents.
 2. **systemd monitoring** -- No way to track unit states in pure OTel mode.
-3. **Journal log collection** -- No native journal reader; `filelog` on `/var/log` is an alternative but not equivalent.
+3. **Journal log collection** -- No native journal reader; `filelog` on `/var/log/journal` is an alternative but not equivalent.
 4. **Web UI** -- The OTel Engine has no pipeline visualization UI.
 5. **Fleet Management** -- Not supported for the OTel Engine yet.
 6. **Reload endpoint** -- No hot-reload via HTTP; must restart the process.

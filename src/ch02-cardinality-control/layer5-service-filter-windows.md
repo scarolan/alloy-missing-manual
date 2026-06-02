@@ -6,7 +6,7 @@ This layer only applies to Windows. Linux does not have an equivalent service-st
 
 ## The Problem: Services x States = Explosion
 
-A standard Windows Server 2022 installation runs approximately 200 services. The Windows exporter's `service` collector generates `windows_service_state` with a `state` label that has 8 possible values for each service:
+A standard Windows Server 2022 installation runs approximately 200 services. The Windows exporter's `service` collector generates `windows_service_state` with a `state` label that has 7 possible values for each service:
 
 - `running`
 - `stopped`
@@ -15,7 +15,6 @@ A standard Windows Server 2022 installation runs approximately 200 services. The
 - `continue pending`
 - `pause pending`
 - `paused`
-- `unknown`
 
 Additionally, it generates:
 
@@ -269,7 +268,7 @@ Use the `Name` column value (not `DisplayName`) in the regex.
 
 ## Summary
 
-- The Windows service collector is the #1 cardinality trap: 200 services x 8 states = 1,200+ series
+- The Windows service collector is the #1 cardinality trap: 200 services x 7 states = 1,400 series
 - The hardened config filters to 12 essential services x 2 states = ~24 series (99% reduction)
 - The `__keepme` temp-label technique enables metric-name-scoped filtering without affecting other metrics in the pipeline
 - The filter uses two passes: service name filtering, then state filtering

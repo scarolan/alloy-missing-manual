@@ -253,7 +253,7 @@ disable_collectors = [
 ]
 ```
 
-Each of these collectors would produce metrics that pass through the allow-list (they have different `__name__` prefixes that are not in the list), so they are technically redundant with Layer 1. But disabling them is a defense-in-depth measure that also saves CPU and memory on the host -- the collector never runs, so the data is never generated.
+Each of these collectors would produce metrics that the allow-list would drop (they have different `__name__` prefixes that are not in the list), so disabling them is technically redundant with Layer 1. But disabling them is a defense-in-depth measure that also saves CPU and memory on the host -- the collector never runs, so the data is never generated.
 
 ## How Layers 1 and 2 Work Together
 
